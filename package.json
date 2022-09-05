@@ -1,24 +1,17 @@
 {
-  "name": "vue3-element-admin",
+  "name": "vue-project",
   "version": "0.0.0",
-  "author": {
-    "name": "huzhushan",
-    "email": "huzhushan@126.com",
-    "url": "https://github.com/huzhushan"
-  },
   "scripts": {
-    "start": "npm run dev:mock",
     "dev": "vite",
-    "dev:mock": "vite --mode mock",
-    "build": "vite build",
-    "build:mock": "vite build --mode mock",
-    "serve": "vite preview",
-    "lint": "eslint --fix --ext .js,.vue src"
+    "build": "run-p type-check build-only",
+    "preview": "vite preview --port 4173",
+    "test:unit": "vitest --environment jsdom",
+    "test:e2e": "start-server-and-test preview http://localhost:4173/ 'cypress open --e2e'",
+    "test:e2e:ci": "start-server-and-test preview http://localhost:4173/ 'cypress run --e2e'",
+    "build-only": "vite build",
+    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions"
-  ],
   "dependencies": {
     "element-plus": "^2.2.15",
     "pinia": "^2.0.17",
@@ -47,25 +40,5 @@
     "vite": "^3.0.4",
     "vitest": "^0.21.0",
     "vue-tsc": "^0.39.5"
-  },
-  "lint-staged": {
-    "src/**/*.{js,vue}": [
-      "npm run lint",
-      "git add"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/huzhushan/vue3-element-admin.git"
-  },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/huzhushan/vue3-element-admin/issues"
-  },
-  "homepage": "https://github.com/huzhushan/vue3-element-admin"
+  }
 }
