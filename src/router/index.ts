@@ -2,7 +2,9 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 
 // 动态菜单
-export const asyncRoutes = []
+export const asyncRoutes = [{
+  'name': ''
+}]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

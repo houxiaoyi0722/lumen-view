@@ -1,9 +1,9 @@
 import {ElLoading} from 'element-plus'
-import router, {asyncRoutes} from 'router'
-import {app, account} from 'src/stores'
+import router, {asyncRoutes} from '@/router'
+import {app_store, account_store, menu_store} from '@/stores'
 
-const getPageTitle = title => {
-    const appTitle = app.name
+const getPageTitle = (title:any) => {
+    const appTitle = app_store.name
     if (title) {
         return `${title} - ${appTitle}`
     }
@@ -17,7 +17,7 @@ const WhiteList = ['login']
 router.beforeEach(async to => {
     document.title = getPageTitle(!!to.meta && to.meta.title)
 
-    if (WhiteList.includes(to.name)) {
+    if (WhiteList.includes(<string>to.name)) {
         return true
     }
     if (!window.localStorage['TOKEN']) {
@@ -30,7 +30,7 @@ router.beforeEach(async to => {
         }
     } else {
         // 获取用户角色信息，根据角色判断权限
-        let userinfo = account.state.account.userinfo
+        let userinfo = account_store.userinfo
         if (!userinfo) {
             const loadingInstance = ElLoading.service({
                 lock: true,
@@ -39,7 +39,7 @@ router.beforeEach(async to => {
             })
             try {
                 // 获取用户信息
-                userinfo = await store.dispatch('account/getUserinfo')
+                await account_store.loadUserinfo()
                 loadingInstance.close()
             } catch (err) {
                 loadingInstance.close()
@@ -54,14 +54,14 @@ router.beforeEach(async to => {
         }
 
         // 生成菜单（如果你的项目有动态菜单，在此处会添加动态路由）
-        if (store.state.menu.menus.length <= 0) {
+        if (menu_store.menus.length <= 0) {
             const loadingInstance = ElLoading.service({
                 lock: true,
                 text: '正在加载数据，请稍候~',
                 background: 'rgba(0, 0, 0, 0.7)',
             })
             try {
-                await store.dispatch('menu/generateMenus', userinfo)
+                await menu_store.generateMenus(userinfo)
                 loadingInstance.close()
                 return to.fullPath // 添加动态路由后，必须加这一句触发重定向，否则会404
             } catch (err) {

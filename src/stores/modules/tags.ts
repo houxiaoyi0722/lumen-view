@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 
-export const tags = defineStore({
+export const tagStore = defineStore({
     id: "tags",
     state: () => ({
         counter: 0,

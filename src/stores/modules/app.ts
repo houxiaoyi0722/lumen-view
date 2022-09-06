@@ -1,15 +1,15 @@
 import {defineStore} from "pinia";
 
-export const app = defineStore({
-    id: "app",
+export const appStore = defineStore("app",{
     state: () => ({
         name: 'lumen',
+        counter: 0,
     }),
     getters: {
-        getName: (state) => state.name,
+        incrName: (state) => state.name,
     },
     actions: {
-        SET_NAME(name) {
+        handle(name: string) {
             this.name = name;
         },
     },
