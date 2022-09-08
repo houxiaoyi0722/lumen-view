@@ -18,18 +18,18 @@
   </div>
 </template>
 <script>
-import { defineComponent, ref, computed } from 'vue'
-import Sidebar from './components/Sidebar/index.vue'
-import Topbar from './components/Topbar/index.vue'
-import Menus from './components/Sidebar/Menus.vue'
-import Tagsbar from './components/Tagsbar/index.vue'
-import Breadcrumbs from './components/Topbar/Breadcrumbs.vue'
-import Content from './components/Content/index.vue'
-import { useResizeHandler } from './hooks/useResizeHandler'
-import { useStore } from 'vuex'
+import { defineComponent, ref, computed } from "vue";
+import Sidebar from "./components/Sidebar/index.vue";
+import Topbar from "./components/Topbar/index.vue";
+import Menus from "./components/Sidebar/Menus.vue";
+import Tagsbar from "./components/Tagsbar/index.vue";
+import Breadcrumbs from "./components/Topbar/Breadcrumbs.vue";
+import Content from "./components/Content/index.vue";
+import { useResizeHandler } from "./hooks/useResizeHandler";
+import { useStore } from "vuex";
 
 export default defineComponent({
-  name: 'layout',
+  name: "layout",
   components: {
     Sidebar,
     Topbar,
@@ -39,22 +39,22 @@ export default defineComponent({
     Content,
   },
   setup() {
-    useResizeHandler()
-    const store = useStore()
-    const defaultSettings = computed(() => store.state.layoutSettings)
-    const isFluid = computed(() => defaultSettings.value.layout.isFluid)
-    const isTopbarFixed = computed(() => defaultSettings.value.topbar.isFixed)
-    const isMenusShow = computed(() => defaultSettings.value.menus.isShow)
+    useResizeHandler();
+    const store = useStore();
+    const defaultSettings = computed(() => store.state.layoutSettings);
+    const isFluid = computed(() => defaultSettings.value.layout.isFluid);
+    const isTopbarFixed = computed(() => defaultSettings.value.topbar.isFixed);
+    const isMenusShow = computed(() => defaultSettings.value.menus.isShow);
     const isHorizontalMenu = computed(
-      () => defaultSettings.value.menus.mode === 'horizontal'
-    )
+      () => defaultSettings.value.menus.mode === "horizontal"
+    );
     const isBreadcrumbsShow = computed(
       () => isHorizontalMenu.value && defaultSettings.value.breadcrumbs.isShow
-    )
-    const paddingFlag = ref(true)
-    const handleBreadcrumbsChange = boo => {
-      paddingFlag.value = boo
-    }
+    );
+    const paddingFlag = ref(true);
+    const handleBreadcrumbsChange = (boo) => {
+      paddingFlag.value = boo;
+    };
 
     return {
       isFluid,
@@ -64,9 +64,9 @@ export default defineComponent({
       isBreadcrumbsShow,
       paddingFlag,
       handleBreadcrumbsChange,
-    }
+    };
   },
-})
+});
 </script>
 
 <style lang="scss" scoped>

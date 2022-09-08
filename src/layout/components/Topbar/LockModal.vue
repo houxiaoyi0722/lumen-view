@@ -44,39 +44,39 @@
 </template>
 
 <script>
-import { defineComponent, reactive, ref } from 'vue'
-import Avatar from '@/components/Avatar/index.vue'
-import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
+import { defineComponent, reactive, ref } from "vue";
+import Avatar from "@/components/Avatar/index.vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 export default defineComponent({
   components: {
     Avatar,
   },
   setup() {
-    const router = useRouter()
-    const store = useStore()
-    const dialogVisible = ref(false)
-    const lockForm = ref(null)
+    const router = useRouter();
+    const store = useStore();
+    const dialogVisible = ref(false);
+    const lockForm = ref(null);
     const lockModel = reactive({
-      password: '',
-    })
+      password: "",
+    });
     const lockRules = reactive({
-      password: [{ required: true, message: '请输入锁屏密码' }],
-    })
+      password: [{ required: true, message: "请输入锁屏密码" }],
+    });
     const submitForm = () => {
-      lockForm.value.validate(valid => {
+      lockForm.value.validate((valid) => {
         if (!valid) {
-          return false
+          return false;
         }
 
         // 对密码加密并跟token保存在一起
-        store.dispatch('app/setScreenCode', lockModel.password)
+        store.dispatch("app/setScreenCode", lockModel.password);
 
         // 跳转到锁屏页面
-        router.push('/lock?redirect=' + router.currentRoute.value.fullPath)
-      })
-    }
+        router.push("/lock?redirect=" + router.currentRoute.value.fullPath);
+      });
+    };
 
     return {
       dialogVisible,
@@ -84,9 +84,9 @@ export default defineComponent({
       lockModel,
       lockRules,
       submitForm,
-    }
+    };
   },
-})
+});
 </script>
 
 <style lang="scss">

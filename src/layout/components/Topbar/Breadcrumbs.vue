@@ -31,57 +31,57 @@
   </el-breadcrumb>
 </template>
 <script>
-import { defineComponent, computed, ref, onBeforeMount, watch } from 'vue'
-import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
+import { defineComponent, computed, ref, onBeforeMount, watch } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 export default defineComponent({
   setup(props, { emit }) {
-    const store = useStore()
-    const device = computed(() => store.state.app.device)
-    const router = useRouter()
-    const route = router.currentRoute // 这里不使用useRoute获取当前路由，否则下面watch监听路由的时候会有警告
-    const breadcrumbs = ref([])
-    const defaultSettings = computed(() => store.state.layoutSettings)
+    const store = useStore();
+    const device = computed(() => store.state.app.device);
+    const router = useRouter();
+    const route = router.currentRoute; // 这里不使用useRoute获取当前路由，否则下面watch监听路由的时候会有警告
+    const breadcrumbs = ref([]);
+    const defaultSettings = computed(() => store.state.layoutSettings);
     const isHorizontalMenu = computed(
-      () => defaultSettings.value.menus.mode === 'horizontal'
-    )
+      () => defaultSettings.value.menus.mode === "horizontal"
+    );
 
-    const getBreadcrumbs = route => {
-      const home = [{ path: '/', meta: { title: '首页' } }]
-      if (route.name === 'home') {
-        return home
+    const getBreadcrumbs = (route) => {
+      const home = [{ path: "/", meta: { title: "首页" } }];
+      if (route.name === "home") {
+        return home;
       } else {
         const matched = route.matched.filter(
-          item => !!item.meta && !!item.meta.title
-        )
+          (item) => !!item.meta && !!item.meta.title
+        );
 
-        return [...home, ...matched]
+        return [...home, ...matched];
       }
-    }
+    };
 
     onBeforeMount(() => {
-      breadcrumbs.value = getBreadcrumbs(route.value)
-    })
+      breadcrumbs.value = getBreadcrumbs(route.value);
+    });
 
     watch(
       route,
-      newRoute => {
-        breadcrumbs.value = getBreadcrumbs(newRoute)
-        emit('on-breadcrumbs-change', breadcrumbs.value.length > 1)
+      (newRoute) => {
+        breadcrumbs.value = getBreadcrumbs(newRoute);
+        emit("on-breadcrumbs-change", breadcrumbs.value.length > 1);
       },
       {
         immediate: true,
       }
-    )
+    );
 
     return {
       device,
       breadcrumbs,
       isHorizontalMenu,
-    }
+    };
   },
-})
+});
 </script>
 
 <style lang="scss" scoped>

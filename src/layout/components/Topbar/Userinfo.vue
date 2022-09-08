@@ -33,35 +33,35 @@
   </el-dropdown>
 </template>
 <script>
-import { defineComponent } from 'vue'
-import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
-import { useUserinfo } from '@/components/Avatar/hooks/useUserinfo'
-import LockModal from './LockModal.vue'
+import { defineComponent } from "vue";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+import { useUserinfo } from "@/components/Avatar/hooks/useUserinfo";
+import LockModal from "./LockModal.vue";
 
 export default defineComponent({
   components: {
     LockModal,
   },
   setup() {
-    const store = useStore()
-    const router = useRouter()
+    const store = useStore();
+    const router = useRouter();
 
-    const { userinfo } = useUserinfo()
+    const { userinfo } = useUserinfo();
 
     // 退出
     const logout = () => {
       // 清除token
-      store.dispatch('app/clearToken')
-      router.push('/login')
-    }
+      store.dispatch("app/clearToken");
+      router.push("/login");
+    };
 
     return {
       userinfo,
       logout,
-    }
+    };
   },
-})
+});
 </script>
 
 <style lang="scss" scoped>

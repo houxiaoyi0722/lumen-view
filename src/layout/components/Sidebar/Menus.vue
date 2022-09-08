@@ -28,11 +28,11 @@
   </el-scrollbar>
 </template>
 <script>
-import { computed, defineComponent } from 'vue'
-import Submenu from './Submenu.vue'
-import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
-import config from './config/menu.module.scss'
+import { computed, defineComponent } from "vue";
+import Submenu from "./Submenu.vue";
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
+import config from "./config/menu.module.scss";
 
 export default defineComponent({
   components: {
@@ -45,20 +45,20 @@ export default defineComponent({
     },
     mode: {
       type: String,
-      default: 'vertical',
+      default: "vertical",
     },
   },
   setup() {
-    const route = useRoute()
-    const store = useStore()
+    const route = useRoute();
+    const store = useStore();
 
     return {
       menus: computed(() => store.state.menu.menus),
       activePath: computed(() => route.path),
       variables: computed(() => config),
-    }
+    };
   },
-})
+});
 </script>
 <style lang="scss">
 // menu hover
@@ -93,7 +93,7 @@ export default defineComponent({
     background-color: $collapseMenuActiveBg !important;
     color: $collapseMenuActiveColor !important;
     &::before {
-      content: '';
+      content: "";
       position: absolute;
       left: 0;
       top: 0;

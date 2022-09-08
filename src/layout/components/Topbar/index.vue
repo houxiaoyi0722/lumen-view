@@ -28,13 +28,13 @@
   </div>
 </template>
 <script>
-import { defineComponent, computed } from 'vue'
-import Logo from '@/layout/components/Sidebar/Logo.vue'
-import Hamburger from './Hamburger.vue'
-import Breadcrumbs from './Breadcrumbs.vue'
-import Userinfo from './Userinfo.vue'
-import ErrorLog from '@/components/ErrorLog/index.vue'
-import { useStore } from 'vuex'
+import { defineComponent, computed } from "vue";
+import Logo from "@/layout/components/Sidebar/Logo.vue";
+import Hamburger from "./Hamburger.vue";
+import Breadcrumbs from "./Breadcrumbs.vue";
+import Userinfo from "./Userinfo.vue";
+import ErrorLog from "@/components/ErrorLog/index.vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
   components: {
@@ -45,24 +45,24 @@ export default defineComponent({
     ErrorLog,
   },
   setup() {
-    const store = useStore()
-    const defaultSettings = computed(() => store.state.layoutSettings)
+    const store = useStore();
+    const defaultSettings = computed(() => store.state.layoutSettings);
 
-    const device = computed(() => store.state.app.device)
+    const device = computed(() => store.state.app.device);
 
     const isHorizontalMenu = computed(
-      () => defaultSettings.value.menus.mode === 'horizontal'
-    )
+      () => defaultSettings.value.menus.mode === "horizontal"
+    );
 
     const isShowLogo = computed(
-      () => isHorizontalMenu.value || device.value === 'mobile'
-    )
+      () => isHorizontalMenu.value || device.value === "mobile"
+    );
 
-    const isShowHamburger = computed(() => !isHorizontalMenu.value)
+    const isShowHamburger = computed(() => !isHorizontalMenu.value);
 
     const isShowBreadcrumbs = computed(
       () => defaultSettings.value.breadcrumbs.isShow && !isHorizontalMenu.value
-    )
+    );
 
     return {
       device,
@@ -70,9 +70,9 @@ export default defineComponent({
       isShowLogo,
       isShowHamburger,
       isShowBreadcrumbs,
-    }
+    };
   },
-})
+});
 </script>
 <style lang="scss" scoped>
 .header {

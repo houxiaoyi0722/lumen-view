@@ -22,7 +22,7 @@
         v-for="(tag, i) in tagList"
         :key="tag.fullPath"
         :to="tag"
-        :ref="el => setItemRef(i, el)"
+        :ref="(el) => setItemRef(i, el)"
         custom
         v-slot="{ navigate, isExactActive }"
       >
@@ -58,38 +58,38 @@
 </template>
 
 <script>
-import { defineComponent, computed, getCurrentInstance } from 'vue'
-import { useTags } from './hooks/useTags'
-import { useContextMenu } from './hooks/useContextMenu'
-import { useStore } from 'vuex'
+import { defineComponent, computed, getCurrentInstance } from "vue";
+import { useTags } from "./hooks/useTags";
+import { useContextMenu } from "./hooks/useContextMenu";
+import { useStore } from "vuex";
 
 export default defineComponent({
-  name: 'Tagsbar',
+  name: "Tagsbar",
   mounted() {
-    const instance = getCurrentInstance()
-    instance.appContext.config.globalProperties.$tagsbar = this
+    const instance = getCurrentInstance();
+    instance.appContext.config.globalProperties.$tagsbar = this;
   },
   setup() {
-    const store = useStore()
-    const defaultSettings = computed(() => store.state.layoutSettings)
-    const isTagsbarShow = computed(() => defaultSettings.value.tagsbar.isShow)
+    const store = useStore();
+    const defaultSettings = computed(() => store.state.layoutSettings);
+    const isTagsbarShow = computed(() => defaultSettings.value.tagsbar.isShow);
 
-    const tags = useTags()
-    const contextMenu = useContextMenu(tags.tagList)
+    const tags = useTags();
+    const contextMenu = useContextMenu(tags.tagList);
 
-    const onScroll = e => {
-      tags.handleScroll(e)
-      contextMenu.closeMenu.value()
-    }
+    const onScroll = (e) => {
+      tags.handleScroll(e);
+      contextMenu.closeMenu.value();
+    };
 
     return {
       isTagsbarShow,
       onScroll,
       ...tags,
       ...contextMenu,
-    }
+    };
   },
-})
+});
 </script>
 
 <style lang="scss" scoped>

@@ -1,26 +1,49 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-
-// 动态菜单
-export const asyncRoutes = [{
-  'name': ''
-}]
+const Layout = () => import("@/layout/index.vue");
+const Redirect = () => import("@/views/redirect/index.vue");
+const Home = () => import("@/views/home/index.vue");
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
-      name: "home",
-      component: HomeView,
+      redirect: "/home",
     },
     {
-      path: "/about",
-      name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import("../views/AboutView.vue"),
+      path: "/redirect/:path(.*)",
+      component: Layout,
+      children: [
+        {
+          path: "",
+          component: Redirect,
+        },
+      ],
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: () => import("@/views/login/index.vue"),
+    },
+    {
+      path: "/home",
+      component: Layout,
+      name: "Dashboard",
+      meta: {
+        title: "工作台",
+        icon: "home",
+      },
+      children: [
+        {
+          path: "",
+          name: "home",
+          component: Home,
+          meta: {
+            title: "首页",
+            affix: true,
+          },
+        },
+      ],
     },
   ],
 });

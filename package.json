@@ -2,17 +2,16 @@
   "name": "vue-project",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --mode dev",
     "build": "run-p type-check build-only",
     "preview": "vite preview --port 4173",
     "test:unit": "vitest --environment jsdom",
-    "test:e2e": "start-server-and-test preview http://localhost:4173/ 'cypress open --e2e'",
-    "test:e2e:ci": "start-server-and-test preview http://localhost:4173/ 'cypress run --e2e'",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "axios": "^0.27.2",
     "dayjs": "^1.11.5",
     "element-plus": "^2.2.16",
     "pinia": "^2.0.17",
@@ -44,6 +43,7 @@
     "unplugin-vue-components": "^0.22.4",
     "vite": "^3.0.4",
     "vitest": "^0.21.0",
-    "vue-tsc": "^0.39.5"
+    "vue-tsc": "^0.39.5",
+    "vite-plugin-svg-icons": "^0.4.0"
   }
 }
