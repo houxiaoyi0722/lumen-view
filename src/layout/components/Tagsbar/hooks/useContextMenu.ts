@@ -1,22 +1,11 @@
-/*
- * @Descripttion:
- * @version:
- * @Date: 2021-04-20 11:06:21
- * @LastEditors: huzhushan@126.com
- * @LastEditTime: 2021-04-29 10:52:41
- * @Author: huzhushan@126.com
- * @HomePage: https://huzhushan.gitee.io/vue3-element-admin
- * @Github: https://github.com/huzhushan/vue3-element-admin
- * @Donate: https://huzhushan.gitee.io/vue3-element-admin/donate/
- */
-
 import { onMounted, onBeforeUnmount, reactive, toRefs, nextTick } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useStore } from "vuex";
-import { isAffix } from "./useTags";
+import { tagStore } from "@/stores/modules/tags";
+import { isAffix } from "@/layout/components/Tagsbar/hooks/useTags";
 
-export const useContextMenu = (tagList) => {
-  const store = useStore();
+const tag_store = tagStore();
+
+export const useContextMenu = (tagList: any) => {
   const router = useRouter();
   const route = useRoute();
 
@@ -24,8 +13,10 @@ export const useContextMenu = (tagList) => {
     visible: false,
     top: 0,
     left: 0,
-    selectedTag: {},
-    openMenu(tag, e) {
+    selectedTag: {
+      fullPath: {},
+    },
+    openMenu(tag: any, e: any) {
       state.visible = true;
       state.left = e.clientX;
       state.top = e.clientY;
@@ -34,8 +25,8 @@ export const useContextMenu = (tagList) => {
     closeMenu() {
       state.visible = false;
     },
-    refreshSelectedTag(tag) {
-      store.commit("tags/DEL_CACHE_LIST", tag);
+    refreshSelectedTag(tag: any) {
+      tag_store.DEL_CACHE_LIST(tag);
       const { fullPath } = tag;
       nextTick(() => {
         router.replace({
@@ -43,19 +34,21 @@ export const useContextMenu = (tagList) => {
         });
       });
     },
-    closeTag(tag) {
+    closeTag(tag: any) {
       if (isAffix(tag)) return;
 
       const closedTagIndex = tagList.value.findIndex(
-        (item) => item.fullPath === tag.fullPath
+        (item: any) => item.fullPath === tag.fullPath
       );
-      store.dispatch("tags/delTag", tag);
+      tag_store.delTag(tag);
       if (isActive(tag)) {
         toLastTag(closedTagIndex - 1);
       }
     },
     closeOtherTags() {
-      store.dispatch("tags/delOtherTags", state.selectedTag);
+      tag_store.delOtherTags(state.selectedTag);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       router.push(state.selectedTag);
     },
     closeLeftTags() {
@@ -64,9 +57,9 @@ export const useContextMenu = (tagList) => {
     closeRightTags() {
       state.closeSomeTags("right");
     },
-    closeSomeTags(direction) {
+    closeSomeTags(direction: any) {
       const index = tagList.value.findIndex(
-        (item) => item.fullPath === state.selectedTag.fullPath
+        (item: any) => item.fullPath === state.selectedTag.fullPath
       );
 
       if (
@@ -80,20 +73,22 @@ export const useContextMenu = (tagList) => {
         direction === "left"
           ? tagList.value.slice(0, index)
           : tagList.value.slice(index + 1);
-      store.dispatch("tags/delSomeTags", needToClose);
+      tag_store.delSomeTags(needToClose);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       router.push(state.selectedTag);
     },
     closeAllTags() {
-      store.dispatch("tags/delAllTags");
+      tag_store.delAllTags();
       router.push("/");
     },
   });
 
-  const isActive = (tag) => {
+  const isActive = (tag: any) => {
     return tag.fullPath === route.fullPath;
   };
 
-  const toLastTag = (lastTagIndex) => {
+  const toLastTag = (lastTagIndex: any) => {
     const lastTag = tagList.value[lastTagIndex];
     if (lastTag) {
       router.push(lastTag.fullPath);

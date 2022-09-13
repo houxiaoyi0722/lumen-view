@@ -46,11 +46,12 @@ import {
 } from "vue";
 import { Login } from "/src/api/login.ts";
 import { useRouter, useRoute } from "vue-router";
-import { app_store } from "../../stores/index";
+import { appStore } from "../../stores/modules/app";
 
 export default defineComponent({
   name: "login",
   setup() {
+    const app_store = appStore();
     const { proxy: ctx } = getCurrentInstance(); // 可以把ctx当成vue2中的this
     const router = useRouter();
     const route = useRoute();
@@ -84,6 +85,7 @@ export default defineComponent({
           if (valid) {
             state.loading = true;
             const { code, data, message } = await Login(state.model);
+            debugger
             if (+code === 200) {
               ctx.$message.success({
                 message: "登录成功",

@@ -12,7 +12,7 @@
         />
       </div>
       <div class="main" :class="{ pt0: isBreadcrumbsShow && paddingFlag }">
-        <Content />
+        <Contents />
       </div>
     </div>
   </div>
@@ -24,9 +24,9 @@ import Topbar from "./components/Topbar/index.vue";
 import Menus from "./components/Sidebar/Menus.vue";
 import Tagsbar from "./components/Tagsbar/index.vue";
 import Breadcrumbs from "./components/Topbar/Breadcrumbs.vue";
-import Content from "./components/Content/index.vue";
+import Contents from "./components/Contents/index.vue";
 import { useResizeHandler } from "./hooks/useResizeHandler";
-import { useStore } from "vuex";
+import { layout } from "../stores/modules/layout";
 
 export default defineComponent({
   name: "layout",
@@ -36,12 +36,13 @@ export default defineComponent({
     Menus,
     Tagsbar,
     Breadcrumbs,
-    Content,
+    Contents,
   },
   setup() {
     useResizeHandler();
-    const store = useStore();
-    const defaultSettings = computed(() => store.state.layoutSettings);
+
+    const layoutSettings = layout();
+    const defaultSettings = computed(() => layoutSettings.setting);
     const isFluid = computed(() => defaultSettings.value.layout.isFluid);
     const isTopbarFixed = computed(() => defaultSettings.value.topbar.isFixed);
     const isMenusShow = computed(() => defaultSettings.value.menus.isShow);

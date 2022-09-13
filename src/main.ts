@@ -18,10 +18,6 @@ import "xe-utils";
 // app.config.globalProperties.$XPrint = VXETable.print
 // app.config.globalProperties.$XSaveFile = VXETable.saveFile
 // app.config.globalProperties.$XReadFile = VXETable.readFile
-
-import dayjs from "dayjs";
-App.prototype.dayjs = dayjs; //全局使用dayjs
-
 const app = createApp(App);
 
 // store
@@ -31,4 +27,3 @@ app.use(ElementPlus);
 app.use(VXETable);
 
 app.mount("#app");
-app.config.globalProperties.day = dayjs; //全局挂载

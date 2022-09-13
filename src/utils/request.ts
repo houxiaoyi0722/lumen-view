@@ -1,7 +1,11 @@
 import axios from "axios";
 import { ElMessage } from "element-plus";
-import { app_store } from "@/stores";
+import { appStore } from "@/stores/modules/app";
 import router from "@/router";
+import {validNull} from "@/utils/validate";
+
+
+const app_store = appStore();
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_URL,
@@ -13,11 +17,12 @@ const request = axios.create({
 request.interceptors.request.use(
   (config) => {
     const authorization = app_store.authorization;
-    if (authorization) {
+    if (!validNull(authorization.token)) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       config.headers["Authorization"] = `Bearer ${authorization.token}`;
     }
+
     return config;
   },
   (error) => {

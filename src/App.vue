@@ -1,5 +1,11 @@
 <template>
-  <el-config-provider>
+  <div id="app">
     <RouterView />
-  </el-config-provider>
+  </div>
 </template>
+
+<script>
+export default {
+  name: "App",
+};
+</script>

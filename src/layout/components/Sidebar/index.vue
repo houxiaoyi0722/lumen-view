@@ -1,20 +1,5 @@
-<!--
- * @Descripttion: 
- * @version: 
- * @Date: 2021-04-20 11:06:21
- * @LastEditors: huzhushan@126.com
- * @LastEditTime: 2021-07-23 09:36:42
- * @Author: huzhushan@126.com
- * @HomePage: https://huzhushan.gitee.io/vue3-element-admin
- * @Github: https://github.com/huzhushan/vue3-element-admin
- * @Donate: https://huzhushan.gitee.io/vue3-element-admin/donate/
- -->
-
 <template>
-  <div
-    class="left"
-    :class="{ collapse: collapse, mobile: device === 'mobile' }"
-  >
+  <div class="left" :class="{ collapse: collapse, mobile: false }">
     <logo />
     <menus :collapse="collapse" />
   </div>
@@ -25,7 +10,7 @@
 import { defineComponent, computed } from "vue";
 import Logo from "./Logo.vue";
 import Menus from "./Menus.vue";
-import { useStore } from "vuex";
+import { appStore } from "../../../stores/modules/app";
 
 export default defineComponent({
   components: {
@@ -33,17 +18,15 @@ export default defineComponent({
     Menus,
   },
   setup() {
-    const store = useStore();
-    const collapse = computed(() => !!store.state.app.sidebar.collapse);
-    const device = computed(() => store.state.app.device);
+    const app_store = appStore();
+    const collapse = computed(() => !!app_store.sidebar.collapse);
 
     const closeSidebar = () => {
-      store.commit("app/setCollapse", 1);
+      app_store.setCollapse(1);
     };
 
     return {
       collapse,
-      device,
       closeSidebar,
     };
   },

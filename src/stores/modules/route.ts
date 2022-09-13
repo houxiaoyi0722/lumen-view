@@ -32,5 +32,8 @@ export const routeStore = defineStore({
     removeRoute() {
       this.routes = [];
     },
+    routeList() {
+      this.routes;
+    },
   },
 });

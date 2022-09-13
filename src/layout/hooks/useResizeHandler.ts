@@ -1,10 +1,11 @@
 import { onBeforeMount, onBeforeUnmount /*watch*/ } from "vue";
 // import { useRouter } from 'vue-router';
-import { useStore } from "vuex";
+import { appStore } from "@/stores/modules/app";
+
+const app_store = appStore();
 
 const WIDTH = 768;
 export const useResizeHandler = () => {
-  const store = useStore();
   // const router = useRouter();
   // const route = router.currentRoute;
 
@@ -14,11 +15,11 @@ export const useResizeHandler = () => {
 
   const resizeHandler = () => {
     if (isMobile()) {
-      store.commit("app/setDevice", "mobile");
-      store.commit("app/setCollapse", 1);
+      app_store.setDevice("mobile");
+      app_store.setCollapse(1);
     } else {
-      store.commit("app/setDevice", "desktop");
-      store.commit("app/setCollapse", 0);
+      app_store.setDevice("desktop");
+      app_store.setCollapse(0);
     }
   };
 

@@ -1,34 +1,25 @@
-/*
- * @Descripttion:
- * @version:
- * @Date: 2021-04-20 11:06:21
- * @LastEditors: huzhushan@126.com
- * @LastEditTime: 2021-11-23 10:56:09
- * @Author: huzhushan@126.com
- * @HomePage: https://huzhushan.gitee.io/vue3-element-admin
- * @Github: https://github.com/huzhushan/vue3-element-admin
- * @Donate: https://huzhushan.gitee.io/vue3-element-admin/donate/
- */
-
 import { useScrollbar } from "./useScrollbar";
 import { watch, computed, ref, nextTick, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
-import { useStore } from "vuex";
+import { tagStore } from "@/stores/modules/tags";
 
-export const isAffix = (tag) => {
-  return !!tag.meta && !!tag.meta.affix;
+const tag_store = tagStore();
+
+export const isAffix = (tag: any) => {
+  return !!tag.meta && tag.meta.affix;
 };
 
 export const useTags = () => {
-  const store = useStore();
   const router = useRouter();
   const route = router.currentRoute;
   const routes = computed(() => router.getRoutes());
-  const tagList = computed(() => store.state.tags.tagList);
+  const tagList = computed(() => tag_store.tagList);
 
   const tagsItem = ref([]);
 
-  const setItemRef = (i, el) => {
+  const setItemRef = (i: any, el: any) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     tagsItem.value[i] = el;
   };
 
@@ -41,8 +32,8 @@ export const useTags = () => {
     }
   );
 
-  const filterAffixTags = (routes) => {
-    return routes.filter((route) => isAffix(route));
+  const filterAffixTags = (routes: any) => {
+    return routes.filter((route: any) => isAffix(route));
   };
 
   const initTags = () => {
@@ -50,42 +41,52 @@ export const useTags = () => {
 
     for (const tag of affixTags) {
       if (tag.name) {
-        store.dispatch("tags/addTag", tag);
+        tag_store.addTag(tag);
       }
     }
 
     // 不在路由中的所有标签，需要删除
     const noUseTags = tagList.value.filter((tag) =>
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       routes.value.every((route) => route.name !== tag.name)
     );
     noUseTags.forEach((tag) => {
-      store.dispatch("tags/delTag", tag);
+      tag_store.delTag(tag);
     });
   };
 
   const addTag = () => {
     const tag = route.value;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     if (!!tag.name && tag.matched[0].components.default.name === "layout") {
-      store.dispatch("tags/addTag", tag);
+      tag_store.addTag(tag);
     }
   };
 
-  const saveActivePosition = (tag) => {
+  const saveActivePosition = (tag: any) => {
     const index = tagList.value.findIndex(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       (item) => item.fullPath === tag.fullPath
     );
 
-    store.dispatch("tags/saveActivePosition", Math.max(0, index));
+    tag_store.saveActivePosition(Math.max(0, index));
   };
 
   const moveToCurrentTag = () => {
     nextTick(() => {
       for (const tag of tagsItem.value) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         if (!!tag && tag.to.path === route.value.path) {
           scrollbar.moveToTarget(tag);
 
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           if (tag.to.fullPath !== route.value.fullPath) {
-            store.dispatch("tags/updateTagList", route.value);
+            tag_store.updateTagList(route.value);
           }
           break;
         }

@@ -1,15 +1,3 @@
-<!--
- * @Descripttion: 
- * @version: 
- * @Date: 2021-04-20 11:06:21
- * @LastEditors: huzhushan@126.com
- * @LastEditTime: 2021-09-18 15:39:30
- * @Author: huzhushan@126.com
- * @HomePage: https://huzhushan.gitee.io/vue3-element-admin
- * @Github: https://github.com/huzhushan/vue3-element-admin
- * @Donate: https://huzhushan.gitee.io/vue3-element-admin/donate/
- -->
-
 <template>
   <el-dropdown trigger="click">
     <div class="userinfo">
@@ -26,7 +14,6 @@
       <el-dropdown-menu>
         <el-dropdown-item>个人中心</el-dropdown-item>
         <el-dropdown-item>修改密码</el-dropdown-item>
-        <lock-modal />
         <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
       </el-dropdown-menu>
     </template>
@@ -34,17 +21,13 @@
 </template>
 <script>
 import { defineComponent } from "vue";
-import { useStore } from "vuex";
+import { appStore } from "../../../stores/modules/app";
 import { useRouter } from "vue-router";
-import { useUserinfo } from "@/components/Avatar/hooks/useUserinfo";
-import LockModal from "./LockModal.vue";
+import { useUserinfo } from "/src/components/Avatar/hooks/useUserinfo";
 
 export default defineComponent({
-  components: {
-    LockModal,
-  },
   setup() {
-    const store = useStore();
+    const app_store = appStore();
     const router = useRouter();
 
     const { userinfo } = useUserinfo();
@@ -52,7 +35,7 @@ export default defineComponent({
     // 退出
     const logout = () => {
       // 清除token
-      store.dispatch("app/clearToken");
+      app_store.clearToken();
       router.push("/login");
     };
 

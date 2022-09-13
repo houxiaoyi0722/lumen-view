@@ -1,15 +1,3 @@
-<!--
- * @Descripttion: 
- * @version: 
- * @Date: 2021-04-20 11:06:21
- * @LastEditors: huzhushan@126.com
- * @LastEditTime: 2021-04-21 12:47:40
- * @Author: huzhushan@126.com
- * @HomePage: https://huzhushan.gitee.io/vue3-element-admin
- * @Github: https://github.com/huzhushan/vue3-element-admin
- * @Donate: https://huzhushan.gitee.io/vue3-element-admin/donate/
- -->
-
 <template>
   <i
     class="fold-btn el-icon-s-fold"
@@ -19,14 +7,15 @@
 </template>
 <script>
 import { defineComponent, computed } from "vue";
-import { useStore } from "vuex";
+import { appStore } from "../../../stores/modules/app";
 
 export default defineComponent({
   setup() {
-    const store = useStore();
-    const collapse = computed(() => !!store.state.app.sidebar.collapse);
+    const app_store = appStore();
+
+    const collapse = computed(() => !!app_store.sidebar.collapse);
     const handleToggleMenu = () => {
-      store.commit("app/setCollapse", +!collapse.value);
+      app_store.setCollapse(+!collapse.value);
     };
     return {
       collapse,

@@ -1,20 +1,8 @@
-<!--
- * @Descripttion: 
- * @version: 
- * @Date: 2021-04-21 09:18:32
- * @LastEditors: huzhushan@126.com
- * @LastEditTime: 2021-07-23 16:49:39
- * @Author: huzhushan@126.com
- * @HomePage: https://huzhushan.gitee.io/vue3-element-admin
- * @Github: https://github.com/huzhushan/vue3-element-admin
- * @Donate: https://huzhushan.gitee.io/vue3-element-admin/donate/
- -->
-
 <template>
   <div class="header" :class="{ 'no-border': isHorizontalMenu }">
     <div class="navigation">
       <logo
-        v-if="isShowLogo"
+        v-if="true"
         class="mobile"
         :class="{ 'show-title': isHorizontalMenu }"
       />
@@ -22,19 +10,17 @@
       <breadcrumbs v-if="isShowBreadcrumbs" />
     </div>
     <div class="action">
-      <error-log />
       <userinfo />
     </div>
   </div>
 </template>
 <script>
 import { defineComponent, computed } from "vue";
-import Logo from "@/layout/components/Sidebar/Logo.vue";
+import Logo from "/src/layout/components/Sidebar/Logo.vue";
 import Hamburger from "./Hamburger.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import Userinfo from "./Userinfo.vue";
-import ErrorLog from "@/components/ErrorLog/index.vue";
-import { useStore } from "vuex";
+import { layout } from "../../../stores/modules/layout";
 
 export default defineComponent({
   components: {
@@ -42,20 +28,13 @@ export default defineComponent({
     Hamburger,
     Breadcrumbs,
     Userinfo,
-    ErrorLog,
   },
   setup() {
-    const store = useStore();
-    const defaultSettings = computed(() => store.state.layoutSettings);
-
-    const device = computed(() => store.state.app.device);
+    const layoutSettings = layout();
+    const defaultSettings = computed(() => layoutSettings.setting);
 
     const isHorizontalMenu = computed(
       () => defaultSettings.value.menus.mode === "horizontal"
-    );
-
-    const isShowLogo = computed(
-      () => isHorizontalMenu.value || device.value === "mobile"
     );
 
     const isShowHamburger = computed(() => !isHorizontalMenu.value);
@@ -65,9 +44,7 @@ export default defineComponent({
     );
 
     return {
-      device,
       isHorizontalMenu,
-      isShowLogo,
       isShowHamburger,
       isShowBreadcrumbs,
     };

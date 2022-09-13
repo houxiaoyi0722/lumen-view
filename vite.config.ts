@@ -1,5 +1,3 @@
-import { fileURLToPath, URL } from "node:url";
-
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
@@ -8,7 +6,9 @@ import viteSvgIcons from "vite-plugin-svg-icons";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx(),
+  plugins: [
+    vue(),
+    vueJsx(),
     viteSvgIcons({
       // 指定需要缓存的图标文件夹
       iconDirs: [path.resolve(__dirname, "src/assets/svg")],
@@ -28,7 +28,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
+      "@": path.resolve(__dirname, "src"),
     },
   },
 });

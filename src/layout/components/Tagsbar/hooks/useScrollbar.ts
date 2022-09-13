@@ -1,27 +1,21 @@
-/*
- * @Descripttion:
- * @version:
- * @Date: 2021-04-20 11:06:21
- * @LastEditors: huzhushan@126.com
- * @LastEditTime: 2021-04-21 12:47:07
- * @Author: huzhushan@126.com
- * @HomePage: https://huzhushan.gitee.io/vue3-element-admin
- * @Github: https://github.com/huzhushan/vue3-element-admin
- * @Donate: https://huzhushan.gitee.io/vue3-element-admin/donate/
- */
-
 import { ref } from "vue";
 
-export const useScrollbar = (tagsItem) => {
+export const useScrollbar = (tagsItem: any) => {
   const scrollContainer = ref(null);
 
-  const handleScroll = (e) => {
+  const handleScroll = (e: any) => {
     const eventDelta = e.wheelDelta || -e.deltaY;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     scrollContainer.value.wrap.scrollLeft -= eventDelta / 4;
   };
 
-  const moveToTarget = (currentTag) => {
+  const moveToTarget = (currentTag: any) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const containerWidth = scrollContainer.value.scrollbar.offsetWidth;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const scrollWrapper = scrollContainer.value.wrap;
     const tagList = tagsItem.value;
 

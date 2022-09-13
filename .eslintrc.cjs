@@ -14,7 +14,8 @@ module.exports = {
   },
   rules: {
     // 关闭名称校验
-    'vue/multi-word-component-names': "off"
+    'vue/multi-word-component-names': "off",
+    "typescript-eslint/ban-ts-comment": "off"
   },
   overrides: [
     {

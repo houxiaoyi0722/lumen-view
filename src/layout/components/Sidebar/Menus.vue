@@ -1,15 +1,3 @@
-<!--
- * @Descripttion: 
- * @version: 
- * @Date: 2021-04-20 11:06:21
- * @LastEditors: huzhushan@126.com
- * @LastEditTime: 2021-07-26 16:02:28
- * @Author: huzhushan@126.com
- * @HomePage: https://huzhushan.gitee.io/vue3-element-admin
- * @Github: https://github.com/huzhushan/vue3-element-admin
- * @Donate: https://huzhushan.gitee.io/vue3-element-admin/donate/
- -->
-
 <template>
   <el-scrollbar class="scroll">
     <el-menu
@@ -30,9 +18,9 @@
 <script>
 import { computed, defineComponent } from "vue";
 import Submenu from "./Submenu.vue";
-import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 import config from "./config/menu.module.scss";
+import { routeStore } from "../../../stores/modules/route";
 
 export default defineComponent({
   components: {
@@ -49,11 +37,10 @@ export default defineComponent({
     },
   },
   setup() {
+    const route_store = routeStore();
     const route = useRoute();
-    const store = useStore();
-
     return {
-      menus: computed(() => store.state.menu.menus),
+      menus: computed(() => route_store.routeList()),
       activePath: computed(() => route.path),
       variables: computed(() => config),
     };

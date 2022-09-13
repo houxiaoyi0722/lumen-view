@@ -9,6 +9,10 @@ export const appStore = defineStore("app", {
       tokenHead: "",
       expiresIn: 0,
     },
+    sidebar: {
+      collapse: {},
+    },
+    device: "",
   }),
   getters: {
     incrName: (state) => state.name,
@@ -24,6 +28,12 @@ export const appStore = defineStore("app", {
     },
     setToken(token: any) {
       this.authorization = token;
+    },
+    setCollapse(collapse: any) {
+      this.sidebar.collapse = collapse;
+    },
+    setDevice(device: string) {
+      this.device = device;
     },
   },
 });

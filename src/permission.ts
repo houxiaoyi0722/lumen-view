@@ -1,21 +1,22 @@
 import { ElLoading } from "element-plus";
 import router from "@/router";
-import { app_store, account_store, route_store } from "@/stores";
-
-const getPageTitle = (title: any) => {
-  const appTitle = app_store.name;
-  if (title) {
-    return `${title} - ${appTitle}`;
-  }
-  return appTitle;
-};
+import { accountStore } from "@/stores/modules/account";
+import { appStore } from "@/stores/modules/app";
+import { routeStore } from "@/stores/modules/route";
 
 // 白名单，里面是路由对象的name
 const WhiteList = ["login"];
 
 // vue-router4的路由守卫不再是通过next放行，而是通过return返回true或false或者一个路由地址
 router.beforeEach(async (to) => {
-  document.title = getPageTitle(!!to.meta && to.meta.title);
+  const account_store = accountStore();
+  const app_store = appStore();
+  const route_store = routeStore();
+
+  const appTitle = app_store.name;
+  if (!!to.meta && to.meta.title) {
+    document.title = `${to.meta.title} - ${appTitle}`;
+  }
 
   if (WhiteList.includes(<string>to.name)) {
     return true;
