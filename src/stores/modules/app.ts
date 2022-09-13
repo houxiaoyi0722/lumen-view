@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { setItem } from "@/utils/storage";
 
 export const appStore = defineStore("app", {
   state: () => ({
@@ -27,6 +28,7 @@ export const appStore = defineStore("app", {
       };
     },
     setToken(token: any) {
+      setItem("TOKEN",token);
       this.authorization = token;
     },
     setCollapse(collapse: any) {

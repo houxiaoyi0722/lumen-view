@@ -6,9 +6,12 @@ import router from "./router";
 
 import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
+import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 
 // 权限控制
 import "./permission";
+
+import "@/styles/index.scss"; // global css
 
 import VXETable from "vxe-table";
 import "vxe-table/lib/style.css";
@@ -19,6 +22,9 @@ import "xe-utils";
 // app.config.globalProperties.$XSaveFile = VXETable.saveFile
 // app.config.globalProperties.$XReadFile = VXETable.readFile
 const app = createApp(App);
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component);
+}
 
 // store
 app.use(createPinia());

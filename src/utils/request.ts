@@ -2,8 +2,7 @@ import axios from "axios";
 import { ElMessage } from "element-plus";
 import { appStore } from "@/stores/modules/app";
 import router from "@/router";
-import {validNull} from "@/utils/validate";
-
+import { validNull } from "@/utils/validate";
 
 const app_store = appStore();
 
@@ -17,10 +16,12 @@ const request = axios.create({
 request.interceptors.request.use(
   (config) => {
     const authorization = app_store.authorization;
+
     if (!validNull(authorization.token)) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      config.headers["Authorization"] = `Bearer ${authorization.token}`;
+      config.headers["Authorization"] =
+        `Bearer ` + JSON.stringify(authorization);
     }
 
     return config;

@@ -2,20 +2,18 @@
   <div class="login">
     <el-form class="form" :model="model" :rules="rules" ref="loginForm">
       <h1 class="title">Vue3 Element Admin</h1>
-      <el-form-item prop="userName">
+      <el-form-item prop="username">
         <el-input
-          class="text"
-          v-model="model.userName"
-          prefix-icon="el-icon-user-solid"
+          v-model="model.username"
+          prefix-icon="UserFilled"
           clearable
           placeholder="用户名"
         />
       </el-form-item>
       <el-form-item prop="password">
         <el-input
-          class="text"
           v-model="model.password"
-          prefix-icon="el-icon-lock"
+          prefix-icon="Lock"
           show-password
           clearable
           placeholder="密码"
@@ -57,11 +55,11 @@ export default defineComponent({
     const route = useRoute();
     const state = reactive({
       model: {
-        userName: "",
+        username: "",
         password: "",
       },
       rules: {
-        userName: [
+        username: [
           { required: true, message: "请输入用户名", trigger: "blur" },
         ],
         password: [
@@ -84,28 +82,31 @@ export default defineComponent({
         state.loginForm.validate(async (valid) => {
           if (valid) {
             state.loading = true;
-            const { code, data, message } = await Login(state.model);
-            debugger
-            if (+code === 200) {
-              ctx.$message.success({
-                message: "登录成功",
-                duration: 1000,
-              });
+            const { expiresIn, refreshToken, token, tokenHead } = await Login(
+              state.model
+            );
 
-              const targetPath = decodeURIComponent(route.query.redirect);
-              if (targetPath.startsWith("http")) {
-                // 如果是一个url地址
-                window.location.href = targetPath;
-              } else if (targetPath.startsWith("/")) {
-                // 如果是内部路由地址
-                await router.push(targetPath);
-              } else {
-                await router.push("/");
-              }
-              app_store.setToken(data);
+            const data = {
+              refreshToken: refreshToken,
+              token: token,
+              tokenHead: tokenHead,
+            };
+
+            ctx.$message.success({
+              message: "登录成功",
+              duration: 1000,
+            });
+            const targetPath = decodeURIComponent(route.query.redirect);
+            if (targetPath.startsWith("http")) {
+              // 如果是一个url地址
+              window.location.href = targetPath;
+            } else if (targetPath.startsWith("/")) {
+              // 如果是内部路由地址
+              await router.push(targetPath);
             } else {
-              ctx.$message.error(message);
+              await router.push("/");
             }
+            app_store.setToken(data);
             state.loading = false;
           }
         });
@@ -138,19 +139,6 @@ export default defineComponent({
       text-align: center;
       font-size: 24px;
       margin: 0 0 24px;
-    }
-    .text {
-      font-size: 16px;
-      :deep(.el-input__inner) {
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        background: rgba(0, 0, 0, 0.1);
-        color: #fff;
-        height: 48px;
-        line-height: 48px;
-        &::placeholder {
-          color: rgba(255, 255, 255, 0.2);
-        }
-      }
     }
     .btn {
       width: 100%;

@@ -26,6 +26,14 @@ export default defineConfig({
       },
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // 全局变量
+        additionalData: '@import "./src/assets/style/global-variables.scss";',
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
