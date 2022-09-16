@@ -1,19 +1,21 @@
 import { defineStore } from "pinia";
+import { getUserinfo } from "@/api/login";
 
 export const accountStore = defineStore({
   id: "account",
   state: () => ({
-    userinfo: {},
+    userinfo: undefined,
   }),
   getters: {},
   actions: {
     // 获取用户信息
     async loadUserinfo() {
-      /*            const { code, data } = await GetUserinfo()
-            if (+code === 200) {
-                this.userinfo = data
-                return Promise.resolve(data)
-            }*/
+      const { data } = await getUserinfo();
+      this.userinfo = data;
+      return Promise.resolve(data);
+    },
+    clearUserinfo() {
+      this.userinfo = undefined;
     },
   },
 });

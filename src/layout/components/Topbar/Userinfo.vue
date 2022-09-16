@@ -24,11 +24,13 @@ import { defineComponent } from "vue";
 import { appStore } from "../../../stores/modules/app";
 import { useRouter } from "vue-router";
 import { useUserinfo } from "/src/components/Avatar/hooks/useUserinfo";
+import {accountStore} from "@/stores/modules/account";
 
 export default defineComponent({
   setup() {
     const app_store = appStore();
     const router = useRouter();
+    const account_store = accountStore();
 
     const { userinfo } = useUserinfo();
 
@@ -36,6 +38,7 @@ export default defineComponent({
     const logout = () => {
       // 清除token
       app_store.clearToken();
+      account_store.clearUserinfo();
       router.push("/login");
     };
 

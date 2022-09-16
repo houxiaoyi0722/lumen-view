@@ -82,15 +82,17 @@ export default defineComponent({
         state.loginForm.validate(async (valid) => {
           if (valid) {
             state.loading = true;
-            const { expiresIn, refreshToken, token, tokenHead } = await Login(
+            const { refreshToken, token, tokenHead } = await Login(
               state.model
-            );
-
+            ).catch(() => {
+              state.loading = false;
+            });
             const data = {
               refreshToken: refreshToken,
               token: token,
               tokenHead: tokenHead,
             };
+            app_store.setToken(data);
 
             ctx.$message.success({
               message: "登录成功",
@@ -106,7 +108,6 @@ export default defineComponent({
             } else {
               await router.push("/");
             }
-            app_store.setToken(data);
             state.loading = false;
           }
         });

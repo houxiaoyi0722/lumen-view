@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { setItem } from "@/utils/storage";
+import { removeItem, setItem } from "@/utils/storage";
 
 export const appStore = defineStore("app", {
   state: () => ({
@@ -8,7 +8,6 @@ export const appStore = defineStore("app", {
       token: "",
       refreshToken: "",
       tokenHead: "",
-      expiresIn: 0,
     },
     sidebar: {
       collapse: {},
@@ -20,15 +19,12 @@ export const appStore = defineStore("app", {
   },
   actions: {
     clearToken() {
-      this.authorization = {
-        token: "",
-        refreshToken: "",
-        tokenHead: "",
-        expiresIn: 0,
-      };
+      removeItem("TOKEN");
+      // @ts-ignore
+      this.authorization = {};
     },
     setToken(token: any) {
-      setItem("TOKEN",token);
+      setItem("TOKEN", token);
       this.authorization = token;
     },
     setCollapse(collapse: any) {

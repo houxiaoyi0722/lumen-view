@@ -3,8 +3,9 @@ import { ElMessage } from "element-plus";
 import { appStore } from "@/stores/modules/app";
 import router from "@/router";
 import { validNull } from "@/utils/validate";
+import {getItem} from "@/utils/storage";
 
-const app_store = appStore();
+
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_URL,
@@ -15,9 +16,8 @@ const request = axios.create({
 // 拦截请求
 request.interceptors.request.use(
   (config) => {
-    const authorization = app_store.authorization;
-
-    if (!validNull(authorization.token)) {
+    const authorization = getItem("TOKEN");
+    if (!validNull(authorization)) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       config.headers["Authorization"] =
@@ -44,28 +44,22 @@ request.interceptors.response.use(
     // 响应拦截器中的 error 就是那个响应的错误对象
     if (error.response && error.response.status === 401) {
       // 校验是否有 refresh_token
+      const app_store = appStore();
       const authorization = app_store.authorization;
       if (!authorization || !authorization.refreshToken) {
+        ElMessage.error(error.response.data.message);
         if (router.currentRoute.value.name === "login") {
           return Promise.reject(error);
+        } else {
+          const redirect = encodeURIComponent(window.location.href);
+          await router.push(`/login?redirect=${redirect}`);
+          // 清除token
+          app_store.clearToken();
         }
-        const redirect = encodeURIComponent(window.location.href);
-        await router.push(`/login?redirect=${redirect}`);
-        // 清除token
-        app_store.clearToken();
-        setTimeout(() => {
-          ElMessage.closeAll();
-          try {
-            ElMessage.error(error.response.data.msg);
-          } catch (err) {
-            ElMessage.error(error.message);
-          }
-        });
-        // 代码不要往后执行了
         return Promise.reject(error);
       }
       // 如果有refresh_token，则请求获取新的 token
-      try {
+/*      try {
         const res = await axios({
           method: "PUT",
           url: "/api/authorizations",
@@ -93,13 +87,12 @@ request.interceptors.response.use(
         // 清除token
         app_store.clearToken();
         return Promise.reject(error);
-      }
+      }*/
     }
 
     // console.dir(error) // 可在此进行错误上报
-    ElMessage.closeAll();
     try {
-      ElMessage.error(error.response.data.msg);
+      ElMessage.error(error.response.data.message);
     } catch (err) {
       ElMessage.error(error.message);
     }

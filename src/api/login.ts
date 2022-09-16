@@ -10,9 +10,9 @@ export const Login = (data: any) => {
 };
 
 // 获取登录用户信息
-export const GetUserinfo = () => {
+export const getUserinfo = () => {
   return request({
-    url: "/userinfo",
+    url: "/lumen/user/userinfo",
     method: "get",
   });
 };

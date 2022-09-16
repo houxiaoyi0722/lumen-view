@@ -1,10 +1,9 @@
 import request from "@/utils/request";
 
 // 获取菜单
-export const GetMenus = (params: any) => {
+export const getRouters = () => {
   return request({
-    url: "/api/menus",
+    url: "/lumen/router/routerTree",
     method: "get",
-    params,
   });
 };
