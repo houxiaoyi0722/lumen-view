@@ -1,6 +1,6 @@
 <template>
   <div class="left" :class="{ collapse: collapse, mobile: false }">
-    <logo />
+<!--    <logo />-->
     <menus :collapse="collapse" />
   </div>
   <div class="mask" @click="closeSidebar"></div>
@@ -14,7 +14,6 @@ import { appStore } from "../../../stores/modules/app";
 
 export default defineComponent({
   components: {
-    Logo,
     Menus,
   },
   setup() {

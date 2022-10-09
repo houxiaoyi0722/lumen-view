@@ -3,6 +3,7 @@ import router from "@/router";
 import { accountStore } from "@/stores/modules/account";
 import { appStore } from "@/stores/modules/app";
 import { routeStore } from "@/stores/modules/route";
+import { has } from "xe-utils";
 
 // 白名单，里面是路由对象的name
 const WhiteList = ["login"];
@@ -34,11 +35,12 @@ router.beforeEach(async (to) => {
     if (to.path === "/login") {
       // if is logged in, redirect to the home page
       return {
-        name: "Dashboard",
+        name: "home",
       };
     } else {
       // 获取用户角色信息，根据角色判断权限
       const hasUserinfo = account_store.userinfo;
+      console.log(hasUserinfo);
       if (!hasUserinfo) {
         const loadingInstance = ElLoading.service({
           lock: true,
@@ -50,13 +52,16 @@ router.beforeEach(async (to) => {
           // 获取用户信息
           await account_store.loadUserinfo();
           // 生成菜单（如果你的项目有动态菜单，在此处会添加动态路由）
-          await route_store.generateRoutes();
+          const formatRoute: any = await route_store.generateRoutes();
+
+          formatRoute.forEach((route: any) => router.addRoute(route));
 
           loadingInstance.close();
         } catch (err) {
           loadingInstance.close();
           return false;
         }
+        console.log(router.getRoutes());
         return to.fullPath; // 添加动态路由后，必须加这一句触发重定向，否则会404
       } else {
         return true;

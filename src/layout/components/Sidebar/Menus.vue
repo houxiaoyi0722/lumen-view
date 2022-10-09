@@ -11,7 +11,12 @@
       :text-color="variables.menuTextColor"
       :active-text-color="variables.menuActiveTextColor"
     >
-      <submenu v-for="menu in menus" :key="menu.url" :menu="menu" />
+      <submenu
+        v-for="menu in menus"
+        :key="menu.path"
+        :menu="menu"
+        :base-path="menu.path"
+      />
     </el-menu>
   </el-scrollbar>
 </template>
@@ -40,7 +45,7 @@ export default defineComponent({
     const route_store = routeStore();
     const route = useRoute();
     return {
-      menus: computed(() => route_store.routeList()),
+      menus: computed(() => route_store.menus),
       activePath: computed(() => route.path),
       variables: computed(() => config),
     };

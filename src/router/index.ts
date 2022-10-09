@@ -7,20 +7,12 @@ export const constantRoutes = [
   {
     path: "/",
     redirect: "/home",
-  },
-  {
-    path: "/redirect/:path(.*)",
-    component: Layout,
-    children: [
-      {
-        path: "",
-        component: Redirect,
-      },
-    ],
+    hidden: true,
   },
   {
     path: "/login",
     name: "login",
+    hidden: true,
     component: () => import("@/views/login/index.vue"),
   },
   {
@@ -43,10 +35,21 @@ export const constantRoutes = [
       },
     ],
   },
+  {
+    path: "/404",
+    component: () => import("@/views/error-page/404.vue"),
+    hidden: true,
+  },
+  {
+    path: "/401",
+    component: () => import("@/views/error-page/401.vue"),
+    hidden: true,
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  // @ts-ignore
   routes: constantRoutes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {

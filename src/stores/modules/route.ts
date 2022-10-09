@@ -11,24 +11,28 @@ export const routeStore = defineStore({
   state: () => ({
     routes: constantRoutes,
   }),
-  getters: {},
+  getters: {
+    menus: (state) => state.routes.filter((item:any) => !item.hidden),
+  },
   actions: {
-    async generateRoutes() {
-      new Promise((resolve, reject) => {
+    generateRoutes() {
+      return new Promise((resolve, reject) => {
         getRouters()
           .then((response) => {
             const { data } = response;
-            // const formatRoute = formatRoutes(data);
-            const formatRoute = data;
-
+            const formatRoute = formatRoutes(data);
+            console.log(formatRoute);
             formatRoute.push({
-              path: "/:pathMatch(.*)",
+              path: "/:pathMatch(.*)*",
               redirect: "/404",
               hidden: true,
+              meta: {
+                title: "",
+                icon: "",
+              },
             });
             filterAsyncRouter(formatRoute);
             this.routes = this.routes.concat(formatRoute);
-            formatRoute.forEach((route: any) => router.addRoute(route));
             resolve(formatRoute);
           })
           .catch((error) => {
@@ -36,40 +40,17 @@ export const routeStore = defineStore({
             reject(error);
           });
       });
-
-      // const menus = router;
-
-      // 方式一：只有固定菜单
-      // const menus = getFilterMenus(fixedRoutes);
-      // commit("SET_MENUS", menus);
-      // // 方式二：有动态菜单
-      // // 从后台获取菜单
-      // const { code, data } = await GetMenus({ role: userinfo.role })
-      //
-      // if (+code === 200) {
-      //     // 过滤出需要添加的动态路由
-      //     const filterRoutes = getFilterRoutes(asyncRoutes, data)
-      //     filterRoutes.forEach(route => router.addRoute(route))
-      //
-      //     // 生成菜单
-      //     const menus = getFilterMenus([...fixedRoutes, ...filterRoutes])
-      //     this.menus =  menus
-      // }
     },
     removeRoute() {
       this.routes = [];
-    },
-    routeList() {
-      this.routes;
     },
   },
 });
 
 export function formatRoutes(aMenu: any) {
   const aRouter: Array<any> = [];
-
   aMenu.forEach((oMenu: any) => {
-    const { path, component, name, mate, hidden, chileRouter } = oMenu;
+    const { path, component, name, mate, hidden, children } = oMenu;
     if (!validNull(component)) {
       const oRouter = {
         path: path,
@@ -77,7 +58,7 @@ export function formatRoutes(aMenu: any) {
         hidden: hidden,
         meta: mate,
         name: name,
-        children: validNull(chileRouter) ? [] : formatRoutes(chileRouter),
+        children: validNull(children) ? undefined : formatRoutes(children),
       };
       aRouter.push(oRouter);
     }
@@ -93,7 +74,7 @@ function filterAsyncRouter(asyncRouterMap: any) {
         // Layout组件特殊处理
         route.component = Layout;
       } else {
-        route.component = modules[`@/views/${route.component}.vue`];
+        route.component = modules[`/src/views/${route.component}.vue`];
       }
     }
     if (route.children && route.children.length) {

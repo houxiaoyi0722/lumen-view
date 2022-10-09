@@ -1,11 +1,6 @@
 <template>
   <div class="header" :class="{ 'no-border': isHorizontalMenu }">
     <div class="navigation">
-      <logo
-        v-if="true"
-        class="mobile"
-        :class="{ 'show-title': isHorizontalMenu }"
-      />
       <hamburger v-if="isShowHamburger" />
       <breadcrumbs v-if="isShowBreadcrumbs" />
     </div>
@@ -24,7 +19,6 @@ import { layout } from "../../../stores/modules/layout";
 
 export default defineComponent({
   components: {
-    Logo,
     Hamburger,
     Breadcrumbs,
     Userinfo,

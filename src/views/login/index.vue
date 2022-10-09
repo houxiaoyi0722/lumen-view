@@ -22,6 +22,7 @@
       <el-form-item>
         <el-button
           :loading="loading"
+          native-type="submit"
           type="primary"
           class="btn"
           @click="submit"
