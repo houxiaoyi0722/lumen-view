@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
-import { removeItem, setItem } from "@/utils/storage";
+import {getItem, removeItem, setItem} from "@/utils/storage";
+import {validNull} from "@/utils/validate";
 
 export const appStore = defineStore("app", {
   state: () => ({
@@ -15,7 +16,12 @@ export const appStore = defineStore("app", {
     device: "",
   }),
   getters: {
-    incrName: (state) => state.name,
+    getAuthorization: (state) => {
+      if (validNull(state.authorization.token)) {
+        state.authorization = getItem("TOKEN");
+      }
+      return state.authorization;
+    },
   },
   actions: {
     clearToken() {

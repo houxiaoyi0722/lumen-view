@@ -21,7 +21,6 @@ export const routeStore = defineStore({
           .then((response) => {
             const { data } = response;
             const formatRoute = formatRoutes(data);
-            console.log(formatRoute);
             formatRoute.push({
               path: "/:pathMatch(.*)*",
               redirect: "/404",

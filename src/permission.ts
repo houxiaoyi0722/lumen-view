@@ -40,7 +40,6 @@ router.beforeEach(async (to) => {
     } else {
       // 获取用户角色信息，根据角色判断权限
       const hasUserinfo = account_store.userinfo;
-      console.log(hasUserinfo);
       if (!hasUserinfo) {
         const loadingInstance = ElLoading.service({
           lock: true,
@@ -61,7 +60,6 @@ router.beforeEach(async (to) => {
           loadingInstance.close();
           return false;
         }
-        console.log(router.getRoutes());
         return to.fullPath; // 添加动态路由后，必须加这一句触发重定向，否则会404
       } else {
         return true;
