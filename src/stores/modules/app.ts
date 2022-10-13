@@ -1,6 +1,9 @@
 import { defineStore } from "pinia";
-import {getItem, removeItem, setItem} from "@/utils/storage";
-import {validNull} from "@/utils/validate";
+import { getItem, removeItem, setItem } from "@/utils/storage";
+import { validNull } from "@/utils/validate";
+
+const COLLAPSE = "VEA-COLLAPSE";
+const TOKEN = "TOKEN";
 
 export const appStore = defineStore("app", {
   state: () => ({
@@ -11,30 +14,31 @@ export const appStore = defineStore("app", {
       tokenHead: "",
     },
     sidebar: {
-      collapse: {},
+      collapse: getItem(COLLAPSE),
     },
     device: "",
   }),
   getters: {
     getAuthorization: (state) => {
       if (validNull(state.authorization.token)) {
-        state.authorization = getItem("TOKEN");
+        state.authorization = getItem(TOKEN);
       }
       return state.authorization;
     },
   },
   actions: {
     clearToken() {
-      removeItem("TOKEN");
+      removeItem(TOKEN);
       // @ts-ignore
       this.authorization = {};
     },
     setToken(token: any) {
-      setItem("TOKEN", token);
+      setItem(TOKEN, token);
       this.authorization = token;
     },
     setCollapse(collapse: any) {
       this.sidebar.collapse = collapse;
+      setItem(COLLAPSE, collapse);
     },
     setDevice(device: string) {
       this.device = device;

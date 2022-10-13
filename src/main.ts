@@ -11,6 +11,9 @@ import ElementPlus from "element-plus";
 import "element-plus/dist/index.css";
 import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 
+// 引入svg图标注册脚本
+import "vite-plugin-svg-icons/register";
+
 // 权限控制
 import "./permission";
 

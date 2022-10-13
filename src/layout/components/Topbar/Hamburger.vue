@@ -1,9 +1,11 @@
 <template>
   <i
-    class="fold-btn el-icon-s-fold"
+    class="fold-btn"
     :class="{ collapse: collapse }"
     @click="handleToggleMenu"
-  ></i>
+  >
+    <el-icon><Fold /></el-icon>
+  </i>
 </template>
 <script>
 import { defineComponent, computed } from "vue";
