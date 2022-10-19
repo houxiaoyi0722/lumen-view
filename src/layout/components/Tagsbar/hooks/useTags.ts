@@ -18,7 +18,6 @@ export const useTags = () => {
   const tagsItem = ref([]);
 
   const setItemRef = (i: any, el: any) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     tagsItem.value[i] = el;
   };
@@ -46,19 +45,17 @@ export const useTags = () => {
     }
 
     // 不在路由中的所有标签，需要删除
-    const noUseTags = tagList.value.filter((tag) =>
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    const noUseTags = tagList.value.filter((tag:any) =>
       // @ts-ignore
       routes.value.every((route) => route.name !== tag.name)
     );
-    noUseTags.forEach((tag) => {
+    noUseTags.forEach((tag:any) => {
       tag_store.delTag(tag);
     });
   };
 
   const addTag = () => {
     const tag = route.value;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     if (!!tag.name && tag.matched[0].components.default.name === "layout") {
       tag_store.addTag(tag);
@@ -78,12 +75,11 @@ export const useTags = () => {
   const moveToCurrentTag = () => {
     nextTick(() => {
       for (const tag of tagsItem.value) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
         // @ts-ignore
         if (!!tag && tag.to.path === route.value.path) {
           scrollbar.moveToTarget(tag);
 
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           if (tag.to.fullPath !== route.value.fullPath) {
             tag_store.updateTagList(route.value);

@@ -24,9 +24,11 @@
           <span class="title">{{ tag.title }}</span>
           <span
             v-if="!isAffix(tag)"
-            class="el-icon-close"
+            class="close-icon-left-margin"
             @click.prevent.stop="closeTag(tag)"
-          />
+          >
+            <el-icon><Close /></el-icon>
+          </span>
         </div>
       </router-link>
     </el-scrollbar>
@@ -49,7 +51,7 @@
 import { defineComponent, computed, getCurrentInstance } from "vue";
 import { useTags } from "./hooks/useTags";
 import { useContextMenu } from "./hooks/useContextMenu";
-import { layout } from "../../../stores/modules/layout";
+import { layout } from "@/stores/modules/layout";
 
 export default defineComponent({
   name: "Tagsbar",
@@ -107,7 +109,7 @@ export default defineComponent({
     border-right: 1px solid #e6e6e6;
     color: #5c5c5c;
     background: #fff;
-    padding: 0 8px;
+    padding: 0px 4px 0px 8px;
     font-size: 12px;
     margin-left: -1px;
     vertical-align: bottom;
@@ -129,26 +131,6 @@ export default defineComponent({
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-    }
-    .el-icon-close {
-      color: #5c5c5c;
-      margin-left: 8px;
-      width: 16px;
-      height: 16px;
-      vertical-align: 2px;
-      border-radius: 50%;
-      text-align: center;
-      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-      transform-origin: 100% 50%;
-      &:before {
-        transform: scale(0.8);
-        display: inline-block;
-        vertical-align: -2px;
-      }
-      &:hover {
-        background-color: #333;
-        color: #fff;
-      }
     }
   }
 }
@@ -172,6 +154,26 @@ export default defineComponent({
     &:hover {
       background: #eee;
     }
+  }
+}
+.close-icon-left-margin {
+  color: #5c5c5c;
+  margin-left: 8px;
+  width: 16px;
+  height: 16px;
+  vertical-align: 2px;
+  border-radius: 50%;
+  text-align: center;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transform-origin: 100% 50%;
+  &:before {
+    transform: scale(0.8);
+    display: inline-block;
+    vertical-align: -2px;
+  }
+  &:hover {
+    background-color: #333;
+    color: #fff;
   }
 }
 </style>
