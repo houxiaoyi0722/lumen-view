@@ -1,20 +1,15 @@
 <template>
-  <el-icon><Grid /></el-icon>
+  <el-icon>
+    <component :is="icon"></component>
+  </el-icon>
   <span>{{ title }}</span>
 </template>
 
 <script>
-import { computed, defineComponent } from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   props: ["title", "icon"],
-  setup(icon) {
-    const isElementIcon = computed(() => icon && icon.startsWith("el-icon"));
-
-    return {
-      isElementIcon,
-    };
-  },
 });
 </script>
 <style lang="scss" scoped>

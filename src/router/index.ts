@@ -21,7 +21,7 @@ export const constantRoutes = [
     name: "Dashboard",
     meta: {
       title: "工作台",
-      icon: "home",
+      icon: "HomeFilled",
     },
     children: [
       {
@@ -31,6 +31,7 @@ export const constantRoutes = [
         meta: {
           title: "首页",
           affix: true,
+          icon: "HomeFilled",
         },
       },
     ],
