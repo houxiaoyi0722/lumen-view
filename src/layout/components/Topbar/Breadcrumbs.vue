@@ -80,9 +80,6 @@ export default defineComponent({
   ::v-deep(.is-link) {
     font-weight: normal;
   }
-  ::v-deep(.el-breadcrumb__item) {
-    float: none;
-  }
   .no_link {
     ::v-deep(.el-breadcrumb__inner) {
       color: #97a8be !important;

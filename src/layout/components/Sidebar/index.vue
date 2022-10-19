@@ -1,6 +1,9 @@
 <template>
-  <div class="left" :class="{ collapse: collapse, mobile: false }">
-<!--    <logo />-->
+  <div
+    class="left"
+    :class="{ collapse: collapse, mobile: device === 'mobile' }"
+  >
+    <!--    <logo />-->
     <menus :collapse="collapse" />
   </div>
   <div class="mask" @click="closeSidebar"></div>
@@ -10,7 +13,7 @@
 import { defineComponent, computed } from "vue";
 import Logo from "./Logo.vue";
 import Menus from "./Menus.vue";
-import { appStore } from "../../../stores/modules/app";
+import { appStore } from "@/stores/modules/app";
 
 export default defineComponent({
   components: {
@@ -19,6 +22,7 @@ export default defineComponent({
   setup() {
     const app_store = appStore();
     const collapse = computed(() => !!app_store.sidebar.collapse);
+    const device = computed(() => app_store.device);
 
     const closeSidebar = () => {
       app_store.setCollapse(1);
@@ -26,6 +30,7 @@ export default defineComponent({
 
     return {
       collapse,
+      device,
       closeSidebar,
     };
   },
