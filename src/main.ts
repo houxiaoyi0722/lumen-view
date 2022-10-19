@@ -22,6 +22,8 @@ import "@/styles/index.scss"; // global css
 import VXETable from "vxe-table";
 import "vxe-table/lib/style.css";
 import "xe-utils";
+import dayjs from "@/utils/dayjs/index";
+
 // 给 vue 实例挂载内部对象，例如：
 // app.config.globalProperties.$XModal = VXETable.modal
 // app.config.globalProperties.$XPrint = VXETable.print
@@ -34,6 +36,7 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 // store
 app.use(createPinia());
+app.use(dayjs);
 app.use(router);
 app.use(ElementPlus);
 app.use(VXETable);

@@ -10,12 +10,11 @@
   </div>
 </template>
 <script>
-import { defineComponent, computed } from "vue";
-import Logo from "/src/layout/components/Sidebar/Logo.vue";
+import { computed, defineComponent } from "vue";
 import Hamburger from "./Hamburger.vue";
 import Breadcrumbs from "./Breadcrumbs.vue";
 import Userinfo from "./Userinfo.vue";
-import { layout } from "../../../stores/modules/layout";
+import { layout } from "@/stores/modules/layout";
 
 export default defineComponent({
   components: {

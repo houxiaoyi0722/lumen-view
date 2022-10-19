@@ -25,7 +25,7 @@ import { computed, defineComponent } from "vue";
 import Submenu from "./Submenu.vue";
 import { useRoute } from "vue-router";
 import config from "./config/menu.module.scss";
-import { routeStore } from "../../../stores/modules/route";
+import { routeStore } from "@/stores/modules/route";
 
 export default defineComponent({
   components: {
