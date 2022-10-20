@@ -41,7 +41,7 @@ export const routeStore = defineStore({
       });
     },
     removeRoute() {
-      this.routes = [];
+      this.routes = constantRoutes;
     },
   },
 });

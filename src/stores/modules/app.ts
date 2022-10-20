@@ -1,6 +1,9 @@
 import { defineStore } from "pinia";
 import { getItem, removeItem, setItem } from "@/utils/storage";
 import { validNull } from "@/utils/validate";
+import {accountStore} from "@/stores/modules/account";
+import {tagStore} from "@/stores/modules/tags";
+import {routeStore} from "@/stores/modules/route";
 
 const COLLAPSE = "VEA-COLLAPSE";
 const TOKEN = "TOKEN";
@@ -31,6 +34,12 @@ export const appStore = defineStore("app", {
       removeItem(TOKEN);
       // @ts-ignore
       this.authorization = {};
+      const account_store = accountStore();
+      const tag_store = tagStore();
+      const route_store = routeStore();
+      account_store.clearUserinfo();
+      tag_store.clearAllTags();
+      route_store.removeRoute();
     },
     setToken(token: any) {
       setItem(TOKEN, token);
