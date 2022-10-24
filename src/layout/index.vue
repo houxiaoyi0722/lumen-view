@@ -26,7 +26,7 @@ import Tagsbar from "./components/Tagsbar/index.vue";
 import Breadcrumbs from "./components/Topbar/Breadcrumbs.vue";
 import Contents from "./components/Contents/index.vue";
 import { useResizeHandler } from "./hooks/useResizeHandler";
-import { layout } from "../stores/modules/layout";
+import { layout } from "@/stores/modules/layout";
 
 export default defineComponent({
   name: "layout",

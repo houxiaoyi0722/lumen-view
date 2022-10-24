@@ -9,7 +9,7 @@
 </template>
 <script>
 import { defineComponent, computed } from "vue";
-import { appStore } from "../../../stores/modules/app";
+import { appStore } from "@/stores/modules/app";
 
 export default defineComponent({
   setup() {

@@ -50,7 +50,7 @@ request.interceptors.response.use(
         ElMessage.error(error.response.data.message);
 
         // 清除token
-        await app_store.clearToken();
+        await account_store.clearToken();
         await account_store.clearUserinfo();
 
         const redirect = encodeURIComponent(window.location.href);
@@ -70,8 +70,8 @@ request.interceptors.response.use(
             },
           });
           // 如果获取成功，则把新的 token 更新到容器中
-          const auth = app_store.getAuthorization;
-          app_store.setToken({
+          const auth = account_store.getAuthorization;
+          account_store.setToken({
             token: res.data.data,
             refreshToken: auth.refreshToken,
             tokenHead: auth.tokenHead,
@@ -85,7 +85,7 @@ request.interceptors.response.use(
           ElMessage.error(error.response.data.message);
 
           // 清除token
-          await app_store.clearToken();
+          await account_store.clearToken();
           await account_store.clearUserinfo();
 
           const redirect = encodeURIComponent(window.location.href);

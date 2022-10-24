@@ -28,7 +28,6 @@ import {accountStore} from "@/stores/modules/account";
 
 export default defineComponent({
   setup() {
-    const app_store = appStore();
     const router = useRouter();
     const account_store = accountStore();
 
@@ -37,7 +36,7 @@ export default defineComponent({
     // 退出
     const logout = () => {
       // 清除token
-      app_store.clearToken();
+      account_store.clearToken();
       account_store.clearUserinfo();
       router.push("/login");
     };
