@@ -1,9 +1,6 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 
-//告诉前页面内的事件监听器内部是否会调用preventDefault函数来阻止事件的默认行为，以便浏览器根据这个信息更好地做出决策来优化页面性能
-import "default-passive-events";
-
 import App from "./App.vue";
 import router from "./router";
 

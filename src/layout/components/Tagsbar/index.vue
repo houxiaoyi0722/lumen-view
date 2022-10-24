@@ -4,7 +4,7 @@
       ref="scrollContainer"
       :vertical="false"
       class="scroll-container"
-      @wheel.prevent="onScroll"
+      @wheel.passive="onScroll"
     >
       <router-link
         v-for="(tag, i) in tagList"
@@ -48,17 +48,13 @@
 </template>
 
 <script>
-import { defineComponent, computed, getCurrentInstance } from "vue";
+import { defineComponent, computed, getCurrentInstance, onMounted } from "vue";
 import { useTags } from "./hooks/useTags";
 import { useContextMenu } from "./hooks/useContextMenu";
 import { layout } from "@/stores/modules/layout";
 
 export default defineComponent({
   name: "Tagsbar",
-  mounted() {
-    const instance = getCurrentInstance();
-    instance.appContext.config.globalProperties.$tagsbar = this;
-  },
   setup() {
     const layoutSettings = layout();
 
@@ -72,6 +68,11 @@ export default defineComponent({
       tags.handleScroll(e);
       contextMenu.closeMenu.value();
     };
+
+    onMounted(() => {
+      const instance = getCurrentInstance();
+      instance.appContext.config.globalProperties.$tagsbar = this;
+    });
 
     return {
       isTagsbarShow,

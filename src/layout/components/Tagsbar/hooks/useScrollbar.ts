@@ -6,14 +6,14 @@ export const useScrollbar = (tagsItem: any) => {
   const handleScroll = (e: any) => {
     const eventDelta = e.wheelDelta || -e.deltaY;
     // @ts-ignore
-    scrollContainer.value.wrap.scrollLeft -= eventDelta / 4;
+    scrollContainer.value.wrap$.scrollLeft -= eventDelta / 4;
   };
 
   const moveToTarget = (currentTag: any) => {
     // @ts-ignore
-    const containerWidth = scrollContainer.value.scrollbar.offsetWidth;
+    const containerWidth = scrollContainer.value.wrap$.offsetWidth;
     // @ts-ignore
-    const scrollWrapper = scrollContainer.value.wrap;
+    const scrollWrapper = scrollContainer.value.wrap$;
     const tagList = tagsItem.value;
 
     let firstTag = null;
