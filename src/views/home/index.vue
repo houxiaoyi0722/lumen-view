@@ -1,14 +1,17 @@
 <template>
-  <div class="home">home</div>
+  <div class="home" ref="aaaa">home</div>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { ref, onMounted } from "vue";
 
-export default defineComponent({
-  name: "home",
-  setup() {},
+const aaaa = ref();
+
+onMounted(() => {
+  console.log(aaaa.value);
 });
+
+defineExpose(aaaa);
 </script>
 
 <style lang="scss" scoped>

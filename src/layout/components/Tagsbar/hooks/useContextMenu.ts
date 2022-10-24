@@ -26,7 +26,7 @@ export const useContextMenu = (tagList: any) => {
       state.visible = false;
     },
     refreshSelectedTag(tag: any) {
-      tag_store.DEL_CACHE_LIST(tag);
+      tag_store.delCacheList(tag);
       const { fullPath } = tag;
       nextTick(() => {
         router.replace({
@@ -47,7 +47,6 @@ export const useContextMenu = (tagList: any) => {
     },
     closeOtherTags() {
       tag_store.delOtherTags(state.selectedTag);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       router.push(state.selectedTag);
     },
@@ -74,7 +73,6 @@ export const useContextMenu = (tagList: any) => {
           ? tagList.value.slice(0, index)
           : tagList.value.slice(index + 1);
       tag_store.delSomeTags(needToClose);
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       router.push(state.selectedTag);
     },

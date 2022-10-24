@@ -5,16 +5,13 @@ export const useScrollbar = (tagsItem: any) => {
 
   const handleScroll = (e: any) => {
     const eventDelta = e.wheelDelta || -e.deltaY;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     scrollContainer.value.wrap.scrollLeft -= eventDelta / 4;
   };
 
   const moveToTarget = (currentTag: any) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const containerWidth = scrollContainer.value.scrollbar.offsetWidth;
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const scrollWrapper = scrollContainer.value.wrap;
     const tagList = tagsItem.value;

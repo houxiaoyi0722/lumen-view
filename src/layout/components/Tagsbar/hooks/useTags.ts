@@ -45,11 +45,11 @@ export const useTags = () => {
     }
 
     // 不在路由中的所有标签，需要删除
-    const noUseTags = tagList.value.filter((tag:any) =>
+    const noUseTags = tagList.value.filter((tag: any) =>
       // @ts-ignore
       routes.value.every((route) => route.name !== tag.name)
     );
-    noUseTags.forEach((tag:any) => {
+    noUseTags.forEach((tag: any) => {
       tag_store.delTag(tag);
     });
   };
@@ -64,7 +64,6 @@ export const useTags = () => {
 
   const saveActivePosition = (tag: any) => {
     const index = tagList.value.findIndex(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       (item) => item.fullPath === tag.fullPath
     );
@@ -75,7 +74,6 @@ export const useTags = () => {
   const moveToCurrentTag = () => {
     nextTick(() => {
       for (const tag of tagsItem.value) {
-
         // @ts-ignore
         if (!!tag && tag.to.path === route.value.path) {
           scrollbar.moveToTarget(tag);
