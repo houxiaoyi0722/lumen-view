@@ -7,3 +7,11 @@ export const getRouters = () => {
     method: "get",
   });
 };
+
+// 获取所有菜单
+export const getAllRouters = () => {
+  return request({
+    url: "/lumen/router/routers",
+    method: "get",
+  });
+};

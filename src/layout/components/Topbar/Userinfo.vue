@@ -2,7 +2,7 @@
   <el-dropdown trigger="click">
     <div class="userinfo">
       <template v-if="!userinfo">
-        <i class="el-icon-user" />
+        <el-icon> <User/> </el-icon>
         admin
       </template>
       <template v-else>
