@@ -8,6 +8,14 @@ export const getRouters = () => {
   });
 };
 
+// 获取所有树形菜单
+export const allRouterTree = () => {
+  return request({
+    url: "/lumen/router/allRouterTree",
+    method: "get",
+  });
+};
+
 // 获取所有菜单
 export const getAllRouters = () => {
   return request({
