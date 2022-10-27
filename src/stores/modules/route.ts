@@ -4,7 +4,7 @@ import { getRouters } from "@/api/routers";
 import router, { constantRoutes } from "@/router";
 
 const Layout = () => import("@/layout/index.vue");
-const modules = import.meta.glob("@/views/**/**.vue");
+export const modules = import.meta.glob("@/views/**/**.vue");
 
 export const routeStore = defineStore({
   id: "route",

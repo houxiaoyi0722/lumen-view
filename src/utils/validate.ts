@@ -87,7 +87,7 @@ export function isArray(arg:any) {
   return Array.isArray(arg);
 }
 
-export function validNull(str:string) {
+export function validNull(str:any) {
   if (
     str === "" ||
     typeof str === "undefined" ||
