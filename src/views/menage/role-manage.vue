@@ -52,7 +52,7 @@
         ></vxe-input>
       </template>
     </vxe-column>
-    <vxe-column title="操作" min-width="100">
+    <vxe-column title="操作" min-width="100" fixed="right">
       <template #default="{ row }">
         <vxe-button type="text" status="primary" @click="insertRow(row)"
           >插入子节点</vxe-button
