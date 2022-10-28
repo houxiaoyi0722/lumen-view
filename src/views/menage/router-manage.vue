@@ -165,7 +165,7 @@ import "ace-builds/src-noconflict/theme-chrome.js";
 import { validNull } from "@/utils/validate";
 import { clone } from "xe-utils";
 import { modules } from "@/stores/modules/route";
-import {getRolesTree, rolesKVTree} from "@/api/role";
+import { rolesKVTree } from "@/api/role";
 
 export default defineComponent({
   components: { VAceEditor },
@@ -386,9 +386,9 @@ export default defineComponent({
         if (res) {
           const $table = xTable.value;
 
-          const insertRecords = $table!.getInsertRecords();
-          const updateRecords = $table!.getUpdateRecords();
-          const removeRecords = $table!.getRemoveRecords();
+          const insertRecords = clone($table!.getInsertRecords(), true);
+          const updateRecords = clone($table!.getUpdateRecords(), true);
+          const removeRecords = clone($table!.getRemoveRecords(), true);
 
           insertRecords.forEach((item) => (item.id = null));
 
