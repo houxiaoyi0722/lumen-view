@@ -151,17 +151,21 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, nextTick, onBeforeMount, reactive, ref} from "vue";
-import type {VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance,} from "vxe-table";
+import { defineComponent, nextTick, onBeforeMount, reactive, ref } from "vue";
+import type {
+  VxeTableInstance,
+  VxeTablePropTypes,
+  VxeToolbarInstance,
+} from "vxe-table";
 import VXETable from "vxe-table";
-import {getAllRouters, routerUpdate,} from "@/api/routers";
-import {VAceEditor} from "vue3-ace-editor";
+import { getAllRouters, routerUpdate } from "@/api/routers";
+import { VAceEditor } from "vue3-ace-editor";
 import "ace-builds/src-noconflict/mode-json.js";
 import "ace-builds/src-noconflict/theme-chrome.js";
-import {validNull} from "@/utils/validate";
-import {clone} from "xe-utils";
-import {modules} from "@/stores/modules/route";
-import {getRolesTree} from "@/api/role";
+import { validNull } from "@/utils/validate";
+import { clone } from "xe-utils";
+import { modules } from "@/stores/modules/route";
+import {getRolesTree, rolesKVTree} from "@/api/role";
 
 export default defineComponent({
   components: { VAceEditor },
@@ -229,7 +233,7 @@ export default defineComponent({
         routerMng.moduleList.push({ value: key, label: key });
       }
 
-      getRolesTree().then((res) => {
+      rolesKVTree().then((res) => {
         routerMng.roleList = res.data;
       });
     });
