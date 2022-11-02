@@ -4,9 +4,6 @@
       <vxe-button @click="insertEvent">新增</vxe-button>
       <vxe-button @click="saveEvent">保存数据</vxe-button>
     </template>
-    <template #tools>
-      <p style="color: red; margin-right: 20px">*子角色继承父角色权限*</p>
-    </template>
   </vxe-toolbar>
 
   <vxe-table
@@ -25,19 +22,19 @@
     <vxe-column type="checkbox" width="40"></vxe-column>
     <vxe-column type="seq" width="100" tree-node></vxe-column>
 
-    <vxe-column field="roleName" title="角色名称" :edit-render="{}">
+    <vxe-column field="groupName" title="用户组名称" :edit-render="{}">
       <template #edit="scope">
         <vxe-input
-          v-model="scope.row.roleName"
+          v-model="scope.row.groupName"
           type="text"
           @change="$refs.roleXTable.updateStatus(scope)"
         ></vxe-input>
       </template>
     </vxe-column>
-    <vxe-column field="roleCode" title="角色代码" :edit-render="{}">
+    <vxe-column field="groupCode" title="用户组代码" :edit-render="{}">
       <template #edit="scope">
         <vxe-input
-          v-model="scope.row.roleCode"
+          v-model="scope.row.groupCode"
           type="text"
           @change="$refs.roleXTable.updateStatus(scope)"
         ></vxe-input>
@@ -67,28 +64,29 @@
 
 <script lang="ts">
 import { defineComponent, nextTick, reactive, ref } from "vue";
-import VXETable, {
+import VXETable from "vxe-table";
+import type {
   VxeTableInstance,
   VxeTablePropTypes,
   VxeToolbarInstance,
 } from "vxe-table";
 import { clone } from "xe-utils";
 import { validNull } from "@/utils/validate";
-import { getRolesTree, roleListUpdate } from "@/api/role";
+import {getUserGroup, userGroupUpdate} from "@/api/user-group";
 
-interface RoleVo {
+interface UserGroupVo {
   id: number;
-  roleName: string;
-  roleCode: string;
+  groupName: string;
+  groupCode: string;
   comment: string;
   parentId: number;
 }
 
 export default defineComponent({
   setup() {
-    const roleMng = reactive({
+    const userGroupMng = reactive({
       loading: false,
-      tableData: [] as RoleVo[],
+      tableData: [] as UserGroupVo[],
       treeConfig: {
         transform: true,
         rowField: "id",
@@ -97,28 +95,32 @@ export default defineComponent({
     });
 
     const validRules = ref({
-      roleName: [
+      groupName: [
         { required: true, message: "名称不能为空" },
         { max: 20, message: "名称长度应小于20" },
         {
           validator({ cellValue }) {
             if (
-              roleMng.tableData.filter((item) => item.roleName === cellValue)
-                .length > 1
+              userGroupMng.tableData.filter(
+                (item) => item.groupName === cellValue
+              ).length > 1
             ) {
-              return new Error("角色名称不能重复");
+              return new Error("用户组名称不能重复");
             }
           },
         },
       ],
-      roleCode: [
-        { required: true, message: "角色代码不能为空" },
-        { max: 20, message: "角色代码长度应小于20" },
+      groupCode: [
+        { required: true, message: "用户组代码不能为空" },
+        { max: 20, message: "用户组代码长度应小于20" },
         {
           validator({ cellValue }) {
-            if (roleMng.tableData.filter((item) => item.roleCode === cellValue)
-                .length > 1) {
-              return new Error("角色代码不能重复");
+            if (
+              userGroupMng.tableData.filter(
+                (item) => item.groupCode === cellValue
+              ).length > 1
+            ) {
+              return new Error("用户组代码不能重复");
             }
           },
         },
@@ -130,17 +132,17 @@ export default defineComponent({
     const roleXToolbar = ref<VxeToolbarInstance>();
 
     const findList = () => {
-      roleMng.loading = true;
+      userGroupMng.loading = true;
 
       return new Promise((resolve) => {
-        getRolesTree()
+        getUserGroup()
           .then((res) => {
-            roleMng.tableData = res.data;
-            roleMng.loading = false;
+            userGroupMng.tableData = res.data;
+            userGroupMng.loading = false;
             resolve(null);
           })
           .catch(() => {
-            roleMng.loading = false;
+            userGroupMng.loading = false;
           });
       });
     };
@@ -169,7 +171,7 @@ export default defineComponent({
         if (res) {
           const $table = roleXTable.value;
 
-          roleListUpdate({
+          userGroupUpdate({
             insertList: formatDateList(
               clone($table!.getInsertRecords(), true).map((item) => {
                 item.id = null;
@@ -198,8 +200,8 @@ export default defineComponent({
       // 如果 row 则有插入到效的目标节点该行的位置
       const bottomRecord = clone({
         id: null,
-        roleName: "",
-        roleCode: "",
+        groupName: "",
+        groupCode: "",
         comment: "",
         parentId: undefined,
       });
@@ -226,8 +228,8 @@ export default defineComponent({
       const { row: newRow } = await $table!.insertAt(
         {
           id: null,
-          roleName: "",
-          roleCode: "",
+          groupName: "",
+          groupCode: "",
           comment: "",
           parentId: undefined,
         },
@@ -253,7 +255,7 @@ export default defineComponent({
     return {
       roleXTable,
       roleXToolbar,
-      roleMng,
+      roleMng: userGroupMng,
       validRules,
       insertRow,
       removeRow,
