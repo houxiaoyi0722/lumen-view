@@ -122,7 +122,7 @@
       :edit-render="{}"
     >
       <template #default="{ row }">
-        {{ transRole(row, routerMng.roleList).join(",") }}
+        {{ transLabels(row.roles, routerMng.roleList).join(",") }}
       </template>
       <template #edit="{ row }">
         <el-tree-select
@@ -165,7 +165,8 @@ import "ace-builds/src-noconflict/theme-chrome.js";
 import { validNull } from "@/utils/validate";
 import { clone } from "xe-utils";
 import { modules } from "@/stores/modules/route";
-import { rolesKVTree } from "@/api/role";
+import { transLabels } from "@/components/hooks/common-hooks";
+import { roleStore } from "@/stores/modules/roles";
 
 export default defineComponent({
   components: { VAceEditor },
@@ -232,9 +233,8 @@ export default defineComponent({
         const key = modulesKey.replace("/src/views/", "").replace(".vue", "");
         routerMng.moduleList.push({ value: key, label: key });
       }
-
-      rolesKVTree().then((res) => {
-        routerMng.roleList = res.data;
+      roleStore().getRolesKVTree().then(res => {
+        routerMng.roleList = res;
       });
     });
 
@@ -341,21 +341,6 @@ export default defineComponent({
       }
     };
 
-    const transRole = (row: any, roleList: Array<any>): Array<string> => {
-      let roles: Array<string> = [];
-      if (!validNull(row.roles)) {
-        for (const role of roleList) {
-          if (!validNull(role.children)) {
-            roles = roles.concat(transRole(row, role.children));
-          }
-          if (row.roles.some((item: string) => item === role.value)) {
-            roles.push(role.label);
-          }
-        }
-      }
-      return roles;
-    };
-
     const validAllEvent = async () => {
       const $table = xTable.value;
       const errMap = await $table!.validate(true);
@@ -428,7 +413,7 @@ export default defineComponent({
       removeRow,
       insertRow,
       concatPath,
-      transRole,
+      transLabels,
     };
   },
 });
