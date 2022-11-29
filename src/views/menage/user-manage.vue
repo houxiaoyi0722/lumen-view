@@ -15,34 +15,38 @@
       ></vxe-input>
     </template>
     <template #enable_item="{ data }">
-      <vxe-select v-model="data.sex" transfer>
-        <vxe-option
+      <el-select v-model="data.enable" clearable placeholder="">
+        <el-option
           v-for="item in userManage.enableList"
           :key="item.value"
-          :value="item.value"
           :label="item.label"
-        ></vxe-option>
-      </vxe-select>
+          :value="item.value"
+        />
+      </el-select>
     </template>
     <template #roles_item="{ data }">
-      <vxe-select v-model="data.sex" transfer>
-        <vxe-option
-          v-for="item in sexList1"
-          :key="item.value"
-          :value="item.value"
-          :label="item.label"
-        ></vxe-option>
-      </vxe-select>
+      <el-tree-select
+        v-model="data.roles"
+        :teleported="false"
+        placeholder=""
+        :data="userManage.roleList"
+        clearable
+        collapse-tags
+        collapse-tags-tooltip
+        filterable
+        check-strictly
+      />
     </template>
     <template #userGroup_item="{ data }">
-      <vxe-select v-model="data.sex" transfer>
-        <vxe-option
-          v-for="item in sexList1"
-          :key="item.value"
-          :value="item.value"
-          :label="item.label"
-        ></vxe-option>
-      </vxe-select>
+      <el-tree-select
+        v-model="data.userGroup"
+        :teleported="false"
+        placeholder=""
+        :data="userManage.userGroupList"
+        clearable
+        filterable
+        check-strictly
+      />
     </template>
     <template #operate_item>
       <vxe-button
@@ -103,25 +107,19 @@
       />
     </template>
 
-    <template #password_default="{ row }">
-      <vxe-button type="reset" content="重置" @click="row"></vxe-button>
-    </template>
-
     <template #operate="{ row }">
-      <template v-if="$refs.xGrid.isEditByRow(row)">
-        <vxe-button
-          status="primary"
-          title="保存"
-          circle
-          @click="saveRowEvent(row)"
-        ></vxe-button>
-      </template>
-      <template v-else>
-        <vxe-button title="编辑" @click="editRowEvent(row)"></vxe-button>
-      </template>
-      <vxe-button title="删除" @click="removeRowEvent(row)"></vxe-button>
-      <vxe-button title="查看"></vxe-button>
-      <vxe-button title="设置"></vxe-button>
+      <vxe-button type="reset" content="重置密码" @click="row"></vxe-button>
+      <vxe-button
+        title="保存"
+        content="保存"
+        @click="saveRowEvent(row)"
+      ></vxe-button>
+      <vxe-button
+        title="删除"
+        content="删除"
+        @click="removeRowEvent(row)"
+      ></vxe-button>
+      <vxe-button title="扩展信息" content="扩展信息"></vxe-button>
     </template>
   </vxe-grid>
 </template>
@@ -134,11 +132,20 @@ import type {
   VxeGridListeners,
   VxeGridProps,
 } from "vxe-table";
-import { userPage } from "@/api/user";
+import { update, userPage } from "@/api/user";
 import { enableList } from "@/stores/dictionaries";
-import { transLabels } from "@/components/hooks/common-hooks";
+import {transIdObjs, transLabels, transObj} from "@/components/hooks/common-hooks";
 import { roleStore } from "@/stores/modules/roles";
-import {userGroupStore} from "@/stores/modules/user-group";
+import { userGroupStore } from "@/stores/modules/user-group";
+
+interface UserVo {
+  id: number;
+  name: string;
+  userName: string;
+  password: string;
+  roles: any[];
+  userGroup: any;
+}
 
 export default defineComponent({
   name: "userManage",
@@ -230,12 +237,11 @@ export default defineComponent({
           slots: { edit: "userGroup_edit", default: "userGroup_default" },
         },
         {
-          field: "password",
-          title: "密码",
-          width: 100,
-          slots: { default: "password_default" },
+          title: "操作",
+          width: 350,
+          fixed: "right",
+          slots: { default: "operate" },
         },
-        { title: "操作", width: 200, slots: { default: "operate" } },
       ],
       data: [],
     });
@@ -267,17 +273,21 @@ export default defineComponent({
         ...formConfig.data,
         pageNumber: pagerConfig.currentPage - 1,
         pageSize: pagerConfig.pageSize,
-      }).then((res: any) => {
-        gridOptions.loading = false;
-        if (gridOptions.pagerConfig) {
-          gridOptions.pagerConfig.total = res.total;
-        }
+      })
+        .then((res: any) => {
+          gridOptions.loading = false;
+          if (gridOptions.pagerConfig) {
+            gridOptions.pagerConfig.total = res.total;
+          }
 
-        for (const row of res.data) {
-          row.roles = row.roles.map((item: any) => item.id);
-        }
-        gridOptions.data = res.data;
-      });
+          for (const row of res.data) {
+            row.roles = row.roles.map((item: any) => item.id);
+          }
+          gridOptions.data = res.data;
+        })
+        .catch(() => {
+          gridOptions.loading = false;
+        });
     };
 
     const gridEvents: VxeGridListeners = {
@@ -297,16 +307,25 @@ export default defineComponent({
       }
     };
 
-    const saveRowEvent = async () => {
+    const saveRowEvent = async (user: UserVo) => {
+      console.log(user);
       const $grid = xGrid.value;
       if ($grid) {
         await $grid.clearEdit();
         gridOptions.loading = true;
-        // 模拟异步保存
-        setTimeout(() => {
-          gridOptions.loading = false;
-          VXETable.modal.message({ content: "保存成功！", status: "success" });
-        }, 300);
+
+        user.roles = transIdObjs(user.roles, "id");
+        user.userGroup = transObj(user.userGroup, "id");
+
+        update(user)
+          .then(() => {
+            gridOptions.loading = false;
+            VXETable.modal.message({ status: "success", content: "保存成功" });
+            findList();
+          })
+          .catch(() => {
+            gridOptions.loading = false;
+          });
       }
     };
 

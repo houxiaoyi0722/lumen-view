@@ -7,3 +7,11 @@ export const userPage = (data: any) => {
     data: data,
   });
 };
+
+export const update = (data: any) => {
+  return request({
+    url: "/lumen/user/user",
+    method: "put",
+    data: data,
+  });
+};
