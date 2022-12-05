@@ -7,15 +7,15 @@
         placeholder="请输入名称"
       ></vxe-input>
     </template>
-    <template #userName_item="{ data }">
+    <template #username_item="{ data }">
       <vxe-input
-        v-model="data.userName"
+        v-model="data.username"
         type="text"
         placeholder="请输入账号"
       ></vxe-input>
     </template>
     <template #enable_item="{ data }">
-      <el-select v-model="data.enable" clearable placeholder="">
+      <el-select v-model="data.enable" clearable placeholder="请选择是否启用">
         <el-option
           v-for="item in userManage.enableList"
           :key="item.value"
@@ -28,7 +28,7 @@
       <el-tree-select
         v-model="data.roles"
         :teleported="false"
-        placeholder=""
+        placeholder="请选择角色"
         :data="userManage.roleList"
         clearable
         collapse-tags
@@ -41,7 +41,7 @@
       <el-tree-select
         v-model="data.userGroup"
         :teleported="false"
-        placeholder=""
+        placeholder="请选择用户组"
         :data="userManage.userGroupList"
         clearable
         filterable
@@ -55,7 +55,7 @@
         content="查询"
         @click="findList()"
       ></vxe-button>
-      <vxe-button type="reset" content="重置"></vxe-button>
+      <vxe-button type="reset" content="重置" @click="reset()"></vxe-button>
     </template>
 
     <template #name_edit="{ row }">
@@ -108,7 +108,11 @@
     </template>
 
     <template #operate="{ row }">
-      <vxe-button type="reset" content="重置密码" @click="row"></vxe-button>
+      <vxe-button
+        type="reset"
+        content="重置密码"
+        @click="resetPassword(row)"
+      ></vxe-button>
       <vxe-button
         title="保存"
         content="保存"
@@ -132,16 +136,21 @@ import type {
   VxeGridListeners,
   VxeGridProps,
 } from "vxe-table";
-import { update, userPage } from "@/api/user";
+import { resetUserPassword, update, userPage } from "@/api/user";
 import { enableList } from "@/stores/dictionaries";
-import {transIdObjs, transLabels, transObj} from "@/components/hooks/common-hooks";
+import {
+  commonAlert,
+  transIdObjs,
+  transLabels,
+  transObj,
+} from "@/components/hooks/common-hooks";
 import { roleStore } from "@/stores/modules/roles";
 import { userGroupStore } from "@/stores/modules/user-group";
 
 interface UserVo {
   id: number;
   name: string;
-  userName: string;
+  username: string;
   password: string;
   roles: any[];
   userGroup: any;
@@ -170,7 +179,7 @@ export default defineComponent({
       formConfig: {
         data: {
           name: "",
-          userName: "",
+          username: "",
           enable: undefined,
           roles: "",
           userGroup: "",
@@ -178,9 +187,9 @@ export default defineComponent({
         items: [
           { field: "name", title: "姓名", slots: { default: "name_item" } },
           {
-            field: "userName",
+            field: "username",
             title: "用户名",
-            slots: { default: "userName_item" },
+            slots: { default: "username_item" },
           },
           {
             field: "enable",
@@ -300,6 +309,14 @@ export default defineComponent({
       },
     };
 
+    const reset = () => {
+      gridOptions.formConfig!.data.name = "";
+      gridOptions.formConfig!.data.username = "";
+      gridOptions.formConfig!.data.enable = undefined;
+      gridOptions.formConfig!.data.roles = "";
+      gridOptions.formConfig!.data.userGroup = "";
+    };
+
     const editRowEvent = (row: any) => {
       const $grid = xGrid.value;
       if ($grid) {
@@ -318,9 +335,17 @@ export default defineComponent({
         user.userGroup = transObj(user.userGroup, "id");
 
         update(user)
-          .then(() => {
+          .then((res: any) => {
             gridOptions.loading = false;
-            VXETable.modal.message({ status: "success", content: "保存成功" });
+            if (res.code != "200") {
+              VXETable.modal.message({ status: "error", content: res.message });
+            } else {
+              VXETable.modal.message({
+                status: "success",
+                content: "保存成功",
+              });
+            }
+
             findList();
           })
           .catch(() => {
@@ -339,6 +364,22 @@ export default defineComponent({
       }
     };
 
+    const resetPassword = async (row: any) => {
+      const type = await VXETable.modal.confirm(
+        `确定要重置用户${row.name}密码?`
+      );
+
+      const $grid = xGrid.value;
+      if ($grid) {
+        if (type === "confirm") {
+          resetUserPassword({ id: row.id }).then((res: any) => {
+            commonAlert(res);
+          });
+        }
+      }
+    };
+
+    // 初次加载
     findList();
 
     return {
@@ -346,11 +387,13 @@ export default defineComponent({
       gridOptions,
       gridEvents,
       userManage,
+      reset,
       transLabels,
       findList,
       editRowEvent,
       saveRowEvent,
       removeRowEvent,
+      resetPassword,
     };
   },
 });

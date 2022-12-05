@@ -15,3 +15,11 @@ export const update = (data: any) => {
     data: data,
   });
 };
+
+export const resetUserPassword = (data: any) => {
+  return request({
+    url: "/lumen/user/password/reset",
+    method: "put",
+    data: data,
+  });
+};
