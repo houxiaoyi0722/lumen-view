@@ -51,13 +51,17 @@ export const transObj = (value: any, field: string): any => {
  * 公共弹窗响应类
  * @param res
  */
-export const commonAlert = (res: any) => {
+export const commonAlert = (res: any,successMsg:string): boolean => {
   if (res.code != "200") {
     VXETable.modal.message({ status: "error", content: res.message });
+    return false;
   } else {
-    VXETable.modal.message({
-      status: "success",
-      content: "更新成功",
-    });
+    if (!validNull(successMsg)) {
+      VXETable.modal.message({
+        status: "success",
+        content: successMsg,
+      });
+    }
+    return true;
   }
 }

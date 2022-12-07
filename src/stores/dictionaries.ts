@@ -1,8 +1,8 @@
 import { ref } from "vue";
-
+// todo 修改为后端提供
 export const sexList = ref([
-  { value: "1", label: "男" },
-  { value: "0", label: "女" },
+  { value: "MAN", label: "男" },
+  { value: "WOMEN", label: "女" },
 ]);
 
 export const enableList = ref([
