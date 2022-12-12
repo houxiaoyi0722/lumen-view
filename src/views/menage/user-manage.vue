@@ -253,12 +253,15 @@
             <template #default="{ data }">
               <el-upload
                 class="avatar-uploader"
-                action=""
+                :action="userManage.uploadAction"
+                :headers="userManage.uploadHeader"
+                :data="userManage.uploadData"
+                method="put"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload"
               >
-                <img v-if="data.avatar" :src="data.avatar" class="avatar" />
+                <img v-if="data.avatar && data.avatar.downLoadUrl" :src="data.avatar.downLoadUrl" class="avatar" />
                 <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
               </el-upload>
             </template>
@@ -289,7 +292,8 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, reactive, ref } from "vue";
-import VXETable, { VxeFormEvents, type VxeGridEvents } from "vxe-table";
+import type { VxeFormEvents, VxeGridEvents } from "vxe-table";
+import VXETable from "vxe-table";
 import type {
   VxeGridInstance,
   VxeGridListeners,
@@ -315,11 +319,11 @@ import { roleStore } from "@/stores/modules/roles";
 import { userGroupStore } from "@/stores/modules/user-group";
 import { validNull } from "@/utils/validate";
 import { clone } from "xe-utils";
-import dayjs from "dayjs";
 import type { UploadProps } from "element-plus";
+import { getItem } from "@/utils/storage";
 
 interface UserVo {
-  id: number;
+  id: string;
   name: string;
   username: string;
   password: string;
@@ -328,17 +332,26 @@ interface UserVo {
 }
 
 interface UserExData {
-  id: number;
+  id: string;
   name: string;
   gender: string;
   birthday: Date;
-  avatar: string;
+  avatar: Storage;
   intro: string;
   phone: string;
   mobilePhone: string;
   address: string;
   email: string;
   user: UserVo;
+}
+
+interface Storage {
+  id: string;
+  originalFileName: string;
+  suffix: string;
+  businessCode: string;
+  businessType: string;
+  downLoadUrl: string;
 }
 
 export default defineComponent({
@@ -523,6 +536,12 @@ export default defineComponent({
     const userManage = reactive({
       enableList,
       userExData: {} as UserExData,
+      uploadAction: import.meta.env.VITE_APP_BASE_URL + "/lumen/oss/upload",
+      uploadHeader: { Authorization: `Bearer ${getItem("TOKEN").token}` },
+      uploadData: {
+        businessCode: "",
+        businessType: "Avatar",
+      },
       userExDataRules: {} as any,
       showExData: false,
       loading: false,
@@ -583,6 +602,7 @@ export default defineComponent({
         userManage.userExData.user = row;
         userManage.showExData = true;
       }
+      userManage.uploadData.businessCode = row.username;
     };
 
     const refreshUserEx = (row: any) => {
@@ -706,14 +726,17 @@ export default defineComponent({
       response,
       uploadFile
     ) => {
-      userManage.userExData.avatar = URL.createObjectURL(uploadFile.raw!);
+      if (commonAlert(response, "上传成功")) {
+        userManage.userExData.avatar = response.data;
+      }
     };
 
     const beforeAvatarUpload: UploadProps["beforeUpload"] = (rawFile) => {
-      if (rawFile.type !== "image/jpeg") {
+      const types = ["image/png", "image/jpeg"];
+      if (!types.find((item) => item === rawFile.type)) {
         VXETable.modal.message({
           status: "error",
-          content: "Avatar picture must be JPG format!",
+          content: "Avatar picture must be JPG/png format!",
         });
 
         return false;
