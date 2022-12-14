@@ -293,7 +293,6 @@
 <script lang="ts">
 import { defineComponent, onMounted, reactive, ref } from "vue";
 import type { VxeFormEvents, VxeGridEvents } from "vxe-table";
-import VXETable from "vxe-table";
 import type {
   VxeGridInstance,
   VxeGridListeners,

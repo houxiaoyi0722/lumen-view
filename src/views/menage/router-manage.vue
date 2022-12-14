@@ -157,7 +157,6 @@ import type {
   VxeTablePropTypes,
   VxeToolbarInstance,
 } from "vxe-table";
-import VXETable from "vxe-table";
 import { getAllRouters, routerUpdate } from "@/api/routers";
 import { VAceEditor } from "vue3-ace-editor";
 import "ace-builds/src-noconflict/mode-json.js";
