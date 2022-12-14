@@ -8,7 +8,7 @@ export const getUserGroup = () => {
 };
 
 // 获取角色列表树
-export const userGroupUpdate = (userGroups:any) => {
+export const userGroupUpdate = (userGroups: any) => {
   return request({
     url: "/lumen/user/group/userGroupListUpdate",
     method: "post",

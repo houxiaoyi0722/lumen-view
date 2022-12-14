@@ -17,7 +17,7 @@ export const getRolesTree = () => {
 };
 
 // 获取角色列表树
-export const roleListUpdate = (roles:any) => {
+export const roleListUpdate = (roles: any) => {
   return request({
     url: "/lumen/role/roleListUpdate",
     method: "post",

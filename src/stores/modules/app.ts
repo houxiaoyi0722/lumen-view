@@ -1,9 +1,5 @@
-import { defineStore } from "pinia";
-import { getItem, removeItem, setItem } from "@/utils/storage";
-import { validNull } from "@/utils/validate";
-import {accountStore} from "@/stores/modules/account";
-import {tagStore} from "@/stores/modules/tags";
-import {routeStore} from "@/stores/modules/route";
+import {defineStore} from "pinia";
+import {getItem, setItem} from "@/utils/storage";
 
 const COLLAPSE = "VEA-COLLAPSE";
 

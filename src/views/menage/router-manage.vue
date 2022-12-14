@@ -232,9 +232,11 @@ export default defineComponent({
         const key = modulesKey.replace("/src/views/", "").replace(".vue", "");
         routerMng.moduleList.push({ value: key, label: key });
       }
-      roleStore().getRolesKVTree().then(res => {
-        routerMng.roleList = res;
-      });
+      roleStore()
+        .getRolesKVTree()
+        .then((res) => {
+          routerMng.roleList = res;
+        });
     });
 
     const xTable = ref<VxeTableInstance>();

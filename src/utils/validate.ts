@@ -6,7 +6,7 @@
  * @param {string} path
  * @returns {Boolean}
  */
-export function isExternal(path:string) {
+export function isExternal(path: string) {
   return /^(https?:|mailto:|tel:)/.test(path);
 }
 
@@ -14,7 +14,7 @@ export function isExternal(path:string) {
  * @param {string} str
  * @returns {Boolean}
  */
-export function validUsername(str:string) {
+export function validUsername(str: string) {
   return str.length >= 0;
 }
 
@@ -22,7 +22,7 @@ export function validUsername(str:string) {
  * @param {string} url
  * @returns {Boolean}
  */
-export function validURL(url:string) {
+export function validURL(url: string) {
   const reg =
     /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
   return reg.test(url);
@@ -32,7 +32,7 @@ export function validURL(url:string) {
  * @param {string} str
  * @returns {Boolean}
  */
-export function validLowerCase(str:string) {
+export function validLowerCase(str: string) {
   const reg = /^[a-z]+$/;
   return reg.test(str);
 }
@@ -41,7 +41,7 @@ export function validLowerCase(str:string) {
  * @param {string} str
  * @returns {Boolean}
  */
-export function validUpperCase(str:string) {
+export function validUpperCase(str: string) {
   const reg = /^[A-Z]+$/;
   return reg.test(str);
 }
@@ -50,7 +50,7 @@ export function validUpperCase(str:string) {
  * @param {string} str
  * @returns {Boolean}
  */
-export function validAlphabets(str:string) {
+export function validAlphabets(str: string) {
   const reg = /^[A-Za-z]+$/;
   return reg.test(str);
 }
@@ -59,7 +59,7 @@ export function validAlphabets(str:string) {
  * @param {string} email
  * @returns {Boolean}
  */
-export function validEmail(email:string) {
+export function validEmail(email: string) {
   const reg =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return reg.test(email);
@@ -69,7 +69,7 @@ export function validEmail(email:string) {
  * @param {string} str
  * @returns {Boolean}
  */
-export function isString(str:any) {
+export function isString(str: any) {
   if (typeof str === "string" || str instanceof String) {
     return true;
   }
@@ -80,14 +80,14 @@ export function isString(str:any) {
  * @param {Array} arg
  * @returns {Boolean}
  */
-export function isArray(arg:any) {
+export function isArray(arg: any) {
   if (typeof Array.isArray === "undefined") {
     return Object.prototype.toString.call(arg) === "[object Array]";
   }
   return Array.isArray(arg);
 }
 
-export function validNull(str:any) {
+export function validNull(str: any) {
   if (
     str === "" ||
     typeof str === "undefined" ||
@@ -103,12 +103,14 @@ export function validNull(str:any) {
  * 根据数组对象的某个字段去重
  * item.name  是[{name:1}] 根据每条数据的name值来去重
  * */
-export function unique(arr:any, val:any) {
+export function unique(arr: any, val: any) {
   const res = new Map();
-  return arr.filter((item:any) => !res.has(item[val]) && res.set(item[val], 1));
+  return arr.filter(
+    (item: any) => !res.has(item[val]) && res.set(item[val], 1)
+  );
 }
 
-export function getBytesLength(str:any) {
+export function getBytesLength(str: any) {
   let num = str.length;
   for (let i = 0; i < str.length; i++) {
     if (str.charCodeAt(i) > 255) {

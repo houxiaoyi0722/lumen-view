@@ -63,23 +63,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick, reactive, ref } from "vue";
-import type {
-  VxeTableInstance,
-  VxeTablePropTypes,
-  VxeToolbarInstance,
-} from "vxe-table";
-import { clone } from "xe-utils";
-import { validNull } from "@/utils/validate";
+import {defineComponent, nextTick, reactive, ref} from "vue";
+import type {VxeTableInstance, VxeTablePropTypes, VxeToolbarInstance,} from "vxe-table";
+import VXETable from "vxe-table";
+import {clone} from "xe-utils";
+import {validNull} from "@/utils/validate";
 import {getUserGroup, userGroupUpdate} from "@/api/user-group";
-
-interface UserGroupVo {
-  id: number;
-  groupName: string;
-  groupCode: string;
-  comment: string;
-  parentId: number;
-}
+import type {UserGroupVo} from "@/types/ManageTypes";
 
 export default defineComponent({
   setup() {

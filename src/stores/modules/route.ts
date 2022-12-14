@@ -12,7 +12,7 @@ export const routeStore = defineStore({
     routes: constantRoutes,
   }),
   getters: {
-    menus: (state) => state.routes.filter((item:any) => !item.hidden),
+    menus: (state) => state.routes.filter((item: any) => !item.hidden),
   },
   actions: {
     generateRoutes() {

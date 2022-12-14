@@ -2,11 +2,19 @@
   <el-dropdown trigger="click">
     <div class="userinfo">
       <template v-if="!userinfo">
-        <el-icon> <User/> </el-icon>
+        <el-icon> <User /> </el-icon>
         admin
       </template>
       <template v-else>
-        <img class="avatar" v-if="userinfo.userExt && userinfo.userExt.avatar && userinfo.userExt.avatar.downLoadUrl" :src="userinfo.userExt.avatar.downLoadUrl" />
+        <img
+          class="avatar"
+          v-if="
+            userinfo.userExt &&
+            userinfo.userExt.avatar &&
+            userinfo.userExt.avatar.downLoadUrl
+          "
+          :src="userinfo.userExt.avatar.downLoadUrl"
+        />
         {{ userinfo.name }}
       </template>
     </div>
@@ -20,10 +28,9 @@
   </el-dropdown>
 </template>
 <script>
-import { defineComponent } from "vue";
-import { appStore } from "../../../stores/modules/app";
-import { useRouter } from "vue-router";
-import { useUserinfo } from "/src/components/Avatar/hooks/useUserinfo";
+import {defineComponent} from "vue";
+import {useRouter} from "vue-router";
+import {useUserinfo} from "/src/components/Avatar/hooks/useUserinfo";
 import {accountStore} from "@/stores/modules/account";
 
 export default defineComponent({

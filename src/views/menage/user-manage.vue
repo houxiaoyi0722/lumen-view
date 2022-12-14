@@ -261,7 +261,11 @@
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload"
               >
-                <img v-if="data.avatar && data.avatar.downLoadUrl" :src="data.avatar.downLoadUrl" class="avatar" />
+                <img
+                  v-if="data.avatar && data.avatar.downLoadUrl"
+                  :src="data.avatar.downLoadUrl"
+                  class="avatar"
+                />
                 <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
               </el-upload>
             </template>
@@ -320,38 +324,8 @@ import { validNull } from "@/utils/validate";
 import { clone } from "xe-utils";
 import type { UploadProps } from "element-plus";
 import { getItem } from "@/utils/storage";
-
-interface UserVo {
-  id: string;
-  name: string;
-  username: string;
-  password: string;
-  roles: any[];
-  userGroup: any;
-}
-
-interface UserExData {
-  id: string;
-  name: string;
-  gender: string;
-  birthday: Date;
-  avatar: Storage;
-  intro: string;
-  phone: string;
-  mobilePhone: string;
-  address: string;
-  email: string;
-  user: UserVo;
-}
-
-interface Storage {
-  id: string;
-  originalFileName: string;
-  suffix: string;
-  businessCode: string;
-  businessType: string;
-  downLoadUrl: string;
-}
+import VXETable from "vxe-table";
+import type { UserExData, UserVo } from "@/types/ManageTypes";
 
 export default defineComponent({
   name: "userManage",

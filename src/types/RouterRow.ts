@@ -1,4 +1,4 @@
-import type { BaseInterface } from "@/interface/BaseInterface";
+import type { BaseInterface } from "@/types/BaseInterface";
 
 export interface RouterRow extends BaseInterface {
   name: string;

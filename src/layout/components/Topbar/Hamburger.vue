@@ -1,9 +1,5 @@
 <template>
-  <i
-    class="fold-btn"
-    :class="{ collapse: collapse }"
-    @click="handleToggleMenu"
-  >
+  <i class="fold-btn" :class="{ collapse: collapse }" @click="handleToggleMenu">
     <el-icon><Fold /></el-icon>
   </i>
 </template>

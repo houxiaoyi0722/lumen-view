@@ -1,6 +1,6 @@
-import { defineStore } from "pinia";
-import { getUserinfo } from "@/api/login";
-import { getItem, removeItem, setItem } from "@/utils/storage";
+import {defineStore} from "pinia";
+import {getUserinfo} from "@/api/login";
+import {getItem, removeItem, setItem} from "@/utils/storage";
 import {validNull} from "@/utils/validate";
 import {tagStore} from "@/stores/modules/tags";
 import {routeStore} from "@/stores/modules/route";

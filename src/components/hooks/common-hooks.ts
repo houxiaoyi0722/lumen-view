@@ -6,7 +6,10 @@ import VXETable from "vxe-table";
  * @param values
  * @param treeList
  */
-export const transLabels = (values: [], treeList: Array<any>): Array<string> => {
+export const transLabels = (
+  values: [],
+  treeList: Array<any>
+): Array<string> => {
   let labels: Array<string> = [];
   if (!validNull(values)) {
     for (const node of treeList) {
@@ -51,7 +54,7 @@ export const transObj = (value: any, field: string): any => {
  * 公共弹窗响应类
  * @param res
  */
-export const commonAlert = (res: any,successMsg:string): boolean => {
+export const commonAlert = (res: any, successMsg: string): boolean => {
   if (res.code != "200") {
     VXETable.modal.message({ status: "error", content: res.message });
     return false;
@@ -64,4 +67,4 @@ export const commonAlert = (res: any,successMsg:string): boolean => {
     }
     return true;
   }
-}
+};

@@ -25,7 +25,7 @@ export const getAllRouters = () => {
 };
 
 // 插入菜单数据
-export const saveRouters = (routes:any) => {
+export const saveRouters = (routes: any) => {
   return request({
     url: "/lumen/router/routers",
     method: "post",
@@ -34,28 +34,28 @@ export const saveRouters = (routes:any) => {
 };
 
 // 更新菜单数据
-export const updateRouters = (routes:any) => {
+export const updateRouters = (routes: any) => {
   return request({
     url: "/lumen/router/routers",
     method: "put",
-    data: routes
+    data: routes,
   });
 };
 
 // 删除菜单数据
-export const removeRouters = (routeIds:any) => {
+export const removeRouters = (routeIds: any) => {
   return request({
     url: "/lumen/router/routers",
     method: "delete",
-    data: routeIds
+    data: routeIds,
   });
 };
 
 // 更新菜单数据
-export const routerUpdate = (tableData:any) => {
+export const routerUpdate = (tableData: any) => {
   return request({
     url: "/lumen/router/routerUpdate",
     method: "post",
-    data: tableData
+    data: tableData,
   });
 };

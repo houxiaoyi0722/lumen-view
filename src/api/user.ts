@@ -51,6 +51,6 @@ export const saveUserExt = (data: any) => {
   return request({
     url: `/lumen/user/exData`,
     method: "put",
-    data
+    data,
   });
 };

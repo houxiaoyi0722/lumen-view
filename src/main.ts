@@ -38,20 +38,20 @@ import {
   Pager,
   Form,
   FormItem,
-  // FormGather,
+  FormGather,
   // Checkbox,
   // CheckboxGroup,
   // Radio,
   // RadioGroup,
   // RadioButton,
-  // Switch,
+  Switch,
   Input,
   Select,
   // Optgroup,
   // Option,
-  // Textarea,
+  Textarea,
   Button,
-  // Modal,
+  Modal,
   // List,
   // Pulldown,
   // 表格
@@ -91,20 +91,20 @@ app
   .use(Pager)
   .use(Form)
   .use(FormItem)
-  // .use(FormGather)
+  .use(FormGather)
   // .use(Checkbox)
   // .use(CheckboxGroup)
   // .use(Radio)
   // .use(RadioGroup)
   // .use(RadioButton)
-  // .use(Switch)
+  .use(Switch)
   .use(Input)
   .use(Select)
   // .use(Optgroup)
   // .use(Option)
-  // .use(Textarea)
+  .use(Textarea)
   .use(Button)
-  // .use(Modal)
+  .use(Modal)
   // .use(List)
   // .use(Pulldown)
 
