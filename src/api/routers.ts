@@ -59,3 +59,11 @@ export const routerUpdate = (tableData: any) => {
     data: tableData,
   });
 };
+
+// 通过id查询下层数据
+export const routerByParentId = (parentId: string,roleCode: any) => {
+  return request({
+    url: `/lumen/router/${roleCode}/level?parentId=${!parentId?"":parentId}`,
+    method: "get",
+  });
+};

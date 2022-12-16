@@ -60,14 +60,20 @@
         <vxe-button type="text" status="primary" @click="removeRow(row)"
           >删除</vxe-button
         >
+        <vxe-button type="text" status="primary" @click="permissionMng(row)"
+          >权限管理</vxe-button
+        >
       </template>
     </vxe-column>
   </vxe-table>
+
+  <el-drawer v-model="roleMng.showPermissionMng" :with-header="false">
+    <role-permission-manage :role="roleMng.role"></role-permission-manage>
+  </el-drawer>
 </template>
 
 <script lang="ts">
 import { defineComponent, nextTick, reactive, ref } from "vue";
-import VXETable from "vxe-table";
 import type {
   VxeTableInstance,
   VxeTablePropTypes,
@@ -76,19 +82,17 @@ import type {
 import { clone } from "xe-utils";
 import { validNull } from "@/utils/validate";
 import { getRolesTree, roleListUpdate } from "@/api/role";
-
-interface RoleVo {
-  id: number;
-  roleName: string;
-  roleCode: string;
-  comment: string;
-  parentId: number;
-}
+import RolePermissionManage from "@/views/menage/components/role-permission-manage.vue";
+import type { RoleVo } from "@/types/ManageType";
+import VXETable from "vxe-table";
 
 export default defineComponent({
+  components: { RolePermissionManage },
   setup() {
     const roleMng = reactive({
       loading: false,
+      showPermissionMng: false,
+      role: {} as RoleVo,
       tableData: [] as RoleVo[],
       treeConfig: {
         transform: true,
@@ -117,8 +121,10 @@ export default defineComponent({
         { max: 20, message: "角色代码长度应小于20" },
         {
           validator({ cellValue }) {
-            if (roleMng.tableData.filter((item) => item.roleCode === cellValue)
-                .length > 1) {
+            if (
+              roleMng.tableData.filter((item) => item.roleCode === cellValue)
+                .length > 1
+            ) {
               return new Error("角色代码不能重复");
             }
           },
@@ -243,6 +249,11 @@ export default defineComponent({
       return findList();
     };
 
+    const permissionMng = (row: RoleVo) => {
+      roleMng.showPermissionMng = true;
+      roleMng.role = row;
+    };
+
     nextTick(() => {
       // 将表格和工具栏进行关联
       const $table = roleXTable.value;
@@ -262,6 +273,7 @@ export default defineComponent({
       insertEvent,
       saveEvent,
       searchMethod,
+      permissionMng,
     };
   },
 });

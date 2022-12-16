@@ -1,13 +1,13 @@
-import type { BaseInterface } from "@/types/BaseInterface";
+import type { BaseType } from "@/types/BaseType";
 
-export interface RouterRow extends BaseInterface {
+export interface RouterType extends BaseType {
   name: string;
   path: string;
   redirect: string;
   component: string;
   mate: string;
   description: string;
-  children: RouterRow[];
+  children: RouterType[];
   parentId: string;
   hidden: false;
   alwaysShow: false;

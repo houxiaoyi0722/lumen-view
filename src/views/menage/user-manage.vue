@@ -325,7 +325,7 @@ import { clone } from "xe-utils";
 import type { UploadProps } from "element-plus";
 import { getItem } from "@/utils/storage";
 import VXETable from "vxe-table";
-import type { UserExData, UserVo } from "@/types/ManageTypes";
+import type { UserExData, UserVo } from "@/types/ManageType";
 
 export default defineComponent({
   name: "userManage",

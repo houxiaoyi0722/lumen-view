@@ -22,13 +22,13 @@
           @contextmenu.prevent="openMenu(tag, $event)"
         >
           <span class="title">{{ tag.title }}</span>
-          <span
+          <i
             v-if="!isAffix(tag)"
             class="close-icon-left-margin"
             @click.prevent.stop="closeTag(tag)"
           >
             <el-icon><Close /></el-icon>
-          </span>
+          </i>
         </div>
       </router-link>
     </el-scrollbar>

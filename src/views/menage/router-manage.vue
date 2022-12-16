@@ -166,6 +166,7 @@ import { clone } from "xe-utils";
 import { modules } from "@/stores/modules/route";
 import { transLabels } from "@/components/hooks/common-hooks";
 import { roleStore } from "@/stores/modules/roles";
+import VXETable from "vxe-table";
 
 export default defineComponent({
   components: { VAceEditor },
