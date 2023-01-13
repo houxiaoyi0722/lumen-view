@@ -67,7 +67,7 @@
     </vxe-column>
   </vxe-table>
 
-  <el-drawer v-model="roleMng.showPermissionMng" :with-header="false">
+  <el-drawer v-model="roleMng.showPermissionMng" :with-header="false" destroy-on-close>
     <role-permission-manage :role="roleMng.role"></role-permission-manage>
   </el-drawer>
 </template>

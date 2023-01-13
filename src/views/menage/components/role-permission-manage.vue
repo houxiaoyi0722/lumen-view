@@ -8,19 +8,21 @@
         </span>
       </template>
       <el-tree
+        ref="elTree"
         :load="loadNode"
         lazy
         node-key="id"
         destroy-on-close
-        :expand-on-click-node="false"
+        show-checkbox
         :props="treeProps"
       >
         <template #default="{ node, data }">
           <span class="custom-tree-node">
-            <span>{{ node.label }}</span>
-            <span>
-              <a> Append </a>
-              <a style="margin-left: 8px"> Delete </a>
+            <el-icon v-if="!!node.data.mate && !!node.data.mate.icon">
+              <component :is="node.data.mate.icon"></component>
+            </el-icon>
+            <span style="margin-left: 3px">
+              <a> {{ !data.mate ? data.name : data.mate.title }} </a>
             </span>
           </span>
         </template>
@@ -46,6 +48,7 @@ import type { Tree } from "@/types/CommonType";
 import type Node from "element-plus/es/components/tree/src/model/node";
 import { routerByParentId } from "@/api/routers";
 import { commonAlert } from "@/components/hooks/common-hooks";
+import {permissionsListByRoute} from "@/api/permission";
 
 export default defineComponent({
   name: "rolePermissionManage",
@@ -56,21 +59,34 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const treeProps = {
+      label: "name",
+      isLeaf: "isLeaf",
+    };
     const loadNode = (node: Node, resolve: (data: Tree[]) => void) => {
       console.log(node);
       routerByParentId(node.data.id, props.role?.roleCode).then((res: any) => {
         console.log(res);
         if (commonAlert(res, "")) {
+          // 叶子节点加载页面下按钮权限
+          if (res.data.length === 0) {
+            // todo 这里直接从后端加载,暂时使用手动维护,前端缓存(同步)再渲染
+            permissionsListByRoute({
+              id:node.data.id
+            }).then(result => {
+              console.log(result)
+              result.data.forEach((item: any) => item.isLeaf = true)
+              return resolve(result.data);
+            });
+          }
+          res.data.forEach((item: any) => item.disabled = true)
+          // 非叶子节点时加载下级菜单
           return resolve(res.data);
         }
         return resolve([]);
       });
     };
 
-    const treeProps = {
-      label: "",
-      isLeaf: "isLeaf",
-    };
     return {
       loadNode,
       treeProps,
