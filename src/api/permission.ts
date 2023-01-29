@@ -10,3 +10,12 @@ export const permissionsListByRoute = (route: any) => {
     },
   });
 };
+
+// 获取角色键值对树
+export const saveRolePermList = (role: any) => {
+  return request({
+    url: "/lumen/role/permissions",
+    method: "put",
+    data: role,
+  });
+};

@@ -8,7 +8,7 @@
         </span>
       </template>
       <el-tree
-        ref="elTree"
+        ref="treeRef"
         :load="loadNode"
         lazy
         node-key="id"
@@ -27,6 +27,13 @@
           </span>
         </template>
       </el-tree>
+
+      <div class="drawer-button">
+        <el-button @click="savePermission()">保存</el-button>
+        <!--todo reset 已选择权限初始化方法-->
+        <el-button @click="reset()">重置</el-button>
+      </div>
+
     </el-tab-pane>
     <el-tab-pane label="">
       <template #label>
@@ -41,14 +48,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import {defineComponent, ref} from "vue";
 import type { PropType } from "vue";
 import type { RoleVo } from "@/types/ManageType";
 import type { Tree } from "@/types/CommonType";
 import type Node from "element-plus/es/components/tree/src/model/node";
 import { routerByParentId } from "@/api/routers";
-import { commonAlert } from "@/components/hooks/common-hooks";
-import {permissionsListByRoute} from "@/api/permission";
+import {commonAlert, transIdObjs} from "@/components/hooks/common-hooks";
+import {permissionsListByRoute, saveRolePermList} from "@/api/permission";
+import type {ElTree} from "element-plus";
 
 export default defineComponent({
   name: "rolePermissionManage",
@@ -63,10 +71,11 @@ export default defineComponent({
       label: "name",
       isLeaf: "isLeaf",
     };
+
+    const treeRef = ref<InstanceType<typeof ElTree>>();
+
     const loadNode = (node: Node, resolve: (data: Tree[]) => void) => {
-      console.log(node);
       routerByParentId(node.data.id, props.role?.roleCode).then((res: any) => {
-        console.log(res);
         if (commonAlert(res, "")) {
           // 叶子节点加载页面下按钮权限
           if (res.data.length === 0) {
@@ -74,7 +83,6 @@ export default defineComponent({
             permissionsListByRoute({
               id:node.data.id
             }).then(result => {
-              console.log(result)
               result.data.forEach((item: any) => item.isLeaf = true)
               return resolve(result.data);
             });
@@ -87,9 +95,25 @@ export default defineComponent({
       });
     };
 
+    const savePermission = () => {
+      const permissionIds = treeRef.value!.getCheckedKeys(true);
+
+      saveRolePermList({
+        ...props.role,
+        parentId: {
+          id: props.role!.parentId,
+        },
+        permissions: transIdObjs(permissionIds, "id"),
+      }).then((res:any) => {
+        commonAlert(res, "保存成功");
+      });
+    };
+
     return {
-      loadNode,
+      treeRef,
       treeProps,
+      loadNode,
+      savePermission,
     };
   },
 });
@@ -98,5 +122,9 @@ export default defineComponent({
 <style scoped>
 .custom-tabs-label .el-icon {
   vertical-align: middle;
+}
+.drawer-button {
+  margin-top: 20px;
+  text-align: center;
 }
 </style>
