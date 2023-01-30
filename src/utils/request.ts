@@ -97,10 +97,11 @@ request.interceptors.response.use(
     }
 
     // console.dir(error) // 可在此进行错误上报
+    const message = error.response.data.message? error.response.data.message:error.message? error.message : "系统异常";
     try {
-      ElMessage.error(error.response.data.message);
+      ElMessage.error(message);
     } catch (err) {
-      ElMessage.error(error.message);
+      ElMessage.error(message);
     }
 
     return Promise.reject(error);

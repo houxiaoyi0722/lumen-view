@@ -54,7 +54,7 @@
         ></vxe-select>
       </template>
     </vxe-column>
-    <vxe-column field="mate" title="元数据" width="200px" :edit-render="{}">
+    <vxe-column field="mate" title="元数据" width="150" :edit-render="{}">
       <template #default="{ row }">
         {{ row.mate }}
       </template>
@@ -117,7 +117,7 @@
     </vxe-column>
     <vxe-column
       field="roles"
-      title="权限管理"
+      title="路由权限"
       min-width="100"
       :edit-render="{}"
     >
@@ -137,17 +137,42 @@
         />
       </template>
     </vxe-column>
-    <vxe-column title="操作" min-width="100" fixed="right">
+    <vxe-column title="操作" width="150" fixed="right">
       <template #default="{ row }">
-        <vxe-button type="text" status="primary" @click="insertRow(row)"
-          >插入子节点</vxe-button
-        >
-        <vxe-button type="text" status="primary" @click="removeRow(row)"
-          >删除</vxe-button
-        >
+        <el-tooltip content="权限管理" effect="light" placement="top">
+          <vxe-button
+            icon="vxe-icon-ellipsis-v"
+            @click="permissionMng(row)"
+            circle
+          ></vxe-button>
+        </el-tooltip>
+        <el-tooltip content="插入子节点" effect="light" placement="top">
+          <vxe-button
+            icon="vxe-icon-add"
+            @click="insertRow(row)"
+            circle
+          ></vxe-button>
+        </el-tooltip>
+        <el-tooltip content="删除" effect="light" placement="top">
+          <vxe-button
+            icon="vxe-icon-delete-fill"
+            @click="removeRow(row)"
+            circle
+          ></vxe-button>
+        </el-tooltip>
       </template>
     </vxe-column>
   </vxe-table>
+
+  <el-drawer
+    v-model="routerMng.showPermissionMng"
+    :with-header="false"
+    destroy-on-close
+  >
+    <router-permission-manage
+      :router="routerMng.router"
+    ></router-permission-manage>
+  </el-drawer>
 </template>
 
 <script lang="ts">
@@ -167,9 +192,10 @@ import { modules } from "@/stores/modules/route";
 import { transLabels } from "@/components/hooks/common-hooks";
 import { roleStore } from "@/stores/modules/roles";
 import VXETable from "vxe-table";
+import RouterPermissionManage from "@/views/menage/components/router-permission-manage.vue";
 
 export default defineComponent({
-  components: { VAceEditor },
+  components: { VAceEditor, RouterPermissionManage },
   setup() {
     const routerMng = reactive({
       loading: false,
@@ -181,6 +207,8 @@ export default defineComponent({
       },
       moduleList: [] as any[],
       roleList: [] as any[],
+      showPermissionMng: false,
+      router: {} as any,
     });
     const validRules = ref({
       name: [
@@ -396,6 +424,11 @@ export default defineComponent({
       });
     };
 
+    const permissionMng = (row: any) => {
+      routerMng.showPermissionMng = true;
+      routerMng.router = row;
+    };
+
     nextTick(() => {
       // 将表格和工具栏进行关联
       const $table = xTable.value;
@@ -416,6 +449,7 @@ export default defineComponent({
       insertRow,
       concatPath,
       transLabels,
+      permissionMng,
     };
   },
 });

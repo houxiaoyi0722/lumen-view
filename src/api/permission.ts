@@ -1,17 +1,29 @@
 import request from "@/utils/request";
 
-// 获取角色键值对树
-export const permissionsListByRoute = (route: any) => {
+// 获取角色下权限列表
+export const permissionsListByRole = (role: any) => {
   return request({
-    url: "/lumen/permissions/permission/route",
+    url: "/lumen/permissions/permission/role",
     method: "post",
     data: {
-      router: route,
+      role: role,
     },
   });
 };
 
-// 获取角色键值对树
+// 获取路由下权限列表
+export const permissionsListByRouter = (router: any) => {
+  return request({
+    url: "/lumen/permissions/permission/router",
+    method: "post",
+    data: {
+      router: router,
+    },
+  });
+};
+
+
+// 保存角色权限
 export const saveRolePermList = (role: any) => {
   return request({
     url: "/lumen/role/permissions",
@@ -19,3 +31,12 @@ export const saveRolePermList = (role: any) => {
     data: role,
   });
 };
+
+// 保存路由权限
+export const saveRouterPerList = (router: any) => {
+  return request({
+    url: "/lumen/router/router",
+    method: "put",
+    data: router,
+  });
+}

@@ -10,6 +10,7 @@
       <el-tree
         ref="treeRef"
         :load="loadNode"
+        default-expand-all
         lazy
         node-key="id"
         destroy-on-close
@@ -30,10 +31,8 @@
 
       <div class="drawer-button">
         <el-button @click="savePermission()">保存</el-button>
-        <!--todo reset 已选择权限初始化方法-->
-        <el-button @click="reset()">重置</el-button>
+        <el-button @click="resetPermission()">重置</el-button>
       </div>
-
     </el-tab-pane>
     <el-tab-pane label="">
       <template #label>
@@ -48,15 +47,19 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import type { PropType } from "vue";
 import type { RoleVo } from "@/types/ManageType";
 import type { Tree } from "@/types/CommonType";
 import type Node from "element-plus/es/components/tree/src/model/node";
 import { routerByParentId } from "@/api/routers";
-import {commonAlert, transIdObjs} from "@/components/hooks/common-hooks";
-import {permissionsListByRoute, saveRolePermList} from "@/api/permission";
-import type {ElTree} from "element-plus";
+import { commonAlert, transIdObjs } from "@/components/hooks/common-hooks";
+import {
+  permissionsListByRole,
+  permissionsListByRouter,
+  saveRolePermList,
+} from "@/api/permission";
+import type { ElTree } from "element-plus";
 
 export default defineComponent({
   name: "rolePermissionManage",
@@ -80,18 +83,31 @@ export default defineComponent({
           // 叶子节点加载页面下按钮权限
           if (res.data.length === 0) {
             // todo 这里直接从后端加载,暂时使用手动维护,前端缓存(同步)再渲染
-            permissionsListByRoute({
-              id:node.data.id
-            }).then(result => {
-              result.data.forEach((item: any) => item.isLeaf = true)
+            permissionsListByRouter({
+              id: node.data.id,
+            }).then((result) => {
+              result.data.forEach((item: any) => (item.isLeaf = true));
               return resolve(result.data);
             });
           }
-          res.data.forEach((item: any) => item.disabled = true)
+          res.data.forEach((item: any) => (item.disabled = true));
           // 非叶子节点时加载下级菜单
           return resolve(res.data);
         }
         return resolve([]);
+      });
+    };
+
+    onMounted(() => {
+      resetPermission();
+    });
+
+    const resetPermission = () => {
+      permissionsListByRole({ id: props.role!.id }).then((res: any) => {
+        console.log(res);
+        if (commonAlert(res, "")) {
+          treeRef.value!.setCheckedKeys(res.data.map((item: any) => item.id));
+        }
       });
     };
 
@@ -104,7 +120,7 @@ export default defineComponent({
           id: props.role!.parentId,
         },
         permissions: transIdObjs(permissionIds, "id"),
-      }).then((res:any) => {
+      }).then((res: any) => {
         commonAlert(res, "保存成功");
       });
     };
@@ -114,6 +130,7 @@ export default defineComponent({
       treeProps,
       loadNode,
       savePermission,
+      resetPermission,
     };
   },
 });
