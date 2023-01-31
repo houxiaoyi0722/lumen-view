@@ -25,7 +25,11 @@
             <vxe-input v-model="row.name" type="text"></vxe-input>
           </template>
         </vxe-column>
-        <vxe-column field="code" title="权限代码" :edit-render="{ defaultValue: router.path + '-' }">
+        <vxe-column
+          field="code"
+          title="权限代码"
+          :edit-render="{ defaultValue: router.path + '-' }"
+        >
           <template #edit="{ row }">
             <vxe-input v-model="row.code" type="text"></vxe-input>
           </template>
@@ -43,12 +47,12 @@
 
 <script lang="ts">
 import type { PropType } from "vue";
-import {defineComponent, onMounted, ref} from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import { VXETable } from "vxe-table";
 import type { VxeTableInstance } from "vxe-table";
-import type {RouterType} from "@/types/RouterType";
-import {permissionsListByRouter, saveRouterPerList} from "@/api/permission";
-import {commonAlert} from "@/components/hooks/common-hooks";
+import type { RouterType } from "@/types/RouterType";
+import { permissionsListByRouter, saveRouterPerList } from "@/api/permission";
+import { commonAlert } from "@/components/hooks/common-hooks";
 
 export default defineComponent({
   name: "routerPermissionManage",
@@ -65,50 +69,50 @@ export default defineComponent({
       tableData: [] as RouterType[],
     });
 
-
     onMounted(() => {
-      permissionsListByRouter({
-        id: props.router!.id
-      }).then(res => {
-        if (commonAlert(res, "")) {
-          routerPriMng.value.tableData = res.data
-        }
-      });
+      loadTableData();
     });
 
-    const insertEvent = async (row: RouterType) => {
+    const loadTableData = () => {
+      permissionsListByRouter({
+        id: props.router!.id,
+      }).then((res) => {
+        if (commonAlert(res, "")) {
+          routerPriMng.value.tableData = res.data;
+        }
+      });
+    };
+
+    const insertEvent = async (row: number) => {
       const $table = xTable.value;
       const record = {
-        sex: "1",
-        date12: "2021-01-01",
+        router: {
+          id: props.router?.id,
+        },
       };
       const { row: newRow } = await $table!.insertAt(record, row);
       await $table!.setEditCell(newRow, "name");
     };
 
-    const getInsertEvent = () => {
-      const $table = xTable.value;
-      const insertRecords = $table!.getInsertRecords();
-      VXETable.modal.alert(`新增：${insertRecords.length}`);
-    };
-
-    // todo 保存路由下权限列表
     const saveEvent = () => {
       const $table = xTable.value;
-      const { insertRecords, removeRecords, updateRecords } =
-        $table!.getRecordset();
-
-      // saveRouterPerList().then()
-      VXETable.modal.alert(
-        `insertRecords=${insertRecords.length} removeRecords=${removeRecords.length} updateRecords=${updateRecords.length}`
-      );
+      const tableData = $table?.getTableData();
+      console.log(tableData);
+      saveRouterPerList({
+        insertList: $table?.getInsertRecords(),
+        updateList: $table?.getUpdateRecords(),
+        removeList: $table?.getRemoveRecords(),
+      }).then((res) => {
+        if (commonAlert(res, "保存成功")) {
+          loadTableData();
+        }
+      });
     };
 
     return {
       xTable,
       routerPriMng,
       insertEvent,
-      getInsertEvent,
       saveEvent,
     };
   },

@@ -35,8 +35,8 @@ export const saveRolePermList = (role: any) => {
 // 保存路由权限
 export const saveRouterPerList = (router: any) => {
   return request({
-    url: "/lumen/router/router",
-    method: "put",
+    url: "/lumen/permissions/router/permission",
+    method: "post",
     data: router,
   });
 }
