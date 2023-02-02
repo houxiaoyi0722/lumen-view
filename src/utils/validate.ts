@@ -87,12 +87,13 @@ export function isArray(arg: any) {
   return Array.isArray(arg);
 }
 
-export function validNull(str: any) {
+export function validNull(obj: any) {
   if (
-    str === "" ||
-    typeof str === "undefined" ||
-    str === null ||
-    str.length === 0
+    obj === "" ||
+    typeof obj === "undefined" ||
+    obj === null ||
+    obj.length === 0 ||
+    Object.keys(obj).length === 0
   ) {
     return true;
   }

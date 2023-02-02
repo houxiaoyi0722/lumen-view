@@ -69,13 +69,13 @@ import VXETable from "vxe-table";
 import {clone} from "xe-utils";
 import {validNull} from "@/utils/validate";
 import {getUserGroup, userGroupUpdate} from "@/api/user-group";
-import type {UserGroupVo} from "@/types/ManageType";
+import type {UserGroup} from "@/types/ManageType";
 
 export default defineComponent({
   setup() {
     const userGroupMng = reactive({
       loading: false,
-      tableData: [] as UserGroupVo[],
+      tableData: [] as UserGroup[],
       treeConfig: {
         transform: true,
         rowField: "id",

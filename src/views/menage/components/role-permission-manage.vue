@@ -49,7 +49,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
 import type { PropType } from "vue";
-import type { RoleVo } from "@/types/ManageType";
+import type { Role } from "@/types/ManageType";
 import type { Tree } from "@/types/CommonType";
 import type Node from "element-plus/es/components/tree/src/model/node";
 import { routerByParentId } from "@/api/routers";
@@ -65,8 +65,8 @@ export default defineComponent({
   name: "rolePermissionManage",
   props: {
     role: {
-      type: Object as PropType<RoleVo>,
-      validator: (role: RoleVo) => !!role.id,
+      type: Object as PropType<Role>,
+      validator: (role: Role) => !!role.id,
     },
   },
   setup(props) {

@@ -67,7 +67,11 @@
     </vxe-column>
   </vxe-table>
 
-  <el-drawer v-model="roleMng.showPermissionMng" :with-header="false" destroy-on-close>
+  <el-drawer
+    v-model="roleMng.showPermissionMng"
+    :with-header="false"
+    destroy-on-close
+  >
     <role-permission-manage :role="roleMng.role"></role-permission-manage>
   </el-drawer>
 </template>
@@ -83,7 +87,7 @@ import { clone } from "xe-utils";
 import { validNull } from "@/utils/validate";
 import { getRolesTree, roleListUpdate } from "@/api/role";
 import RolePermissionManage from "@/views/menage/components/role-permission-manage.vue";
-import type { RoleVo } from "@/types/ManageType";
+import type { Role } from "@/types/ManageType";
 import VXETable from "vxe-table";
 
 export default defineComponent({
@@ -92,8 +96,8 @@ export default defineComponent({
     const roleMng = reactive({
       loading: false,
       showPermissionMng: false,
-      role: {} as RoleVo,
-      tableData: [] as RoleVo[],
+      role: {} as Role,
+      tableData: [] as Role[],
       treeConfig: {
         transform: true,
         rowField: "id",
@@ -249,7 +253,7 @@ export default defineComponent({
       return findList();
     };
 
-    const permissionMng = (row: RoleVo) => {
+    const permissionMng = (row: Role) => {
       roleMng.showPermissionMng = true;
       roleMng.role = row;
     };

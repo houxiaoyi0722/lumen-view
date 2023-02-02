@@ -1,9 +1,9 @@
-import { ElLoading } from "element-plus";
+import {ElLoading} from "element-plus";
 import router from "@/router";
-import { accountStore } from "@/stores/modules/account";
-import { appStore } from "@/stores/modules/app";
-import { routeStore } from "@/stores/modules/route";
-import { has } from "xe-utils";
+import {accountStore} from "@/stores/modules/account";
+import {appStore} from "@/stores/modules/app";
+import {routeStore} from "@/stores/modules/route";
+import {validNull} from "@/utils/validate";
 
 // 白名单，里面是路由对象的name
 const WhiteList = ["login"];
@@ -40,7 +40,7 @@ router.beforeEach(async (to) => {
     } else {
       // 获取用户角色信息，根据角色判断权限
       const hasUserinfo = account_store.userinfo;
-      if (!hasUserinfo) {
+      if (validNull(hasUserinfo)) {
         const loadingInstance = ElLoading.service({
           lock: true,
           text: "正在加载数据，请稍候~",

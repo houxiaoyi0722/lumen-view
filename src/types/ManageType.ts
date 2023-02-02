@@ -1,10 +1,12 @@
-export interface UserVo {
+
+export interface User {
   id: string;
   name: string;
   username: string;
   password: string;
-  roles: any[];
-  userGroup: any;
+  roles: Role[];
+  userGroup: UserGroup;
+  userExt: UserExData;
 }
 
 export interface UserExData {
@@ -18,7 +20,7 @@ export interface UserExData {
   mobilePhone: string;
   address: string;
   email: string;
-  user: UserVo;
+  user: User;
 }
 
 export interface Storage {
@@ -30,18 +32,26 @@ export interface Storage {
   downLoadUrl: string;
 }
 
-export interface RoleVo {
+export interface Role {
   id: number;
   roleName: string;
   roleCode: string;
   comment: string;
   parentId: number;
+  permissions: Permission[];
 }
 
-export interface UserGroupVo {
+export interface UserGroup {
   id: number;
   groupName: string;
   groupCode: string;
   comment: string;
   parentId: number;
+}
+
+export interface Permission {
+  id: number;
+  code: string;
+  name: string;
+  comment: string;
 }

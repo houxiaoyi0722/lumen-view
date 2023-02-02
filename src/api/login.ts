@@ -1,4 +1,6 @@
 import request from "@/utils/request";
+import type {User} from "@/types/ManageType";
+import type {AxiosPromise} from "axios";
 
 // 登录接口
 export const Login = (data: any) => {
@@ -10,7 +12,7 @@ export const Login = (data: any) => {
 };
 
 // 获取登录用户信息
-export const getUserinfo = () => {
+export const getUserinfo = (): AxiosPromise<User> => {
   return request({
     url: "/lumen/user/userinfo",
     method: "get",

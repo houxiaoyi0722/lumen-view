@@ -325,7 +325,7 @@ import { clone } from "xe-utils";
 import type { UploadProps } from "element-plus";
 import { getItem } from "@/utils/storage";
 import VXETable from "vxe-table";
-import type { UserExData, UserVo } from "@/types/ManageType";
+import type { UserExData, User } from "@/types/ManageType";
 
 export default defineComponent({
   name: "userManage",
@@ -622,7 +622,7 @@ export default defineComponent({
       gridOptions.formConfig!.data.userGroup = "";
     };
 
-    const saveRowEvent = async (user: UserVo) => {
+    const saveRowEvent = async (user: User) => {
       const $grid = xGrid.value;
       $grid!.validate(user).then((res) => {
         if (res) {
@@ -647,7 +647,7 @@ export default defineComponent({
       });
     };
 
-    const saveOrUpdate = (user: UserVo) => {
+    const saveOrUpdate = (user: User) => {
       return validNull(user.id) ? insert(user) : update(user);
     };
 

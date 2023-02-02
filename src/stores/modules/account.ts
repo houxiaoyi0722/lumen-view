@@ -4,23 +4,27 @@ import {getItem, removeItem, setItem} from "@/utils/storage";
 import {validNull} from "@/utils/validate";
 import {tagStore} from "@/stores/modules/tags";
 import {routeStore} from "@/stores/modules/route";
+import type {User} from "@/types/ManageType";
 
 const TOKEN = "TOKEN";
+const USERINFO = "USERINFO";
+const PERMISSIONS = "PERMISSIONS";
 
 export const accountStore = defineStore({
   id: "account",
   state: () => ({
-    userinfo: undefined,
+    userinfo: {} as User,
     authorization: {
       token: "",
       refreshToken: "",
       tokenHead: "",
     },
+    permissions: [] as string[],
   }),
   getters: {
     getUserInfo: (state) => {
-      if (!state.userinfo) {
-        state.userinfo = getItem("userinfo");
+      if (validNull(state.userinfo)) {
+        state.userinfo = getItem(USERINFO);
       }
       return state.userinfo;
     },
@@ -30,18 +34,34 @@ export const accountStore = defineStore({
       }
       return state.authorization;
     },
+    getPermissions: (state) => {
+      if (validNull(state.permissions)) {
+        state.permissions = getItem(PERMISSIONS);
+      }
+      return state.permissions;
+    },
   },
   actions: {
     // 获取用户信息
     async loadUserinfo() {
       const { data } = await getUserinfo();
+      let perArr: string[] = [];
+      if (!validNull(data.roles)) {
+        data.roles.forEach(role => {
+          perArr = perArr.concat(role.permissions.map(item => item.code));
+        });
+      }
       this.userinfo = data;
-      setItem("userinfo", data);
+      this.permissions = perArr;
+
+      setItem(USERINFO, data);
+      setItem(PERMISSIONS, perArr);
       return Promise.resolve(data);
     },
     clearUserinfo() {
-      this.userinfo = undefined;
-      removeItem("userinfo");
+      this.userinfo = {} as User;
+      removeItem(USERINFO);
+      removeItem(PERMISSIONS);
     },
     clearToken() {
       removeItem(TOKEN);
