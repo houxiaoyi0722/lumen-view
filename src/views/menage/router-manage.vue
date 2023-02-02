@@ -3,6 +3,7 @@
     <template #buttons>
       <vxe-button @click="insertEvent">新增</vxe-button>
       <vxe-button @click="saveEvent">保存数据</vxe-button>
+      <vxe-button @click="showOtherPermission">其他权限管理</vxe-button>
     </template>
   </vxe-toolbar>
 
@@ -173,6 +174,14 @@
       :router="routerMng.router"
     ></router-permission-manage>
   </el-drawer>
+
+  <el-drawer
+    v-model="routerMng.showOtherPri"
+    :with-header="false"
+    destroy-on-close
+  >
+    <other-permission-manage></other-permission-manage>
+  </el-drawer>
 </template>
 
 <script lang="ts">
@@ -193,9 +202,10 @@ import { transLabels } from "@/components/hooks/common-hooks";
 import { roleStore } from "@/stores/modules/roles";
 import VXETable from "vxe-table";
 import RouterPermissionManage from "@/views/menage/components/router-permission-manage.vue";
+import OtherPermissionManage from "@/views/menage/components/other-permission-manage.vue";
 
 export default defineComponent({
-  components: { VAceEditor, RouterPermissionManage },
+  components: { VAceEditor, RouterPermissionManage, OtherPermissionManage },
   setup() {
     const routerMng = reactive({
       loading: false,
@@ -208,6 +218,7 @@ export default defineComponent({
       moduleList: [] as any[],
       roleList: [] as any[],
       showPermissionMng: false,
+      showOtherPri: false,
       router: {} as any,
     });
     const validRules = ref({
@@ -429,6 +440,10 @@ export default defineComponent({
       routerMng.router = row;
     };
 
+    const showOtherPermission = () => {
+      routerMng.showOtherPri = true;
+    };
+
     nextTick(() => {
       // 将表格和工具栏进行关联
       const $table = xTable.value;
@@ -450,6 +465,7 @@ export default defineComponent({
       concatPath,
       transLabels,
       permissionMng,
+      showOtherPermission,
     };
   },
 });

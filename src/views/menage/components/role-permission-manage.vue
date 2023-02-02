@@ -41,7 +41,7 @@
           <span>其他权限</span>
         </span>
       </template>
-      其他
+<!--todo 1.获取用户权限时获取当前角色权限以及父级权限 2.考虑是否添加权限管理列表?或者在其他权限下添加可搜索的表格-->
     </el-tab-pane>
   </el-tabs>
 </template>
@@ -83,12 +83,14 @@ export default defineComponent({
           // 叶子节点加载页面下按钮权限
           if (res.data.length === 0) {
             // todo 这里直接从后端加载,暂时使用手动维护,前端缓存(同步)再渲染
-            permissionsListByRouter({
-              id: node.data.id,
-            }).then((result) => {
-              result.data.forEach((item: any) => (item.isLeaf = true));
-              return resolve(result.data);
-            });
+            if (node.data.id) {
+              permissionsListByRouter({
+                id: node.data.id,
+              }).then((result) => {
+                result.data.forEach((item: any) => (item.isLeaf = true));
+                return resolve(result.data);
+              });
+            }
           }
           res.data.forEach((item: any) => (item.disabled = true));
           // 非叶子节点时加载下级菜单
