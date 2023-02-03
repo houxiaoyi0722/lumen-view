@@ -46,7 +46,7 @@ request.interceptors.response.use(
 
       const authorization = getItem("TOKEN");
 
-      if (validNull(authorization.refreshToken)) {
+      if (validNull(authorization) || validNull(authorization.refreshToken)) {
         ElMessage.error(error.response.data.message);
 
         // 清除token
