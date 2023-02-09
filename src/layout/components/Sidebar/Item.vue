@@ -5,7 +5,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import IconAdapter from "@/components/adapter/IconAdapter.vue";
+import IconAdapter from "@/components/IconAdapter";
 
 export default defineComponent({
   components: { IconAdapter },

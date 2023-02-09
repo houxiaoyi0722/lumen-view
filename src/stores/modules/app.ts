@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { getItem, setItem } from "@/utils/storage";
 import { validNull } from "@/utils/validate";
-import { icons, svgIcons } from "@/components/adapter/icons";
+import { icons, svgIcons } from "@/components/IconAdapter/icons";
 
 const COLLAPSE = "VEA-COLLAPSE";
 const EL_ICONS = "EL_ICONS";
