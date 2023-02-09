@@ -1,14 +1,14 @@
 <template>
-  <el-icon>
-    <component :is="icon"></component>
-  </el-icon>
+  <icon-adapter :name="icon"></icon-adapter>
   <span>{{ title }}</span>
 </template>
 
 <script>
 import { defineComponent } from "vue";
+import IconAdapter from "@/components/adapter/IconAdapter.vue";
 
 export default defineComponent({
+  components: { IconAdapter },
   props: ["title", "icon"],
 });
 </script>

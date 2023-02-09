@@ -10,6 +10,8 @@ import * as ElementPlusIconsVue from "@element-plus/icons-vue";
 
 // 引入svg图标注册脚本
 import "vite-plugin-svg-icons/register";
+// icon-svg组件
+import SvgIcon from "@/components/SvgIcon/index.vue";
 
 // 权限控制
 import "./permission";
@@ -61,6 +63,7 @@ import "vxe-table/lib/style.css";
 import "xe-utils";
 import dayjs from "@/utils/dayjs/index";
 import {accountStore} from "@/stores/modules/account";
+import {appStore} from "@/stores/modules/app";
 
 // 给 vue 实例挂载内部对象，例如：
 // app.config.globalProperties.$XModal = VXETable.modal
@@ -68,10 +71,6 @@ import {accountStore} from "@/stores/modules/account";
 // app.config.globalProperties.$XSaveFile = VXETable.saveFile
 // app.config.globalProperties.$XReadFile = VXETable.readFile
 const app = createApp(App);
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-  app.component(key, component);
-}
-
 // store
 app.use(createPinia());
 app.use(dayjs);
@@ -114,7 +113,7 @@ app
 
 app.mount("#app");
 
-// 使 v-focus 在所有组件中都可用 在Pinia创建后再调用
+// 使 v-focus 在所有组件中都可用 在Pina创建后再调用
 app.directive("permission", (el, binding) => {
   // 这会在 `mounted` 和 `updated` 时都调用
   const account_store = accountStore();
@@ -122,3 +121,16 @@ app.directive("permission", (el, binding) => {
     el.parentNode && el.parentNode.removeChild(el);
   }
 });
+
+
+app.component("svgIcon", SvgIcon);
+const elIcons: string[] = [];
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component);
+  elIcons.push(key);
+}
+const app_store = appStore();
+app_store.setElIcons(elIcons);
+
+
+
