@@ -49,8 +49,8 @@ import {
   Switch,
   Input,
   Select,
-  // Optgroup,
-  // Option,
+  Optgroup,
+  Option,
   Textarea,
   Button,
   Modal,
@@ -100,8 +100,8 @@ app
   .use(Switch)
   .use(Input)
   .use(Select)
-  // .use(Optgroup)
-  // .use(Option)
+  .use(Optgroup)
+  .use(Option)
   .use(Textarea)
   .use(Button)
   .use(Modal)

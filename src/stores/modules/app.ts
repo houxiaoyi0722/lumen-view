@@ -18,7 +18,7 @@ export const appStore = defineStore("app", {
     svgIcons: svgIcons as string[],
   }),
   getters: {
-    obtainElIcons: (state) => {
+    obtainElIcons: (state): string[] => {
       if (validNull(state.elIcons)) {
         state.elIcons = getItem(EL_ICONS);
       }

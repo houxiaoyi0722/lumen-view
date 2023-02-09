@@ -12,7 +12,7 @@
     keep-source
     ref="xTable"
     height="90%"
-    :row-config="{ keyField: 'id' }"
+    :row-config="{ keyField: 'id', isHover: true }"
     :column-config="{ resizable: true }"
     :loading="routerMng.loading"
     :tree-config="routerMng.treeConfig"
@@ -20,10 +20,16 @@
     :edit-rules="validRules"
     :data="routerMng.tableData"
   >
-    <vxe-column type="checkbox" width="40"></vxe-column>
-    <vxe-column type="seq" width="100" tree-node></vxe-column>
+    <vxe-column type="checkbox" min-width="40" width="40"></vxe-column>
+    <vxe-column type="seq" min-width="100" width="100" tree-node></vxe-column>
 
-    <vxe-column field="name" title="路由名称" :edit-render="{}">
+    <vxe-column
+      field="name"
+      title="路由名称"
+      min-width="150"
+      width="150"
+      :edit-render="{}"
+    >
       <template #edit="scope">
         <vxe-input
           v-model="scope.row.name"
@@ -32,7 +38,13 @@
         ></vxe-input>
       </template>
     </vxe-column>
-    <vxe-column field="path" title="访问路径" :edit-render="{}">
+    <vxe-column
+      field="path"
+      title="访问路径"
+      min-width="150"
+      width="150"
+      :edit-render="{}"
+    >
       <template #default="{ row }">
         {{ concatPath(row) }}
       </template>
@@ -44,7 +56,13 @@
         ></vxe-input>
       </template>
     </vxe-column>
-    <vxe-column field="component" title="component" :edit-render="{}">
+    <vxe-column
+      field="component"
+      title="component"
+      min-width="150"
+      width="150"
+      :edit-render="{}"
+    >
       <template #edit="scope">
         <vxe-select
           v-model="scope.row.component"
@@ -55,25 +73,61 @@
         ></vxe-select>
       </template>
     </vxe-column>
-    <vxe-column field="mate" title="元数据" width="150" :edit-render="{}">
+    <vxe-column
+      field="icon"
+      title="图标"
+      min-width="80"
+      width="80"
+      :edit-render="{}"
+    >
       <template #default="{ row }">
-        {{ row.mate }}
+        <icon-adapter :name="row.icon"></icon-adapter>
+      </template>
+      <template #edit="scope">
+        <vxe-select
+          v-model="scope.row.icon"
+          placeholder="可搜索"
+          @change="$refs.xTable.updateStatus(scope)"
+          filterable
+        >
+          <vxe-optgroup v-for="item in routerMng.iconGroups" :key="item.groupName" :label="item.groupName">
+            <vxe-option v-for="icon in item.icons" :key="icon" :value="icon" :label="icon">
+              <template #default="{ option }">
+                <icon-adapter :name="option.label"></icon-adapter>
+              </template>
+            </vxe-option>
+          </vxe-optgroup>
+        </vxe-select>
+      </template>
+    </vxe-column>
+    <vxe-column
+      field="title"
+      title="标题"
+      min-width="100"
+      width="100"
+      :edit-render="{}"
+    >
+      <template #default="{ row }">
+        {{ row.title }}
       </template>
       <template #edit="scope">
         <div style="width: 100%; float: left">
-          <v-ace-editor
-            v-model:value="scope.row.mate"
-            @change="$refs.xTable.updateStatus(scope)"
-            lang="json"
-            :theme="'chrome'"
-            :readonly="false"
-            style="height: 100px"
-            class="ace-editor"
-          />
+          <vxe-input
+            v-model="scope.row.title"
+            type="text"
+            @change="updateMate('title', scope.row.title, scope)"
+          ></vxe-input>
+          <!-- 更新事件更新mate数据 -->
         </div>
       </template>
     </vxe-column>
-    <vxe-column field="redirect" title="跳转路径" :edit-render="{}">
+    <vxe-column
+      field="redirect"
+      title="跳转路径"
+      min-width="150"
+      width="150"
+      :edit-render="{}"
+    >
       <template #edit="scope">
         <vxe-input
           v-model="scope.row.redirect"
@@ -82,7 +136,13 @@
         ></vxe-input>
       </template>
     </vxe-column>
-    <vxe-column field="description" title="描述" :edit-render="{}">
+    <vxe-column
+      field="description"
+      title="描述"
+      min-width="150"
+      width="150"
+      :edit-render="{}"
+    >
       <template #edit="scope">
         <vxe-input
           v-model="scope.row.description"
@@ -91,7 +151,13 @@
         ></vxe-input>
       </template>
     </vxe-column>
-    <vxe-column field="hidden" title="是否隐藏" :edit-render="{}">
+    <vxe-column
+      field="hidden"
+      title="是否隐藏"
+      min-width="100"
+      width="100"
+      :edit-render="{}"
+    >
       <template #default="{ row }">
         <vxe-switch
           v-model="row.hidden"
@@ -107,7 +173,13 @@
         ></vxe-switch>
       </template>
     </vxe-column>
-    <vxe-column field="orderBy" title="排序" width="80" :edit-render="{}">
+    <vxe-column
+      field="orderBy"
+      title="排序"
+      min-width="80"
+      width="80"
+      :edit-render="{}"
+    >
       <template #edit="scope">
         <vxe-input
           v-model="scope.row.orderBy"
@@ -119,7 +191,8 @@
     <vxe-column
       field="roles"
       title="路由权限"
-      min-width="100"
+      min-width="250"
+      width="250"
       :edit-render="{}"
     >
       <template #default="{ row }">
@@ -138,7 +211,31 @@
         />
       </template>
     </vxe-column>
-    <vxe-column title="操作" width="150" fixed="right">
+    <vxe-column
+      field="mate"
+      title="元数据"
+      min-width="300"
+      width="300"
+      :edit-render="{}"
+    >
+      <template #default="{ row }">
+        {{ row.mate }}
+      </template>
+      <template #edit="scope">
+        <div style="width: 100%; float: left">
+          <v-ace-editor
+            v-model:value="scope.row.mate"
+            @change="$refs.xTable.updateStatus(scope)"
+            lang="json"
+            :theme="'chrome'"
+            :readonly="false"
+            style="height: 100px"
+            class="ace-editor"
+          />
+        </div>
+      </template>
+    </vxe-column>
+    <vxe-column title="操作" width="150" min-width="150" fixed="right">
       <template #default="{ row }">
         <el-tooltip content="权限管理" effect="light" placement="top">
           <vxe-button
@@ -203,10 +300,19 @@ import { roleStore } from "@/stores/modules/roles";
 import VXETable from "vxe-table";
 import RouterPermissionManage from "@/views/menage/components/router-permission-manage.vue";
 import OtherPermissionManage from "@/views/menage/components/other-permission-manage.vue";
+import IconAdapter from "@/components/IconAdapter/index.vue";
+import {appStore} from "@/stores/modules/app";
 
 export default defineComponent({
-  components: { VAceEditor, RouterPermissionManage, OtherPermissionManage },
+  components: {
+    IconAdapter,
+    VAceEditor,
+    RouterPermissionManage,
+    OtherPermissionManage,
+  },
   setup() {
+
+    const app_store = appStore();
     const routerMng = reactive({
       loading: false,
       tableData: [] as any[],
@@ -220,6 +326,20 @@ export default defineComponent({
       showPermissionMng: false,
       showOtherPri: false,
       router: {} as any,
+      iconGroups: [
+        {
+          groupName: "el-icon",
+          icons: app_store.obtainElIcons,
+        },
+        {
+          groupName: "vxe-icon",
+          icons: app_store.obtainVxeIcons,
+        },
+        {
+          groupName: "自定义icon",
+          icons: app_store.obtainSvgIcons,
+        },
+      ],
     });
     const validRules = ref({
       name: [
@@ -304,6 +424,8 @@ export default defineComponent({
           formatJson(row.children);
         }
         row.roles = row.roles.map((item: any) => item.id);
+        row.icon = row.mate.icon;
+        row.title = row.mate.title;
         row.mate = JSON.stringify(row.mate, null, 2);
       }
       return data;
@@ -325,6 +447,8 @@ export default defineComponent({
         name: "",
         path: "",
         component: "Layout",
+        title: "example",
+        icon: "Sunset",
         mate: "{\n" + '  "title": "example",\n' + '  "icon": "Sunset"\n' + "}",
         description: "",
         hidden: false,
@@ -357,6 +481,8 @@ export default defineComponent({
           name: "",
           path: "",
           component: "Layout",
+          title: "example",
+          icon: "Sunset",
           mate:
             "{\n" + '  "title": "example",\n' + '  "icon": "Sunset"\n' + "}",
           description: "",
@@ -444,6 +570,14 @@ export default defineComponent({
       routerMng.showOtherPri = true;
     };
 
+    const updateMate = (field: string, value: string, scope: any) => {
+      // 联动更新mate数据
+      const mateParse = JSON.parse(scope.row.mate);
+      mateParse[field] = value;
+      scope.row.mate = JSON.stringify(mateParse, null, 2);
+      xTable.value!.updateStatus(scope);
+    };
+
     nextTick(() => {
       // 将表格和工具栏进行关联
       const $table = xTable.value;
@@ -466,6 +600,7 @@ export default defineComponent({
       transLabels,
       permissionMng,
       showOtherPermission,
+      updateMate,
     };
   },
 });
