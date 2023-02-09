@@ -62,8 +62,8 @@ import {
 import "vxe-table/lib/style.css";
 import "xe-utils";
 import dayjs from "@/utils/dayjs/index";
-import {accountStore} from "@/stores/modules/account";
-import {appStore} from "@/stores/modules/app";
+import { accountStore } from "@/stores/modules/account";
+import { appStore } from "@/stores/modules/app";
 
 // 给 vue 实例挂载内部对象，例如：
 // app.config.globalProperties.$XModal = VXETable.modal
@@ -117,11 +117,10 @@ app.mount("#app");
 app.directive("permission", (el, binding) => {
   // 这会在 `mounted` 和 `updated` 时都调用
   const account_store = accountStore();
-  if (!account_store.getPermissions.find(item => item === binding.value)) {
+  if (!account_store.getPermissions.find((item) => item === binding.value)) {
     el.parentNode && el.parentNode.removeChild(el);
   }
 });
-
 
 app.component("svgIcon", SvgIcon);
 const elIcons: string[] = [];
@@ -129,8 +128,4 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component);
   elIcons.push(key);
 }
-const app_store = appStore();
-app_store.setElIcons(elIcons);
-
-
-
+appStore().setElIcons(elIcons);
