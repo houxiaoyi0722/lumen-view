@@ -24,11 +24,29 @@ export const appStore = defineStore("app", {
       }
       return state.elIcons;
     },
+    kVElIcons: (state): any[] => {
+      if (validNull(state.elIcons)) {
+        state.elIcons = getItem(EL_ICONS);
+      }
+      return state.elIcons.map(item => {
+        return { label: item, value: item };
+      });
+    },
     obtainVxeIcons: (state) => {
       return state.vxeIcons;
     },
+    kVVxeIcons: (state): any[] => {
+      return state.vxeIcons.map(item => {
+        return { label: item, value: item };
+      });
+    },
     obtainSvgIcons: (state) => {
       return state.svgIcons;
+    },
+    kVSvgIcons: (state): any[] => {
+      return state.svgIcons.map(item => {
+        return { label: item, value: item };
+      });
     },
   },
   actions: {

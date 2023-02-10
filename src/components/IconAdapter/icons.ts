@@ -168,4 +168,15 @@ export const icons = [
   "zoom-in",
   "zoom-out",
 ];
-export const svgIcons = ["403", "404", "500", "bug", "dict", "home", "logo"];
+export const svgIcons = [
+  "403",
+  "404",
+  "500",
+  "bug",
+  "dict",
+  "home",
+  "logo",
+  "userGroup",
+  "userGroup2",
+  "userGroup3",
+];

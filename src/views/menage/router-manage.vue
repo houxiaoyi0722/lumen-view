@@ -76,28 +76,38 @@
     <vxe-column
       field="icon"
       title="图标"
-      min-width="80"
-      width="80"
+      min-width="150"
+      width="150"
       :edit-render="{}"
     >
       <template #default="{ row }">
         <icon-adapter :name="row.icon"></icon-adapter>
+        {{ row.icon }}
       </template>
       <template #edit="scope">
-        <vxe-select
+        <el-select
           v-model="scope.row.icon"
-          placeholder="可搜索"
-          @change="$refs.xTable.updateStatus(scope)"
           filterable
+          placeholder="可搜索"
+          :teleported="false"
+          @change="updateMate('icon', scope.row.icon, scope)"
         >
-          <vxe-optgroup v-for="item in routerMng.iconGroups" :key="item.groupName" :label="item.groupName">
-            <vxe-option v-for="icon in item.icons" :key="icon" :value="icon" :label="icon">
-              <template #default="{ option }">
-                <icon-adapter :name="option.label"></icon-adapter>
-              </template>
-            </vxe-option>
-          </vxe-optgroup>
-        </vxe-select>
+          <el-option-group
+            v-for="item in routerMng.iconGroups"
+            :key="item.groupName"
+            :label="item.groupName"
+          >
+            <el-option
+              v-for="icon in item.icons"
+              :key="icon"
+              :value="icon"
+              :label="icon"
+            >
+              <icon-adapter :name="icon"></icon-adapter>
+              {{ icon }}
+            </el-option>
+          </el-option-group>
+        </el-select>
       </template>
     </vxe-column>
     <vxe-column
@@ -301,7 +311,7 @@ import VXETable from "vxe-table";
 import RouterPermissionManage from "@/views/menage/components/router-permission-manage.vue";
 import OtherPermissionManage from "@/views/menage/components/other-permission-manage.vue";
 import IconAdapter from "@/components/IconAdapter/index.vue";
-import {appStore} from "@/stores/modules/app";
+import { appStore } from "@/stores/modules/app";
 
 export default defineComponent({
   components: {
@@ -311,7 +321,6 @@ export default defineComponent({
     OtherPermissionManage,
   },
   setup() {
-
     const app_store = appStore();
     const routerMng = reactive({
       loading: false,
@@ -586,6 +595,20 @@ export default defineComponent({
       findList();
     });
 
+    const filterIcon = (scope: any) => {
+      console.log(scope);
+      const searchValue = scope.searchValue;
+
+      if (validNull(searchValue)) return true;
+
+      const value = scope.group.options.find((item: any) => {
+        const values: string = item.value;
+        return values.includes(searchValue);
+      });
+      console.log(value);
+      return !!value;
+    };
+
     return {
       xTable,
       xToolbar,
@@ -601,6 +624,7 @@ export default defineComponent({
       permissionMng,
       showOtherPermission,
       updateMate,
+      filterIcon,
     };
   },
 });
