@@ -65,6 +65,7 @@
                 pushRef(el, row);
               }
             "
+            keep-source
             border
             max-height="500"
             :edit-config="{ trigger: 'click', mode: 'cell' }"
@@ -160,10 +161,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from "vue";
-import type { VxeTableInstance, VxeTableEvents } from "vxe-table";
-import { dictPage, findOne } from "@/api/dict";
-import { commonAlert } from "@/components/hooks/common-hooks";
+import {defineComponent, reactive, ref} from "vue";
+import type {VxeTableEvents, VxeTableInstance} from "vxe-table";
+import {dictItemUpdate, dictPage, findOne} from "@/api/dict";
+import {commonAlert} from "@/components/hooks/common-hooks";
 import XEUtils from "xe-utils";
 
 export default defineComponent({
@@ -204,18 +205,22 @@ export default defineComponent({
       });
     };
 
+    function itemList(row: any) {
+      findOne(row.id).then((res: any) => {
+        if (commonAlert(res, "")) {
+          dictManage.otherData[row.id] = res.data;
+        }
+        return [];
+      });
+    }
+
     const toggleExpandChangeEvent: VxeTableEvents.ToggleRowExpand = ({
       expanded,
       row,
       rowIndex,
     }) => {
       if (expanded) {
-        findOne(row.id).then((res: any) => {
-          if (commonAlert(res, "")) {
-            dictManage.otherData[row.id] = res.data;
-          }
-          return [];
-        });
+        itemList(row);
       }
     };
 
@@ -246,7 +251,7 @@ export default defineComponent({
           dictionary: {
             id: row.id,
           },
-          itemKey: `${row.groupId}-`,
+          itemKey: `${row.groupId}_`,
           itemValue: "",
           comment: row.groupName,
         },
@@ -262,7 +267,22 @@ export default defineComponent({
       }
     };
 
-    const itemSave = (row: any) => {};
+    const itemSave = (row: any) => {
+      const $cTable = dictManage.cTableRefs[row.id];
+      const insertRecords = $cTable.getInsertRecords();
+      const updateRecords = $cTable.getUpdateRecords();
+      const removeRecords = $cTable.getRemoveRecords();
+      dictItemUpdate({
+        insertList: insertRecords,
+        updateList: updateRecords,
+        removeList: removeRecords,
+      }).then((res: any) => {
+        if (commonAlert(res, "保存成功")) {
+          itemList(row);
+        }
+      });
+      console.log(insertRecords,updateRecords,removeRecords);
+    };
 
     findPage();
 
