@@ -25,3 +25,26 @@ export const dictItemUpdate = (param: any) => {
     data: param,
   });
 };
+/**
+ * 更新dict列表
+ * @param param
+ */
+export const dictUpdate = (param: any) => {
+  return request({
+    url: "/lumen/dict/dict/listUpdate",
+    method: "put",
+    data: param,
+  });
+};
+
+/**
+ * 删除dict
+ * @param param
+ */
+export const delDictList = (param: any) => {
+  return request({
+    url: "/lumen/dict/dictionaries",
+    method: "delete",
+    data: param,
+  });
+}

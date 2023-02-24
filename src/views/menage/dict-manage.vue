@@ -22,17 +22,25 @@
   </vxe-form>
   <vxe-toolbar perfect>
     <template #buttons>
-      <vxe-button status="perfect">新增</vxe-button>
-      <vxe-button status="perfect">删除</vxe-button>
-      <vxe-button status="perfect">保存</vxe-button>
+      <vxe-button status="perfect" @click="addDict()">新增</vxe-button>
+      <vxe-button status="perfect" @click="delDict()">删除</vxe-button>
+      <vxe-button status="perfect" @click="saveDict()">保存</vxe-button>
     </template>
   </vxe-toolbar>
   <vxe-table
     ref="xTable"
     border
     auto-resize
+    keep-source
+    id
+    :expand-config="dictManage.expandConfig"
+    :loading="dictManage.loading"
+    :edit-config="{ trigger: 'click', mode: 'cell', showStatus: true }"
+    :edit-rules="dictManage.validRules"
+    :row-config="{ keyField: 'id' }"
     :data="dictManage.tableData"
-    :edit-config="{ trigger: 'click', mode: 'cell' }"
+    @checkbox-change="checkboxChangeEvent"
+    @checkbox-all="checkboxAllEvent"
     @toggle-row-expand="toggleExpandChangeEvent"
   >
     <vxe-column type="checkbox" width="60"></vxe-column>
@@ -68,7 +76,7 @@
             keep-source
             border
             max-height="500"
-            :edit-config="{ trigger: 'click', mode: 'cell' }"
+            :edit-config="{ trigger: 'click', mode: 'cell', showStatus: true }"
             :data="dictManage.otherData[row.id]"
           >
             <vxe-column type="checkbox" width="60"></vxe-column>
@@ -161,11 +169,17 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, reactive, ref} from "vue";
-import type {VxeTableEvents, VxeTableInstance} from "vxe-table";
-import {dictItemUpdate, dictPage, findOne} from "@/api/dict";
-import {commonAlert} from "@/components/hooks/common-hooks";
+import { defineComponent, reactive, ref } from "vue";
+import type {
+  VxeTableEvents,
+  VxeTableInstance,
+  VxeTablePropTypes,
+} from "vxe-table";
+import {delDictList, dictItemUpdate, dictPage, dictUpdate, findOne} from "@/api/dict";
+import { commonAlert } from "@/components/hooks/common-hooks";
 import XEUtils from "xe-utils";
+import { validNull } from "@/utils/validate";
+import { VXETable } from "vxe-table";
 
 export default defineComponent({
   setup() {
@@ -186,6 +200,19 @@ export default defineComponent({
       },
       cTableRefs: {} as any,
       filterList: [] as any[],
+      loading: false,
+      validRules: {},
+      expandConfig: {
+        toggleMethod({ expanded, row }) {
+          if (expanded) {
+            if (validNull(row.id)) {
+              return false;
+            }
+          }
+          return true;
+        },
+      } as VxeTablePropTypes.ExpandConfig,
+      checkedRows: new Map(),
     });
 
     const pushRef = (el: any, row: any) => {
@@ -193,6 +220,8 @@ export default defineComponent({
     };
 
     const findPage = () => {
+      const $xTable = xTable.value;
+
       dictPage({
         ...dictManage.formData,
         pageNumber: dictManage.page.pageNumber - 1,
@@ -201,31 +230,51 @@ export default defineComponent({
         if (commonAlert(res, "")) {
           dictManage.tableData = res.data;
           dictManage.page.total = res.total;
+          if ($xTable) {
+            $xTable!.setCheckboxRow([...dictManage.checkedRows.values()], true);
+          }
         }
       });
     };
 
-    function itemList(row: any) {
-      findOne(row.id).then((res: any) => {
-        if (commonAlert(res, "")) {
-          dictManage.otherData[row.id] = res.data;
-        }
-        return [];
-      });
-    }
-
     const toggleExpandChangeEvent: VxeTableEvents.ToggleRowExpand = ({
       expanded,
       row,
-      rowIndex,
     }) => {
       if (expanded) {
         itemList(row);
       }
     };
 
+    const checkboxChangeEvent: VxeTableEvents.CheckboxChange = ({
+      checked,
+      row,
+    }) => {
+      if (checked) {
+        dictManage.checkedRows.set(row.id, row);
+      } else {
+        dictManage.checkedRows.delete(row.id);
+      }
+    };
+
+    const checkboxAllEvent: VxeTableEvents.CheckboxAll = ({ checked }) => {
+      const $xTable = xTable.value;
+      const { tableData } = $xTable!.getTableData();
+      if (checked) {
+        tableData.forEach((row) => {
+          dictManage.checkedRows.set(row.id, row);
+        });
+      } else {
+        tableData.forEach((row) => {
+          dictManage.checkedRows.delete(row.id);
+        });
+      }
+    };
+
     const searchEvent = (row: any) => {
-      const filterName = XEUtils.toValueString(dictManage.filterName).trim().toLowerCase();
+      const filterName = XEUtils.toValueString(dictManage.filterName)
+        .trim()
+        .toLowerCase();
       const $cTable = dictManage.cTableRefs[row.id];
 
       if (filterName) {
@@ -242,6 +291,59 @@ export default defineComponent({
       } else {
         $cTable.reloadData(dictManage.otherData[row.id]);
       }
+    };
+
+    function itemList(row: any) {
+      if (!validNull(row.id)) {
+        findOne(row.id).then((res: any) => {
+          if (commonAlert(res, "")) {
+            dictManage.otherData[row.id] = res.data;
+          }
+          return [];
+        });
+      }
+    }
+
+    const addDict = () => {
+      const $table = xTable.value;
+      $table!.insert({
+        id: null,
+        groupId: "",
+        groupName: "",
+        comment: "",
+      });
+    };
+
+    const delDict = () => {
+      VXETable.modal.confirm("您确定要删除选中数据么？").then((item) => {
+        if ("confirm" === item) {
+          /*todo 删除参数校验*/
+          delDictList([...dictManage.checkedRows.values()]).then((res) => {
+            if (commonAlert(res, "删除成功")) {
+              findPage();
+              dictManage.checkedRows = new Map();
+            }
+          });
+        }
+      });
+    };
+
+    const saveDict = () => {
+      const $xTable = xTable.value;
+      const insertRecords = $xTable!.getInsertRecords().map(item => {
+        item.id = null
+        return item;
+      });
+      const updateRecords = $xTable!.getUpdateRecords();
+      console.log(insertRecords, updateRecords, []);
+      dictUpdate({
+        insertList: insertRecords,
+        updateList: updateRecords,
+      }).then((res) => {
+        if (commonAlert(res, "保存成功")) {
+          findPage();
+        }
+      });
     };
 
     const itemAdd = (row: any) => {
@@ -281,20 +383,25 @@ export default defineComponent({
           itemList(row);
         }
       });
-      console.log(insertRecords,updateRecords,removeRecords);
     };
 
     findPage();
 
     return {
+      xTable,
       dictManage,
       findPage,
       pushRef,
+      addDict,
+      delDict,
+      saveDict,
       itemAdd,
       itemDel,
       itemSave,
       searchEvent,
       toggleExpandChangeEvent,
+      checkboxChangeEvent,
+      checkboxAllEvent,
     };
   },
 });
