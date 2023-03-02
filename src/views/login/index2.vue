@@ -9,17 +9,17 @@
       <div class="form">
         <h2>sign up</h2>
         <input
-            type="text"
-            name="username"
-            id="username"
-            placeholder="Username..."
+          type="text"
+          name="username"
+          id="username"
+          placeholder="Username..."
         />
         <input type="email" name="emal" id="email" placeholder="Email..." />
         <input
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Password..."
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Password..."
         />
         <button class="signUp">sign up</button>
       </div>
@@ -30,10 +30,10 @@
         <h2>sign in</h2>
         <input type="email" name="emal" id="email" placeholder="Email..." />
         <input
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Password..."
+          type="password"
+          name="password"
+          id="password"
+          placeholder="Password..."
         />
         <a href="#" class="forget-password">forget your password</a>
         <button class="signIn">sign in</button>
@@ -60,12 +60,11 @@
 </template>
 
 <script>
-import {computed, defineComponent, reactive, ref} from "vue";
+import { computed, defineComponent, reactive, ref } from "vue";
 
 export default defineComponent({
   name: "login",
   setup() {
-
     const state = reactive({
       model: {
         username: "",
@@ -82,7 +81,10 @@ export default defineComponent({
     };
 
     const removeClass = () => {
-      state.containerClsList.splice(state.containerClsList.indexOf("active"),1);
+      state.containerClsList.splice(
+        state.containerClsList.indexOf("active"),
+        1
+      );
     };
 
     return {
@@ -124,7 +126,7 @@ h2 {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   width: 768px;
   height: 480px;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.2);
