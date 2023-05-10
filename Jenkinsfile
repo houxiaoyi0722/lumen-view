@@ -3,11 +3,10 @@ pipeline {
   agent any
 
   environment {
-    PROFILE = "txy"
+    PROFILE = "test"
     DOCKER_REGISTY = "10.144.233.86:8082"
-    pom = readMavenPom file: 'pom.xml'
-    img_name = "${pom.artifactId}-${PROFILE}"
-    img_version = "${pom.version}"
+    img_name = "lumen-view-${PROFILE}"
+    img_version = "0.0.1"
   }
 
   stages {
@@ -18,15 +17,15 @@ pipeline {
       }
     }
 
-    stage('mvn build') {
+    stage('npm build') {
       steps {
-        sh "mvn clean compile package"
+        sh "npm run build-only:${PROFILE}"
       }
     }
 
     stage('image build and push') {
       steps {
-        sh "docker build -t ${img_name.toLowerCase()}:${img_version.toLowerCase()} -f Dockerfile --build-arg ACTIVE=${PROFILE} ."
+        sh "docker build -t ${img_name.toLowerCase()}:${img_version.toLowerCase()} -f Dockerfile ."
         sh "docker tag ${img_name.toLowerCase()}:${img_version.toLowerCase()} ${DOCKER_REGISTY}/sang/${img_name.toLowerCase()}:${img_version.toLowerCase()}"
         sh "docker tag ${img_name.toLowerCase()}:${img_version.toLowerCase()} ${DOCKER_REGISTY}/sang/${img_name.toLowerCase()}:latest"
         withCredentials([usernamePassword(credentialsId: 'docker-register', passwordVariable: 'dockerPassword', usernameVariable: 'dockerUser')]) {
