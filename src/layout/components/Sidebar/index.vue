@@ -11,7 +11,6 @@
 
 <script>
 import { defineComponent, computed } from "vue";
-import Logo from "./Logo.vue";
 import Menus from "./Menus.vue";
 import { appStore } from "@/stores/modules/app";
 

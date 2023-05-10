@@ -5,7 +5,7 @@ import type {AxiosPromise} from "axios";
 // 登录接口
 export const Login = (data: any) => {
   return request({
-    url: "/login",
+    url: "/lumen/login",
     method: "post",
     data,
   });

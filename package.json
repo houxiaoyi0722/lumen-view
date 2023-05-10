@@ -1,12 +1,14 @@
 {
   "name": "vue-project",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "dev": "vite --mode dev",
     "build": "run-p type-check build-only",
     "preview": "vite preview --port 4173",
     "test:unit": "vitest --environment jsdom",
-    "build-only": "vite build",
+    "build-only:dev": "vite build --mode dev",
+    "build-only:test": "vite build --mode test",
+    "build-only:prod": "vite build --mode prod",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
