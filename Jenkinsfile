@@ -19,6 +19,7 @@ pipeline {
 
     stage('npm build') {
       steps {
+        sh "npm install"
         sh "npm run build-only:${PROFILE}"
       }
     }
