@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: sang-lumen
+  name: lumen-view
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: lumen-view
+      app.kubernetes.io/version: 0.0.1
+      environment: test
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: lumen-view
+        app.kubernetes.io/version: 0.0.1
+        environment: test
+    spec:
+      containers:
+      - image: 10.144.233.86/sang/lumen-view-test:latest
+        imagePullPolicy: Always
+        name: lumen-view
+        livenessProbe:
+          httpGet:
+            path: /view/
+            port: 8080
+          initialDelaySeconds: 120
+          timeoutSeconds: 10
+          failureThreshold: 6
+        readinessProbe:
+          httpGet:
+            path: /view/
+            port: 8080
+        resources:
+          requests:
+            cpu: 200m
+            memory: 1024Mi
+          limits:
+            cpu: 4000m
+            memory: 4096Mi
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: secret-docker-harbor
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: sang-lumen
+  name: pro-cn-rcp
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: lumen-view
+    app.kubernetes.io/version: 0.0.1
+    environment: test
