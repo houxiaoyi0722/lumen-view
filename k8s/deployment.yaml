@@ -64,9 +64,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   namespace: sang-lumen
-  name: ingress-lumen
+  name: ingress-lumen-view
   labels:
-    name: ingress-lumen
+    name: ingress-lumen-view
   annotations:
     name: kubernetes.io/ingress.class
 spec:
@@ -77,8 +77,8 @@ spec:
         paths:
           - backend:
               service:
-                name: lumen
+                name: lumen-view
                 port:
-                  number: 8080
+                  number: 80
             pathType: Prefix
             path: /view
