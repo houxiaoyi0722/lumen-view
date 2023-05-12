@@ -21,17 +21,17 @@ spec:
       - image: 10.144.233.86:8082/sang/lumen-view-test:latest
         imagePullPolicy: Always
         name: lumen-view
-        livenessProbe:
-          httpGet:
-            path: /view/
-            port: 8080
-          initialDelaySeconds: 120
-          timeoutSeconds: 10
-          failureThreshold: 6
-        readinessProbe:
-          httpGet:
-            path: /view/
-            port: 8080
+#        livenessProbe:
+#          httpGet:
+#            path: /view/
+#            port: 80
+#          initialDelaySeconds: 120
+#          timeoutSeconds: 10
+#          failureThreshold: 6
+#        readinessProbe:
+#          httpGet:
+#            path: /view/
+#            port: 80
         resources:
           requests:
             cpu: 200m
