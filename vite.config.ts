@@ -10,6 +10,7 @@ import {
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "/view",
   plugins: [
     vue(),
     vueJsx(),

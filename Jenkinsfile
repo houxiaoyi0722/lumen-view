@@ -11,20 +11,20 @@ pipeline {
 
   stages {
 
-    stage('prepare') {
+    stage('准备') {
       steps {
         sh 'printenv'
       }
     }
 
-    stage('npm build') {
+    stage('构建') {
       steps {
         sh "npm install"
         sh "npm run build-only:${PROFILE}"
       }
     }
 
-    stage('image build and push') {
+    stage('打包镜像') {
       steps {
         sh "docker build -t ${img_name.toLowerCase()}:${img_version.toLowerCase()} -f Dockerfile ."
         sh "docker tag ${img_name.toLowerCase()}:${img_version.toLowerCase()} ${DOCKER_REGISTY}/sang/${img_name.toLowerCase()}:${img_version.toLowerCase()}"
@@ -33,6 +33,23 @@ pipeline {
           sh "docker login -u ${dockerUser} -p ${dockerPassword} ${DOCKER_REGISTY}"
           sh "docker push ${DOCKER_REGISTY}/sang/${img_name.toLowerCase()}:${img_version.toLowerCase()}"
           sh "docker push ${DOCKER_REGISTY}/sang/${img_name.toLowerCase()}:latest"
+        }
+      }
+    }
+
+    stage('部署') {
+      steps {
+        sh "cp k8s/deployment.yaml /opt/kubernetes/lumen/deployment-lumen-view.yaml"
+        script {
+          def remote = [:]
+          remote.name = 'centos'
+          remote.host = '10.144.233.86'
+          withCredentials([usernamePassword(credentialsId: 'centos', passwordVariable: 'password', usernameVariable: 'user')]) {
+            remote.user = "${user}"
+            remote.password = "${password}"
+            remote.allowAnyHosts = true
+          }
+          sshCommand remote: remote, command: "kubectl apply -f /opt/kubernetes/lumen/deployment-lumen-view.yaml"
         }
       }
     }
