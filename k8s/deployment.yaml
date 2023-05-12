@@ -18,7 +18,7 @@ spec:
         environment: test
     spec:
       containers:
-      - image: 10.144.233.86/sang/lumen-view-test:latest
+      - image: 10.144.233.86:8082/sang/lumen-view-test:latest
         imagePullPolicy: Always
         name: lumen-view
         livenessProbe:
