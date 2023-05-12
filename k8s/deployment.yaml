@@ -59,3 +59,26 @@ spec:
     app.kubernetes.io/name: lumen-view
     app.kubernetes.io/version: 0.0.1
     environment: test
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: sang-lumen
+  name: ingress-lumen
+  labels:
+    name: ingress-lumen
+  annotations:
+    name: kubernetes.io/ingress.class
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: www.sang.lumen.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: lumen
+                port:
+                  number: 8080
+            pathType: Prefix
+            path: /view
