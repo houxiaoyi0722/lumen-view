@@ -19,6 +19,7 @@ pipeline {
 
     stage('构建') {
       steps {
+        sh "npm config set registry=http://10.144.233.86:8011/repository/lumen-npm/"
         sh "npm install"
         sh "npm run build-only:${PROFILE}"
       }
