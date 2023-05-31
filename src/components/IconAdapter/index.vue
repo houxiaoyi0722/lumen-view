@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 30px">
+  <div style="width: 30px;vertical-align: middle;">
     <!-- iconType为空或者为el时为true -->
     <el-icon v-if="isElIcon()">
       <component :is="name"></component>
