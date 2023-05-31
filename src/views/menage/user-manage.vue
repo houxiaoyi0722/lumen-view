@@ -509,7 +509,7 @@ export default defineComponent({
     const userManage = reactive({
       enableList,
       userExData: {} as UserExData,
-      uploadAction: import.meta.env.VITE_APP_BASE_URL + "/lumen/oss/upload",
+      uploadAction: import.meta.env.VITE_APP_BASE_URL + "lumen/oss/upload",
       uploadHeader: { Authorization: `Bearer ${getItem("TOKEN").token}` },
       uploadData: {
         businessCode: "",
