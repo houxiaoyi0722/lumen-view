@@ -1,11 +1,13 @@
 <template>
-  <!-- iconType为空或者为el时为true -->
-  <el-icon v-if="isElIcon()">
-    <component :is="name"></component>
-  </el-icon>
-  <!-- iconType为空或者为el时为true -->
-  <vxe-icon v-else-if="isVxeIcon()" :name="name"></vxe-icon>
-  <svg-icon v-else :name="name"></svg-icon>
+  <div style="width: 30px">
+    <!-- iconType为空或者为el时为true -->
+    <el-icon v-if="isElIcon()">
+      <component :is="name"></component>
+    </el-icon>
+    <!-- iconType为空或者为el时为true -->
+    <vxe-icon style="margin-left: 5px;margin-right: 5px" v-else-if="isVxeIcon()" :name="name"></vxe-icon>
+    <svg-icon v-else :name="name"></svg-icon>
+  </div>
 </template>
 
 <script lang="ts">
