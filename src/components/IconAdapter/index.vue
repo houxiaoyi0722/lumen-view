@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 30px" class="icon-middle">
+  <div class="icon-middle">
     <!-- iconType为空或者为el时为true -->
     <el-icon v-if="isElIcon()">
       <component :is="name"></component>
@@ -51,6 +51,7 @@ export default defineComponent({
 
 <style scoped>
 .icon-middle >>> .el-sub-menu__title * {
+  width: 30px;
   vertical-align: middle;
 }
 </style>
