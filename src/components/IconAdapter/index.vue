@@ -50,7 +50,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-  .icon-middle >> .el-sub-menu__title {
-    vertical-align: middle;
-  }
+.icon-middle >>> .el-sub-menu__title * {
+  vertical-align: middle;
+}
 </style>
