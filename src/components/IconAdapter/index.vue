@@ -1,13 +1,19 @@
 <template>
-  <div class="icon-middle">
-    <!-- iconType为空或者为el时为true -->
-    <el-icon v-if="isElIcon()">
-      <component :is="name"></component>
-    </el-icon>
-    <!-- iconType为空或者为el时为true -->
-    <vxe-icon style="margin-left: 5px;margin-right: 5px" v-else-if="isVxeIcon()" :name="name"></vxe-icon>
-    <svg-icon v-else :name="name"></svg-icon>
-  </div>
+  <!-- iconType为空或者为el时为true -->
+  <el-icon style="width: 30px" v-if="isElIcon()">
+    <component :is="name"></component>
+  </el-icon>
+  <!-- iconType为空或者为el时为true -->
+  <vxe-icon
+    style="width: 30px; margin-left: 6px; align-items: center"
+    v-else-if="isVxeIcon()"
+    :name="name"
+  ></vxe-icon>
+  <svg-icon
+    style="width: 30px; margin-left: 5px; align-items: center"
+    v-else
+    :name="name"
+  ></svg-icon>
 </template>
 
 <script lang="ts">
@@ -49,9 +55,4 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.icon-middle >>> .el-sub-menu__title * {
-  width: 30px;
-  vertical-align: middle;
-}
-</style>
+<style scoped></style>
