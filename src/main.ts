@@ -13,6 +13,8 @@ import "vite-plugin-svg-icons/register";
 // icon-svg组件
 import SvgIcon from "@/components/SvgIcon/index.vue";
 
+import "./views/flowable/components/theme/index.scss";
+
 // 权限控制
 import "./permission";
 
