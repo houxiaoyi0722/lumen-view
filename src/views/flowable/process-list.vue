@@ -3,16 +3,16 @@
     <template #name_item="{ data }">
       <vxe-input
         v-model="data.name"
+        clearable
         type="text"
         placeholder="请输入名称"
       ></vxe-input>
     </template>
     <template #active_item="{ data }">
-      <vxe-input
-        v-model="data.active"
-        type="text"
-        placeholder="请输入名称"
-      ></vxe-input>
+      <vxe-select v-model="data.active" clearable>
+        <vxe-option value="true" label="活动中"></vxe-option>
+        <vxe-option value="false" label="挂起"></vxe-option>
+      </vxe-select>
     </template>
     <template #operate_item>
       <vxe-button
@@ -23,7 +23,23 @@
       ></vxe-button>
       <vxe-button type="reset" content="重置" @click="reset()"></vxe-button>
     </template>
+
+    <template #enabled_default="{ row }">
+      {{ row.suspensionState === "1" ? "活动中" : "挂起" }}
+    </template>
+    <template #operate="{ row }">
+      <vxe-button
+        title="编辑"
+        content="编辑"
+        @click="editProcess(row)"
+      ></vxe-button>
+      <vxe-button title="激活/挂起" content="激活/挂起"></vxe-button>
+    </template>
   </vxe-grid>
+
+  <vxe-modal v-model="editModal.showEdit" id="myModal6" fullscreen transfer destroy-on-close>
+    <process-edit :process-define-id="editModal.processDefineId" :deployment-id="editModal.deploymentId" :resource-name="editModal.resourceName" />
+  </vxe-modal>
 </template>
 
 <script lang="ts">
@@ -34,11 +50,20 @@ import type {
   VxeGridListeners,
 } from "vxe-table";
 import { processDefinitionPage } from "@/api/flowable";
+import ProcessEdit from "@/views/flowable/process-edit.vue";
 
 export default defineComponent({
   name: "process-list",
+  components: { ProcessEdit },
   setup() {
     const xGrid = ref<VxeGridInstance>();
+
+    const editModal = reactive({
+      showEdit: false,
+      processDefineId: "",
+      deploymentId: "",
+      resourceName: "",
+    });
 
     const gridOptions = reactive<VxeGridProps>({
       border: true,
@@ -64,7 +89,7 @@ export default defineComponent({
           { field: "name", title: "流程名称", slots: { default: "name_item" } },
           {
             field: "active",
-            title: "活动中",
+            title: "活动状态",
             slots: { default: "active_item" },
           },
           { slots: { default: "operate_item" } },
@@ -73,22 +98,32 @@ export default defineComponent({
       columns: [
         { type: "seq", width: 60 },
         {
+          width: 400,
           field: "id",
           title: "流程定义id",
         },
         {
+          width: 200,
           field: "name",
           title: "流程名称",
         },
         {
+          width: 200,
           field: "key",
           title: "流程key",
         },
         {
+          width: 200,
+          field: "description",
+          title: "描述",
+        },
+        {
+          width: 100,
           field: "version",
           title: "版本",
         },
         {
+          width: 300,
           field: "deploymentId",
           title: "部署id",
         },
@@ -96,12 +131,12 @@ export default defineComponent({
           width: 100,
           align: "center",
           field: "suspensionState",
-          title: "挂起/激活",
+          title: "活动状态",
           slots: { default: "enabled_default" },
         },
         {
           title: "操作",
-          width: 80,
+          width: 300,
           fixed: "right",
           slots: { default: "operate" },
         },
@@ -148,14 +183,23 @@ export default defineComponent({
       gridOptions.formConfig!.data.active = null;
     };
 
+    const editProcess = (row: any) => {
+      editModal.showEdit = true;
+      editModal.processDefineId = row.id;
+      editModal.deploymentId = row.deploymentId;
+      editModal.resourceName = row.resourceName;
+    };
+
     findList();
 
     return {
       xGrid,
       gridOptions,
+      editModal,
       gridEvents,
       findList,
       reset,
+      editProcess,
     };
   },
 });

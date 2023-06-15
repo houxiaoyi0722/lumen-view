@@ -246,6 +246,8 @@ import Codemirror from "codemirror-editor-vue3";
 import "codemirror/theme/monokai.css";
 import "codemirror/mode/javascript/javascript.js";
 import "codemirror/mode/xml/xml.js";
+import { processXmlResource } from "@/api/flowable";
+import {validNull} from "@/utils/validate";
 
 export default {
   name: "ProcessDesigner",
@@ -281,6 +283,9 @@ export default {
     modelValue: String, // xml 字符串
     processId: String,
     processName: String,
+    processDefineId: String,
+    deploymentId: String,
+    resourceName: String,
     translations: Object, // 自定义的翻译文件
     options: {
       type: Object,
@@ -456,6 +461,11 @@ export default {
       });
       this.$emit("init-finished", this.bpmnModeler);
       this.initModelListeners();
+      if (!validNull(this.deploymentId) && !validNull(this.resourceName)) {
+        processXmlResource(this.deploymentId,this.resourceName).then(res => {
+          this.createNewDiagram(res);
+        });
+      };
     },
     initModelListeners() {
       const EventBus = this.bpmnModeler.get("eventBus");

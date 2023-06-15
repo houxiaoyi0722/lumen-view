@@ -1,122 +1,118 @@
 <template>
-  <vxe-modal
-    v-model="pageVariable.showEdit"
-    id="myModal6"
-    fullscreen
-    transfer
-  >
-    <div class="process-edit">
-      <process-designer
-          :key="`designer-${pageVariable.reloadIndex}`"
-          :options="{
+  <div class="process-edit">
+    <process-designer
+      :key="`designer-${pageVariable.reloadIndex}`"
+      :options="{
         taskResizingEnabled: true,
         eventResizingEnabled: true,
         minimap: {
           open: true,
         },
       }"
-          v-model="pageVariable.xmlString"
-          v-bind="pageVariable.controlForm"
-          keyboard
-          ref="processDesigner"
-          @element-click="elementClick"
-          @element-contextmenu="elementContextmenu"
-          @init-finished="initModeler"
-      />
-      <properties-panel
-          :key="`penal-${pageVariable.reloadIndex}`"
-          :bpmn-modeler="pageVariable.modeler"
-          :prefix="pageVariable.controlForm.prefix"
-          class="process-panel"
-      />
-      <!-- demo config -->
-      <div class="demo-control-bar">
-        <div
-            class="open-model-button"
-            @click="pageVariable.controlDrawerVisible = true"
-        >
-          <el-icon>
-            <setting />
-          </el-icon>
-        </div>
-      </div>
-      <el-drawer
-          v-model="pageVariable.controlDrawerVisible"
-          size="400px"
-          title="偏好设置"
-          append-to-body
-          destroy-on-close
+      :resource-name="resourceName"
+      :process-define-id="processDefineId"
+      :deployment-id="deploymentId"
+      v-model="pageVariable.xmlString"
+      v-bind="pageVariable.controlForm"
+      keyboard
+      ref="processDesigner"
+      @element-click="elementClick"
+      @element-contextmenu="elementContextmenu"
+      @init-finished="initModeler"
+    />
+    <properties-panel
+      :key="`penal-${pageVariable.reloadIndex}`"
+      :bpmn-modeler="pageVariable.modeler"
+      :prefix="pageVariable.controlForm.prefix"
+      class="process-panel"
+    />
+    <!-- demo config -->
+    <div class="demo-control-bar">
+      <div
+        class="open-model-button"
+        @click="pageVariable.controlDrawerVisible = true"
       >
-        <el-form
-            :model="pageVariable.controlForm"
-            size="small"
-            label-width="100px"
-            class="control-form"
-            @submit.prevent
-        >
-          <el-form-item label="流程ID">
-            <el-input
-                v-model="pageVariable.controlForm.processId"
-                @change="reloadProcessDesigner(true)"
-            />
-          </el-form-item>
-          <el-form-item label="流程名称">
-            <el-input
-                v-model="pageVariable.controlForm.processName"
-                @change="reloadProcessDesigner(true)"
-            />
-          </el-form-item>
-          <el-form-item label="流转模拟">
-            <el-switch
-                v-model="pageVariable.controlForm.simulation"
-                inactive-text="停用"
-                active-text="启用"
-                @change="reloadProcessDesigner()"
-            />
-          </el-form-item>
-          <el-form-item label="禁用双击">
-            <el-switch
-                v-model="pageVariable.controlForm.labelEditing"
-                inactive-text="停用"
-                active-text="启用"
-                @change="changeLabelEditingStatus"
-            />
-          </el-form-item>
-          <el-form-item label="自定义渲染">
-            <el-switch
-                v-model="pageVariable.controlForm.labelVisible"
-                inactive-text="停用"
-                active-text="启用"
-                @change="changeLabelVisibleStatus"
-            />
-          </el-form-item>
-          <el-form-item label="流程引擎">
-            <el-radio-group
-                v-model="pageVariable.controlForm.prefix"
-                @change="reloadProcessDesigner()"
-            >
-              <el-radio label="camunda">camunda</el-radio>
-              <el-radio label="flowable">flowable</el-radio>
-              <el-radio label="activiti">activiti</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="工具栏">
-            <el-radio-group v-model="pageVariable.controlForm.headerButtonSize">
-              <el-radio label="small">small</el-radio>
-              <el-radio label="default">default</el-radio>
-              <el-radio label="large">large</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-switch
-              v-model="pageVariable.pageMode"
-              active-text="dark"
-              inactive-text="light"
-              @change="changePageMode"
-          ></el-switch>
-        </el-form>
-      </el-drawer>
+        <el-icon>
+          <setting />
+        </el-icon>
+      </div>
     </div>
-  </vxe-modal>
+    <el-drawer
+      v-model="pageVariable.controlDrawerVisible"
+      size="400px"
+      title="偏好设置"
+      append-to-body
+      destroy-on-close
+    >
+      <el-form
+        :model="pageVariable.controlForm"
+        size="small"
+        label-width="100px"
+        class="control-form"
+        @submit.prevent
+      >
+        <el-form-item label="流程ID">
+          <el-input
+            v-model="pageVariable.controlForm.processId"
+            @change="reloadProcessDesigner(true)"
+          />
+        </el-form-item>
+        <el-form-item label="流程名称">
+          <el-input
+            v-model="pageVariable.controlForm.processName"
+            @change="reloadProcessDesigner(true)"
+          />
+        </el-form-item>
+        <el-form-item label="流转模拟">
+          <el-switch
+            v-model="pageVariable.controlForm.simulation"
+            inactive-text="停用"
+            active-text="启用"
+            @change="reloadProcessDesigner()"
+          />
+        </el-form-item>
+        <el-form-item label="禁用双击">
+          <el-switch
+            v-model="pageVariable.controlForm.labelEditing"
+            inactive-text="停用"
+            active-text="启用"
+            @change="changeLabelEditingStatus"
+          />
+        </el-form-item>
+        <el-form-item label="自定义渲染">
+          <el-switch
+            v-model="pageVariable.controlForm.labelVisible"
+            inactive-text="停用"
+            active-text="启用"
+            @change="changeLabelVisibleStatus"
+          />
+        </el-form-item>
+        <el-form-item label="流程引擎">
+          <el-radio-group
+            v-model="pageVariable.controlForm.prefix"
+            @change="reloadProcessDesigner()"
+          >
+            <el-radio label="camunda">camunda</el-radio>
+            <el-radio label="flowable">flowable</el-radio>
+            <el-radio label="activiti">activiti</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="工具栏">
+          <el-radio-group v-model="pageVariable.controlForm.headerButtonSize">
+            <el-radio label="small">small</el-radio>
+            <el-radio label="default">default</el-radio>
+            <el-radio label="large">large</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-switch
+          v-model="pageVariable.pageMode"
+          active-text="dark"
+          inactive-text="light"
+          @change="changePageMode"
+        ></el-switch>
+      </el-form>
+    </el-drawer>
+  </div>
 </template>
 
 <script>
@@ -135,7 +131,7 @@ import minimapModule from "diagram-js-minimap";
 import "bpmn-js/dist/assets/diagram-js.css";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css";
-import { defineComponent, reactive } from "vue";
+import {defineComponent, reactive} from "vue";
 import ProcessDesigner from "./components/designer/ProcessDesigner.vue";
 import PropertiesPanel from "./components/penal/PropertiesPanel.vue";
 
@@ -145,9 +141,19 @@ export default defineComponent({
     ProcessDesigner,
     PropertiesPanel,
   },
+  props: {
+    processDefineId: {
+      type: String,
+    },
+    deploymentId: {
+      type: String,
+    },
+    resourceName: {
+      type: String,
+    },
+  },
   setup() {
     const pageVariable = reactive({
-      showEdit: true,
       xmlString: "",
       modeler: null,
       reloadIndex: 0,

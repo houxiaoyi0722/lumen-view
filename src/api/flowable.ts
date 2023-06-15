@@ -7,3 +7,13 @@ export const processDefinitionPage = (data: any) => {
     method: "get",
   });
 };
+
+export const processXmlResource = (
+  deploymentId: string,
+  resourceName: string
+) => {
+  return request({
+    url: `/lumen/flowable/processXmlResource?deploymentId=${deploymentId}&resourceName=${encodeURIComponent(resourceName)}`,
+    method: "get",
+  });
+};
