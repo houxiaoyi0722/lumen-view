@@ -8,8 +8,15 @@
             :size="headerButtonSize"
             :type="headerButtonType"
             :icon="FolderOpened"
+            @click="deployProcess()"
+            >保存并部署</el-button
+          >
+          <el-button
+            :size="headerButtonSize"
+            :type="headerButtonType"
+            :icon="FolderOpened"
             @click="$refs.refFile.click()"
-            >打开文件</el-button
+            >上传文件</el-button
           >
           <el-tooltip effect="light">
             <template #content>
@@ -246,8 +253,10 @@ import Codemirror from "codemirror-editor-vue3";
 import "codemirror/theme/monokai.css";
 import "codemirror/mode/javascript/javascript.js";
 import "codemirror/mode/xml/xml.js";
-import { processXmlResource } from "@/api/flowable";
+import {deployProcess, processXmlResource} from "@/api/flowable";
 import {validNull} from "@/utils/validate";
+import Log from "@/views/flowable/components/Log";
+import {commonAlert} from "@/components/hooks/common-hooks";
 
 export default {
   name: "ProcessDesigner",
@@ -508,7 +517,8 @@ export default {
       try {
         const { warnings } = await this.bpmnModeler.importXML(xmlString);
         if (warnings && warnings.length) {
-          warnings.forEach((warn) => console.warn(warn));
+          // todo 暂时注释
+          // warnings.forEach((warn) => console.warn(warn));
         }
       } catch (e) {
         console.error(`[Process Designer Warn]: ${e?.message || e}`);
@@ -683,6 +693,27 @@ export default {
       //   this.previewType = "json";
       //   this.previewModelVisible = true;
       // });
+    },
+    async deployProcess() {
+      const {err, xml} = await this.bpmnModeler.saveXML();
+      // 读取异常时抛出异常
+      if (err) {
+        console.error(`[Process Designer Warn ]: ${err.message || err}`);
+      }
+      const formData = new FormData();
+      const fileName = this.processId + this.processName + ".xml";
+      formData.append("file",xml,fileName);
+      formData.append(
+        "resourceName",
+        validNull(this.resourceName) ? fileName : this.resourceName
+      );
+      formData.append("name",this.processName);
+      deployProcess(formData).then(res => {
+        if (commonAlert(res, "保存成功")) {
+          console.log(res)
+        }
+      })
+      Log.prettyPrimary("xml:", xml);
     },
   },
 };

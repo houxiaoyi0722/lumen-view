@@ -1,5 +1,11 @@
 <template>
-  <vxe-grid ref="xGrid" v-bind="gridOptions" v-on="gridEvents">
+  <vxe-grid
+    ref="xGrid"
+    v-bind="gridOptions"
+    v-on="gridEvents"
+    @cell-menu="cellContextMenuEvent"
+    @menu-click="contextMenuClickEvent"
+  >
     <template #name_item="{ data }">
       <vxe-input
         v-model="data.name"
@@ -29,16 +35,32 @@
     </template>
     <template #operate="{ row }">
       <vxe-button
-        title="编辑"
-        content="编辑"
-        @click="editProcess(row)"
+        v-if="row.suspensionState === '1'"
+        title="挂起"
+        content="挂起"
+        @click="activeOrSuspend(row)"
       ></vxe-button>
-      <vxe-button title="激活/挂起" content="激活/挂起"></vxe-button>
+      <vxe-button
+        v-if="row.suspensionState === '2'"
+        title="激活"
+        content="激活"
+        @click="activeOrSuspend(row)"
+      ></vxe-button>
     </template>
   </vxe-grid>
 
-  <vxe-modal v-model="editModal.showEdit" id="myModal6" fullscreen transfer destroy-on-close>
-    <process-edit :process-define-id="editModal.processDefineId" :deployment-id="editModal.deploymentId" :resource-name="editModal.resourceName" />
+  <vxe-modal
+    v-model="editModal.showEdit"
+    id="myModal6"
+    fullscreen
+    transfer
+    destroy-on-close
+  >
+    <process-edit
+      :process-define-id="editModal.processDefineId"
+      :deployment-id="editModal.deploymentId"
+      :resource-name="editModal.resourceName"
+    />
   </vxe-modal>
 </template>
 
@@ -48,9 +70,16 @@ import type {
   VxeGridInstance,
   VxeGridProps,
   VxeGridListeners,
+  VxeGridEvents,
 } from "vxe-table";
-import { processDefinitionPage } from "@/api/flowable";
+import {
+  deleteProcess,
+  processDefinitionPage,
+  suspendedOrActiveProcess,
+} from "@/api/flowable";
 import ProcessEdit from "@/views/flowable/process-edit.vue";
+import { commonAlert } from "@/components/hooks/common-hooks";
+import type {ProcessDefinition} from "@/types/FlowableType";
 
 export default defineComponent({
   name: "process-list",
@@ -96,7 +125,7 @@ export default defineComponent({
         ],
       },
       columns: [
-        { type: "seq", width: 60 },
+        { type: "seq", width: 60, align: "center" },
         {
           width: 400,
           field: "id",
@@ -119,6 +148,7 @@ export default defineComponent({
         },
         {
           width: 100,
+          align: "center",
           field: "version",
           title: "版本",
         },
@@ -136,11 +166,38 @@ export default defineComponent({
         },
         {
           title: "操作",
-          width: 300,
+          align: "center",
+          width: 100,
           fixed: "right",
           slots: { default: "operate" },
         },
       ],
+      menuConfig: {
+        body: {
+          options: [
+            [
+              {
+                code: "create",
+                name: "新增",
+                visible: true,
+                disabled: false,
+              },
+              {
+                code: "save",
+                name: "编辑",
+                visible: true,
+                disabled: false,
+              },
+              {
+                code: "delete",
+                name: "删除",
+                visible: true,
+                disabled: false,
+              },
+            ],
+          ],
+        },
+      },
       data: [],
     });
 
@@ -183,11 +240,51 @@ export default defineComponent({
       gridOptions.formConfig!.data.active = null;
     };
 
-    const editProcess = (row: any) => {
+    const cellContextMenuEvent: VxeGridEvents.CellMenu = ({ row }) => {
+      const $grid = xGrid.value;
+      $grid!.setCurrentRow(row);
+    };
+
+    const contextMenuClickEvent: VxeGridEvents.MenuClick = ({
+      menu,
+      row,
+      column,
+    }) => {
+      const $grid = xGrid.value;
+      switch (menu.code) {
+        case "create":
+          // createProcess();
+          break;
+        case "save":
+          editProcess(row);
+          break;
+        case "delete":
+          remove(row);
+          break;
+      }
+    };
+
+    const editProcess = (row: ProcessDefinition) => {
       editModal.showEdit = true;
       editModal.processDefineId = row.id;
       editModal.deploymentId = row.deploymentId;
       editModal.resourceName = row.resourceName;
+    };
+
+    const remove = (row: ProcessDefinition) => {
+      deleteProcess(row).then((res) => {
+        if (commonAlert(res, "删除成功")) {
+          findList();
+        }
+      });
+    };
+
+    const activeOrSuspend = (row: ProcessDefinition) => {
+      suspendedOrActiveProcess(row).then((res) => {
+        if (commonAlert(res, "更新成功")) {
+          findList();
+        }
+      });
     };
 
     findList();
@@ -200,6 +297,9 @@ export default defineComponent({
       findList,
       reset,
       editProcess,
+      activeOrSuspend,
+      contextMenuClickEvent,
+      cellContextMenuEvent,
     };
   },
 });
