@@ -19,6 +19,7 @@
       @element-click="elementClick"
       @element-contextmenu="elementContextmenu"
       @init-finished="initModeler"
+      @edit-finish="editFinish"
     />
     <properties-panel
       :key="`penal-${pageVariable.reloadIndex}`"
@@ -131,7 +132,7 @@ import minimapModule from "diagram-js-minimap";
 import "bpmn-js/dist/assets/diagram-js.css";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
 import "bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css";
-import {defineComponent, reactive} from "vue";
+import { defineComponent, reactive } from "vue";
 import ProcessDesigner from "./components/designer/ProcessDesigner.vue";
 import PropertiesPanel from "./components/penal/PropertiesPanel.vue";
 
@@ -152,6 +153,7 @@ export default defineComponent({
       type: String,
     },
   },
+  emits: ["edit-finish-list"],
   setup() {
     const pageVariable = reactive({
       xmlString: "",
@@ -191,6 +193,10 @@ export default defineComponent({
         Log.prettyPrimary("Process Id:", rootElement.id);
         Log.prettyPrimary("Process Name:", rootElement.businessObject.name);
       }, 10);
+    };
+
+    const editFinish = () => {
+      this.$emit("edit-finish-list");
     };
 
     const reloadProcessDesigner = (notDeep) => {
@@ -247,6 +253,7 @@ export default defineComponent({
     return {
       pageVariable,
       initModeler,
+      editFinish,
       reloadProcessDesigner,
       changeLabelEditingStatus,
       changeLabelVisibleStatus,

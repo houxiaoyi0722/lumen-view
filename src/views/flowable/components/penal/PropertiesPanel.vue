@@ -243,7 +243,7 @@ export default {
       Log.printBack(
         `select element changed: id: ${activatedElement.id} , type: ${activatedElement.businessObject.$type}`
       );
-      Log.prettyInfo("businessObject", activatedElement.businessObject);
+      // Log.prettyInfo("businessObject", activatedElement.businessObject);
       window.bpmnInstances.bpmnElement = activatedElement;
       this.bpmnElement = activatedElement;
       this.elementId = activatedElement.id;

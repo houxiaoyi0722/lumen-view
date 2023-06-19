@@ -60,6 +60,7 @@
       :process-define-id="editModal.processDefineId"
       :deployment-id="editModal.deploymentId"
       :resource-name="editModal.resourceName"
+      @edit-finish-list="editFinish()"
     />
   </vxe-modal>
 </template>
@@ -79,7 +80,7 @@ import {
 } from "@/api/flowable";
 import ProcessEdit from "@/views/flowable/process-edit.vue";
 import { commonAlert } from "@/components/hooks/common-hooks";
-import type {ProcessDefinition} from "@/types/FlowableType";
+import type { ProcessDefinition } from "@/types/FlowableType";
 
 export default defineComponent({
   name: "process-list",
@@ -253,7 +254,7 @@ export default defineComponent({
       const $grid = xGrid.value;
       switch (menu.code) {
         case "create":
-          // createProcess();
+          createProcess();
           break;
         case "save":
           editProcess(row);
@@ -262,6 +263,13 @@ export default defineComponent({
           remove(row);
           break;
       }
+    };
+
+    const createProcess = () => {
+      editModal.processDefineId = "";
+      editModal.deploymentId = "";
+      editModal.resourceName = "";
+      editModal.showEdit = true;
     };
 
     const editProcess = (row: ProcessDefinition) => {
@@ -287,6 +295,11 @@ export default defineComponent({
       });
     };
 
+    const editFinish = () => {
+      editModal.showEdit = false;
+      findList();
+    };
+
     findList();
 
     return {
@@ -300,6 +313,7 @@ export default defineComponent({
       activeOrSuspend,
       contextMenuClickEvent,
       cellContextMenuEvent,
+      editFinish,
     };
   },
 });

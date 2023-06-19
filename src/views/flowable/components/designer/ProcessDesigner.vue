@@ -217,17 +217,17 @@
 
 <script>
 import {
-  Histogram,
   Cpu,
+  Download,
+  FolderOpened,
+  Histogram,
   Refresh,
   RefreshLeft,
   RefreshRight,
-  ZoomOut,
-  ZoomIn,
-  View,
-  Download,
-  FolderOpened,
   ScaleToOriginal,
+  View,
+  ZoomIn,
+  ZoomOut,
 } from "@element-plus/icons-vue";
 import BpmnModeler from "bpmn-js/lib/Modeler";
 import DefaultEmptyXML from "./plugins/defaultEmpty";
@@ -248,14 +248,12 @@ import activitiModdleExtension from "./plugins/extension-moddle/activiti";
 import flowableModdleExtension from "./plugins/extension-moddle/flowable";
 // 引入json转换与高亮
 // import X2JS from "x2js";
-
 import Codemirror from "codemirror-editor-vue3";
 import "codemirror/theme/monokai.css";
 import "codemirror/mode/javascript/javascript.js";
 import "codemirror/mode/xml/xml.js";
 import {deployProcess, processXmlResource} from "@/api/flowable";
 import {validNull} from "@/utils/validate";
-import Log from "@/views/flowable/components/Log";
 import {commonAlert} from "@/components/hooks/common-hooks";
 
 export default {
@@ -282,6 +280,7 @@ export default {
   emits: [
     "destroy",
     "init-finished",
+    "edit-finish",
     "commandStack-changed",
     "update:modelValue",
     "change",
@@ -446,7 +445,6 @@ export default {
   },
   mounted() {
     this.initBpmnModeler();
-    this.createNewDiagram(this.value);
     // this.$once("hook:beforeUnmount", () => {
     //   if (this.bpmnModeler) this.bpmnModeler.destroy();
     //   this.$emit("destroy", this.bpmnModeler);
@@ -468,13 +466,14 @@ export default {
         moddleExtensions: this.moddleExtensions,
         ...this.options,
       });
-      this.$emit("init-finished", this.bpmnModeler);
-      this.initModelListeners();
       if (!validNull(this.deploymentId) && !validNull(this.resourceName)) {
-        processXmlResource(this.deploymentId,this.resourceName).then(res => {
+        processXmlResource(this.deploymentId, this.resourceName).then((res) => {
           this.createNewDiagram(res);
         });
-      };
+      } else {
+        this.createNewDiagram(this.value);
+      }
+      this.initModelListeners();
     },
     initModelListeners() {
       const EventBus = this.bpmnModeler.get("eventBus");
@@ -523,6 +522,7 @@ export default {
       } catch (e) {
         console.error(`[Process Designer Warn]: ${e?.message || e}`);
       }
+      this.$emit("init-finished", this.bpmnModeler);
     },
 
     // 下载流程图到本地
@@ -695,25 +695,32 @@ export default {
       // });
     },
     async deployProcess() {
-      const {err, xml} = await this.bpmnModeler.saveXML();
+      const { err, xml } = await this.bpmnModeler.saveXML();
       // 读取异常时抛出异常
       if (err) {
         console.error(`[Process Designer Warn ]: ${err.message || err}`);
       }
+      const canvas = this.bpmnModeler.get("canvas");
+      const rootElement = canvas.getRootElement();
       const formData = new FormData();
-      const fileName = this.processId + this.processName + ".xml";
-      formData.append("file",xml,fileName);
+      const fileName = rootElement.id + rootElement.businessObject.name + ".bpmn20.xml";
+
+      formData.append(
+        "file",
+        new Blob([xml], { type: "text/xml" }),
+        fileName
+      );
       formData.append(
         "resourceName",
         validNull(this.resourceName) ? fileName : this.resourceName
       );
-      formData.append("name",this.processName);
-      deployProcess(formData).then(res => {
+      formData.append("name", rootElement.businessObject.name);
+
+      deployProcess(formData).then((res) => {
         if (commonAlert(res, "保存成功")) {
-          console.log(res)
+          this.$emit("edit-finish");
         }
-      })
-      Log.prettyPrimary("xml:", xml);
+      });
     },
   },
 };
