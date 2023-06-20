@@ -19,7 +19,6 @@
       @element-click="elementClick"
       @element-contextmenu="elementContextmenu"
       @init-finished="initModeler"
-      @edit-finish="editFinish"
     />
     <properties-panel
       :key="`penal-${pageVariable.reloadIndex}`"
@@ -153,7 +152,7 @@ export default defineComponent({
       type: String,
     },
   },
-  emits: ["edit-finish-list"],
+  emits: ["edit-finish-list", "init-finish"],
   setup() {
     const pageVariable = reactive({
       xmlString: "",
@@ -193,10 +192,6 @@ export default defineComponent({
         Log.prettyPrimary("Process Id:", rootElement.id);
         Log.prettyPrimary("Process Name:", rootElement.businessObject.name);
       }, 10);
-    };
-
-    const editFinish = () => {
-      this.$emit("edit-finish-list");
     };
 
     const reloadProcessDesigner = (notDeep) => {
@@ -253,7 +248,6 @@ export default defineComponent({
     return {
       pageVariable,
       initModeler,
-      editFinish,
       reloadProcessDesigner,
       changeLabelEditingStatus,
       changeLabelVisibleStatus,

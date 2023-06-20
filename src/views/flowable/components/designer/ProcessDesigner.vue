@@ -252,9 +252,9 @@ import Codemirror from "codemirror-editor-vue3";
 import "codemirror/theme/monokai.css";
 import "codemirror/mode/javascript/javascript.js";
 import "codemirror/mode/xml/xml.js";
-import {deployProcess, processXmlResource} from "@/api/flowable";
-import {validNull} from "@/utils/validate";
-import {commonAlert} from "@/components/hooks/common-hooks";
+import { deployProcess, processXmlResource } from "@/api/flowable";
+import { validNull } from "@/utils/validate";
+import { commonAlert } from "@/components/hooks/common-hooks";
 
 export default {
   name: "ProcessDesigner",
@@ -280,7 +280,6 @@ export default {
   emits: [
     "destroy",
     "init-finished",
-    "edit-finish",
     "commandStack-changed",
     "update:modelValue",
     "change",
@@ -523,6 +522,7 @@ export default {
         console.error(`[Process Designer Warn]: ${e?.message || e}`);
       }
       this.$emit("init-finished", this.bpmnModeler);
+      this.$parent.$emit("init-finish");
     },
 
     // 下载流程图到本地
@@ -703,13 +703,10 @@ export default {
       const canvas = this.bpmnModeler.get("canvas");
       const rootElement = canvas.getRootElement();
       const formData = new FormData();
-      const fileName = rootElement.id + rootElement.businessObject.name + ".bpmn20.xml";
+      const fileName =
+        rootElement.id + rootElement.businessObject.name + ".bpmn20.xml";
 
-      formData.append(
-        "file",
-        new Blob([xml], { type: "text/xml" }),
-        fileName
-      );
+      formData.append("file", new Blob([xml], { type: "text/xml" }), fileName);
       formData.append(
         "resourceName",
         validNull(this.resourceName) ? fileName : this.resourceName
@@ -718,7 +715,7 @@ export default {
 
       deployProcess(formData).then((res) => {
         if (commonAlert(res, "保存成功")) {
-          this.$emit("edit-finish");
+          this.$parent.$emit("edit-finish-list");
         }
       });
     },

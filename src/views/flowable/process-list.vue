@@ -54,13 +54,16 @@
     id="myModal6"
     fullscreen
     transfer
+    resize
     destroy-on-close
+    :loading="editModal.loading"
   >
     <process-edit
       :process-define-id="editModal.processDefineId"
       :deployment-id="editModal.deploymentId"
       :resource-name="editModal.resourceName"
       @edit-finish-list="editFinish()"
+      @init-finish="initFinish()"
     />
   </vxe-modal>
 </template>
@@ -89,6 +92,7 @@ export default defineComponent({
     const xGrid = ref<VxeGridInstance>();
 
     const editModal = reactive({
+      loading: false,
       showEdit: false,
       processDefineId: "",
       deploymentId: "",
@@ -274,6 +278,7 @@ export default defineComponent({
 
     const editProcess = (row: ProcessDefinition) => {
       editModal.showEdit = true;
+      editModal.loading = true;
       editModal.processDefineId = row.id;
       editModal.deploymentId = row.deploymentId;
       editModal.resourceName = row.resourceName;
@@ -300,6 +305,10 @@ export default defineComponent({
       findList();
     };
 
+    const initFinish = () => {
+      editModal.loading = false;
+    };
+
     findList();
 
     return {
@@ -314,6 +323,7 @@ export default defineComponent({
       contextMenuClickEvent,
       cellContextMenuEvent,
       editFinish,
+      initFinish,
     };
   },
 });
