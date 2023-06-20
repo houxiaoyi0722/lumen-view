@@ -43,6 +43,18 @@ export const deployProcess = (formData: any) => {
     method: "PUT",
     data: formData,
   });
+};
 
-}
+export const userList = (name: any) => {
+  return request({
+    url: `/lumen/flowable/user/list?name=${name}`,
+    method: "get",
+  });
+};
 
+export const groupList = (name: any) => {
+  return request({
+    url: `/lumen/flowable/group/list?name=${name}`,
+    method: "get",
+  });
+};

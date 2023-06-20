@@ -19,6 +19,9 @@
           @change="changeTaskAsync"
         />
       </el-form-item>
+      <el-form-item label="是否补偿">
+        <el-switch v-model="taskConfigForm.isForCompensation"></el-switch>
+      </el-form-item>
       <component :is="witchTaskComponent" v-bind="$props" />
     </el-form>
   </div>
@@ -28,10 +31,11 @@
 import UserTask from "./task-components/UserTask.vue";
 import ScriptTask from "./task-components/ScriptTask.vue";
 import ReceiveTask from "./task-components/ReceiveTask.vue";
+import ServiceTask from "./task-components/ServiceTask.vue";
 
 export default {
   name: "ElementTaskConfig",
-  components: { UserTask, ScriptTask, ReceiveTask },
+  components: { UserTask, ScriptTask, ReceiveTask, ServiceTask },
   props: {
     id: String,
     type: String,
@@ -42,6 +46,7 @@ export default {
         asyncAfter: false,
         asyncBefore: false,
         exclusive: false,
+        isForCompensation: false,
       },
       witchTaskComponent: "",
       installedComponent: {
@@ -51,6 +56,7 @@ export default {
         UserTask: "UserTask", // 用户任务配置
         ScriptTask: "ScriptTask", // 脚本任务配置
         ReceiveTask: "ReceiveTask", // 消息接收任务
+        ServiceTask: "ServiceTask", // 服务任务
       },
     };
   },
@@ -65,6 +71,8 @@ export default {
           this.bpmnElement?.businessObject?.asyncAfter;
         this.taskConfigForm.exclusive =
           this.bpmnElement?.businessObject?.exclusive;
+        this.taskConfigForm.isForCompensation =
+          this.bpmnElement?.businessObject?.isForCompensation;
       },
     },
     type: {

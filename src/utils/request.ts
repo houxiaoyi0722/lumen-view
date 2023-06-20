@@ -63,7 +63,7 @@ request.interceptors.response.use(
           const res = await axios({
             method: "POST",
             baseURL: import.meta.env.VITE_APP_BASE_URL,
-            url: "/authorizations",
+            url: "/lumen/authorizations",
             timeout: 10000,
             headers: {
               Authorization: `Bearer ${authorization.refreshToken}`,

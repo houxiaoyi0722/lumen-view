@@ -431,7 +431,7 @@ export default defineComponent({
         },
         {
           field: "username",
-          title: "用户名",
+          title: "账号",
           editRender: { autofocus: ".vxe-input--inner" },
           slots: { edit: "username_edit" },
         },
@@ -465,12 +465,12 @@ export default defineComponent({
       ],
       editRules: {
         name: [
-          { required: true, message: "姓名" },
-          { min: 6, max: 100, message: "姓名长度在 6 到 100 个字符" },
+          { required: true, message: "姓名不能为空" },
+          { min: 1, max: 20, message: "姓名长度在 1 到 20 个字符" },
         ],
         username: [
-          { required: true, message: "姓名" },
-          { min: 6, max: 100, message: "名称长度在 6 到 100 个字符" },
+          { required: true, message: "账号不能为空" },
+          { min: 6, max: 100, message: "账号长度在 6 到 100 个字符" },
         ],
       },
       data: [],
