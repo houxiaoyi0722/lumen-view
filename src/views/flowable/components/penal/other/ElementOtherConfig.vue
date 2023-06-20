@@ -1,7 +1,7 @@
 <template>
   <div class="panel-tab__content">
     <div class="element-property input-property">
-      <div class="element-property__label">元素文档：</div>
+      <div class="element-property__label">文档描述：</div>
       <div class="element-property__value">
         <el-input
           type="textarea"
@@ -21,39 +21,47 @@
 export default {
   name: "ElementOtherConfig",
   props: {
-    id: String
+    id: String,
   },
   data() {
     return {
-      documentation: ""
+      documentation: "",
     };
   },
   watch: {
     id: {
       immediate: true,
-      handler: function(id) {
+      handler: function (id) {
         if (id && id.length) {
           this.$nextTick(() => {
-            const documentations = window.bpmnInstances.bpmnElement.businessObject?.documentation;
-            this.documentation = documentations && documentations.length ? documentations[0].text : "";
+            const documentations =
+              window.bpmnInstances.bpmnElement.businessObject?.documentation;
+            this.documentation =
+              documentations && documentations.length
+                ? documentations[0].text
+                : "";
           });
         } else {
           this.documentation = "";
         }
-      }
-    }
+      },
+    },
   },
   methods: {
     updateDocumentation() {
-      (this.bpmnElement && this.bpmnElement.id === this.id) || (this.bpmnElement = window.bpmnInstances.elementRegistry.get(this.id));
-      const documentation = window.bpmnInstances.bpmnFactory.create("bpmn:Documentation", { text: this.documentation });
+      (this.bpmnElement && this.bpmnElement.id === this.id) ||
+        (this.bpmnElement = window.bpmnInstances.elementRegistry.get(this.id));
+      const documentation = window.bpmnInstances.bpmnFactory.create(
+        "bpmn:Documentation",
+        { text: this.documentation }
+      );
       window.bpmnInstances.modeling.updateProperties(this.bpmnElement, {
-        documentation: [documentation]
+        documentation: [documentation],
       });
-    }
+    },
   },
   beforeUnmount() {
     this.bpmnElement = null;
-  }
+  },
 };
 </script>

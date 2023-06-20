@@ -51,18 +51,6 @@
         class="control-form"
         @submit.prevent
       >
-        <el-form-item label="流程ID">
-          <el-input
-            v-model="pageVariable.controlForm.processId"
-            @change="reloadProcessDesigner(true)"
-          />
-        </el-form-item>
-        <el-form-item label="流程名称">
-          <el-input
-            v-model="pageVariable.controlForm.processName"
-            @change="reloadProcessDesigner(true)"
-          />
-        </el-form-item>
         <el-form-item label="流转模拟">
           <el-switch
             v-model="pageVariable.controlForm.simulation"
@@ -87,7 +75,7 @@
             @change="changeLabelVisibleStatus"
           />
         </el-form-item>
-        <el-form-item label="流程引擎">
+<!--        <el-form-item label="流程引擎">
           <el-radio-group
             v-model="pageVariable.controlForm.prefix"
             @change="reloadProcessDesigner()"
@@ -96,7 +84,7 @@
             <el-radio label="flowable">flowable</el-radio>
             <el-radio label="activiti">activiti</el-radio>
           </el-radio-group>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="工具栏">
           <el-radio-group v-model="pageVariable.controlForm.headerButtonSize">
             <el-radio label="small">small</el-radio>
@@ -104,12 +92,12 @@
             <el-radio label="large">large</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-switch
+<!--        <el-switch
           v-model="pageVariable.pageMode"
           active-text="dark"
           inactive-text="light"
           @change="changePageMode"
-        ></el-switch>
+        ></el-switch>-->
       </el-form>
     </el-drawer>
   </div>

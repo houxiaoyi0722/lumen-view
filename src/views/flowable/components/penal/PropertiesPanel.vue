@@ -40,14 +40,14 @@
           :type="elementType"
         />
       </el-collapse-item>
-      <el-collapse-item name="condition" v-if="formVisible" key="form">
+<!--      <el-collapse-item name="condition" v-if="formVisible" key="form">
         <template #title>
           <div class="panel-tab__title">
             <el-icon><list /></el-icon>表单
           </div>
         </template>
         <element-form :id="elementId" :type="elementType" />
-      </el-collapse-item>
+      </el-collapse-item>-->
       <el-collapse-item
         name="task"
         v-if="elementType.indexOf('Task') !== -1"
@@ -55,7 +55,7 @@
       >
         <template #title>
           <div class="panel-tab__title">
-            <el-icon><checked /></el-icon>任务
+            <el-icon><checked /></el-icon>任务定义
           </div>
         </template>
         <element-task :id="elementId" :type="elementType" />
@@ -123,7 +123,7 @@ import FlowCondition from "./flow-condition/FlowCondition.vue";
 import SignalAndMassage from "./signal-message/SignalAndMessage.vue";
 import ElementListeners from "./listeners/ElementListeners.vue";
 import ElementProperties from "./properties/ElementProperties.vue";
-import ElementForm from "./form/ElementForm.vue";
+// import ElementForm from "./form/ElementForm.vue";
 import UserTaskListeners from "./listeners/UserTaskListeners.vue";
 import Log from "../Log";
 /**
@@ -136,7 +136,7 @@ export default {
   name: "PropertiesPanel",
   components: {
     UserTaskListeners,
-    ElementForm,
+    // ElementForm,
     ElementProperties,
     ElementListeners,
     SignalAndMassage,

@@ -656,7 +656,13 @@ export default {
     processRestart() {
       this.recoverable = false;
       this.revocable = false;
-      this.createNewDiagram(null);
+      if (!validNull(this.deploymentId) && !validNull(this.resourceName)) {
+        processXmlResource(this.deploymentId, this.resourceName).then((res) => {
+          this.createNewDiagram(res);
+        });
+      } else {
+        this.createNewDiagram(null);
+      }
     },
     elementsAlign(align) {
       const Align = this.bpmnModeler.get("alignElements");
