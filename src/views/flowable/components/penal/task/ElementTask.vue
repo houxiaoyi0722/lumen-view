@@ -20,7 +20,10 @@
         />
       </el-form-item>
       <el-form-item label="是否补偿">
-        <el-switch v-model="taskConfigForm.isForCompensation"></el-switch>
+        <el-switch
+          v-model="taskConfigForm.isForCompensation"
+          @change="changeTaskAsync"
+        ></el-switch>
       </el-form-item>
       <component :is="witchTaskComponent" v-bind="$props" />
     </el-form>

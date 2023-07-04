@@ -33,6 +33,46 @@
             @change="updateBaseInfo('isExecutable')"
           />
         </el-form-item>
+        <el-form-item label="流程启动者">
+          <el-select
+            v-model="elementBaseInfo.candidateStarterUsers"
+            @change="updateBaseInfo('candidateStarterUsers')"
+            clearable
+            filterable
+            remote
+            placeholder="输入姓名搜索"
+            remote-show-suffix
+            :remote-method="assigneeRemoteMethod"
+            :loading="selectData.loading"
+          >
+            <el-option
+              v-for="item in userOptions"
+              :key="item.id"
+              :label="item.displayName"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="流程启动者组">
+          <el-select
+            v-model="elementBaseInfo.candidateStarterGroups"
+            @change="updateBaseInfo('candidateStarterGroups')"
+            filterable
+            clearable
+            remote
+            placeholder="输入名称搜索"
+            remote-show-suffix
+            :remote-method="groupRemoteMethod"
+            :loading="selectData.loading"
+          >
+            <el-option
+              v-for="item in groupOptions"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
       </template>
       <el-form-item
         v-if="elementBaseInfo.$type === 'bpmn:SubProcess'"
@@ -49,6 +89,8 @@
   </div>
 </template>
 <script>
+import {groupList, userList} from "@/api/flowable";
+
 export default {
   name: "ElementBaseInfo",
   props: {
@@ -62,6 +104,11 @@ export default {
   data() {
     return {
       elementBaseInfo: {},
+      selectData: {
+        loading: false,
+      },
+      userOptions: [],
+      groupOptions: [],
     };
   },
   watch: {
@@ -103,6 +150,20 @@ export default {
       const attrObj = Object.create(null);
       attrObj[key] = this.elementBaseInfo[key];
       window.bpmnInstances.modeling.updateProperties(this.bpmnElement, attrObj);
+    },
+    assigneeRemoteMethod(query) {
+      this.selectData.loading = true;
+      userList(query).then((res) => {
+        this.selectData.loading = false;
+        this.userOptions = res.data;
+      });
+    },
+    groupRemoteMethod(query) {
+      this.selectData.loading = true;
+      groupList(query).then((res) => {
+        this.selectData.loading = false;
+        this.groupOptions = res.data;
+      });
     },
   },
   beforeUnmount() {

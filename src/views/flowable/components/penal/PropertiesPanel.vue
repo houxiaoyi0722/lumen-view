@@ -40,7 +40,7 @@
           :type="elementType"
         />
       </el-collapse-item>
-<!--      <el-collapse-item name="condition" v-if="formVisible" key="form">
+      <!--      <el-collapse-item name="condition" v-if="formVisible" key="form">
         <template #title>
           <div class="panel-tab__title">
             <el-icon><list /></el-icon>表单

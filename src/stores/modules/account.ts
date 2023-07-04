@@ -1,10 +1,10 @@
-import {defineStore} from "pinia";
-import {getUserinfo} from "@/api/login";
-import {getItem, removeItem, setItem} from "@/utils/storage";
-import {validNull} from "@/utils/validate";
-import {tagStore} from "@/stores/modules/tags";
-import {routeStore} from "@/stores/modules/route";
-import type {User} from "@/types/ManageType";
+import { defineStore } from "pinia";
+import { getUserinfo } from "@/api/login";
+import { getItem, removeItem, setItem } from "@/utils/storage";
+import { validNull } from "@/utils/validate";
+import { tagStore } from "@/stores/modules/tags";
+import { routeStore } from "@/stores/modules/route";
+import type { User } from "@/types/ManageType";
 
 const TOKEN = "TOKEN";
 const USERINFO = "USERINFO";
@@ -47,8 +47,8 @@ export const accountStore = defineStore({
       const { data } = await getUserinfo();
       let perArr: string[] = [];
       if (!validNull(data.roles)) {
-        data.roles.forEach(role => {
-          perArr = perArr.concat(role.permissions.map(item => item.code));
+        data.roles.forEach((role) => {
+          perArr = perArr.concat(role.permissions.map((item) => item.code));
         });
       }
       this.userinfo = data;

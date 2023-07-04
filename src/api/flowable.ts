@@ -1,10 +1,13 @@
 import request from "@/utils/request";
 import { validNull } from "@/utils/validate";
 import type { ProcessDefinition } from "@/types/FlowableType";
+import {accountStore} from "@/stores/modules/account";
 
 export const processDefinitionPage = (data: any) => {
   return request({
-    url: `/lumen/flowable/process/page?name=${data.name}${validNull(data.active) ? "" : "&active=" + data.active}&pageNumber=${data.pageNumber}&pageSize=${data.pageSize}`,
+    url: `/lumen/flowable/process/page?name=${data.name}${
+      validNull(data.active) ? "" : "&active=" + data.active
+    }&pageNumber=${data.pageNumber}&pageSize=${data.pageSize}`,
     method: "get",
   });
 };
@@ -14,7 +17,9 @@ export const processXmlResource = (
   resourceName: string
 ) => {
   return request({
-    url: `/lumen/flowable/processXmlResource?deploymentId=${deploymentId}&resourceName=${encodeURIComponent(resourceName)}`,
+    url: `/lumen/flowable/processXmlResource?deploymentId=${deploymentId}&resourceName=${encodeURIComponent(
+      resourceName
+    )}`,
     method: "get",
   });
 };
@@ -58,3 +63,11 @@ export const groupList = (name: any) => {
     method: "get",
   });
 };
+
+export const obtainProcessList = (processPage: any) => {
+  const account_store = accountStore();
+  return request({
+    url: `/lumen/flowable/process/page?startBy=${account_store.userinfo.username}&active=true&pageNumber=${processPage.currentPage}&pageSize=${processPage.pageSize}`,
+    method: "get",
+  });
+}

@@ -319,6 +319,17 @@
           "name": "priority",
           "isAttr": true,
           "type": "String"
+        },
+        {
+          "name": "isBatchApproval",
+          "isAttr": true,
+          "type": "Boolean",
+          "default": false
+        },
+        {
+          "name": "processPath",
+          "isAttr": true,
+          "type": "String"
         }
       ]
     },

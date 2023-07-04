@@ -1,5 +1,18 @@
 <template>
   <div style="margin-top: 16px">
+    <el-form-item label="处理页面">
+      <el-input
+        v-model="userTaskForm.processPath"
+        clearable
+        @change="updateElementTask('processPath')"
+      />
+    </el-form-item>
+    <el-form-item label="允许批量审批">
+      <el-switch
+        v-model="userTaskForm.isBatchApproval"
+        @change="updateElementTask('isBatchApproval')"
+      ></el-switch>
+    </el-form-item>
     <el-form-item label="处理用户">
       <el-select
         v-model="userTaskForm.assignee"
@@ -88,7 +101,7 @@
 </template>
 
 <script>
-import {groupList, userList} from "@/api/flowable";
+import { groupList, userList } from "@/api/flowable";
 
 export default {
   name: "UserTask",
@@ -102,7 +115,9 @@ export default {
         loading: false,
       },
       defaultTaskForm: {
+        isBatchApproval: false,
         assignee: "",
+        processPath: "",
         candidateUsers: [],
         candidateGroups: [],
         dueDate: "",

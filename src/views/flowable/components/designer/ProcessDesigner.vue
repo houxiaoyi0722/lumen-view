@@ -403,13 +403,15 @@ export default {
       //   Modules.push(bpmnModdleExtension);
       // }
       if (this.prefix === "camunda") {
-        Modules.push(camundaModdleExtension);
+        // Modules.push(camundaModdleExtension);
+        Modules.push(flowableModdleExtension);
       }
       if (this.prefix === "flowable") {
         Modules.push(flowableModdleExtension);
       }
       if (this.prefix === "activiti") {
-        Modules.push(activitiModdleExtension);
+        Modules.push(flowableModdleExtension);
+        // Modules.push(activitiModdleExtension);
       }
 
       return Modules;
@@ -430,13 +432,15 @@ export default {
 
       // 根据需要的 "流程类型" 设置 对应的解析文件
       if (this.prefix === "activiti") {
-        Extensions.activiti = activitiModdleDescriptor;
+        // Extensions.activiti = activitiModdleDescriptor;
+        Extensions.flowable = flowableModdleDescriptor;
       }
       if (this.prefix === "flowable") {
         Extensions.flowable = flowableModdleDescriptor;
       }
       if (this.prefix === "camunda") {
-        Extensions.camunda = camundaModdleDescriptor;
+        Extensions.flowable = flowableModdleDescriptor;
+        // Extensions.camunda = camundaModdleDescriptor;
       }
 
       return Extensions;
