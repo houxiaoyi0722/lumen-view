@@ -73,6 +73,13 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item label="流程处理页面">
+          <el-input
+            v-model="elementBaseInfo.processDisposePath"
+            clearable
+            @change="updateBaseInfo('processDisposePath')"
+          />
+        </el-form-item>
       </template>
       <el-form-item
         v-if="elementBaseInfo.$type === 'bpmn:SubProcess'"
@@ -89,7 +96,7 @@
   </div>
 </template>
 <script>
-import {groupList, userList} from "@/api/flowable";
+import { groupList, userList } from "@/api/flowable";
 
 export default {
   name: "ElementBaseInfo",

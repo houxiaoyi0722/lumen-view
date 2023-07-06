@@ -245,6 +245,11 @@
           "type": "String"
         },
         {
+          "name": "processDisposePath",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
           "name": "versionTag",
           "isAttr": true,
           "type": "String"
@@ -327,7 +332,7 @@
           "default": false
         },
         {
-          "name": "processPath",
+          "name": "taskDisposePath",
           "isAttr": true,
           "type": "String"
         }

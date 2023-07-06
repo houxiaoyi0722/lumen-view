@@ -2,9 +2,9 @@
   <div style="margin-top: 16px">
     <el-form-item label="处理页面">
       <el-input
-        v-model="userTaskForm.processPath"
+        v-model="userTaskForm.taskDisposePath"
         clearable
-        @change="updateElementTask('processPath')"
+        @change="updateElementTask('taskDisposePath')"
       />
     </el-form-item>
     <el-form-item label="允许批量审批">
@@ -117,7 +117,7 @@ export default {
       defaultTaskForm: {
         isBatchApproval: false,
         assignee: "",
-        processPath: "",
+        taskDisposePath: "",
         candidateUsers: [],
         candidateGroups: [],
         dueDate: "",
