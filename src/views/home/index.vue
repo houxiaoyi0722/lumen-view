@@ -39,17 +39,47 @@
         >
         </vxe-pager>
       </el-tab-pane>
-      <el-tab-pane label="我的待办" name="todo">User</el-tab-pane>
+      <el-tab-pane label="我的待办" name="todo">
+        <vxe-table
+          :show-header="false"
+          border
+          size="mini"
+          :row-config="{ height: 20 }"
+          :data="home.todoList"
+        >
+          <vxe-column type="seq" width="60"></vxe-column>
+          <vxe-column field="name" title="名称" show-overflow></vxe-column>
+          <vxe-column field="startBy" title="发起人" show-overflow></vxe-column>
+          <vxe-column title="操作" width="60" show-overflow>
+            <template #default="{ row }">
+              <vxe-button
+                type="text"
+                icon="vxe-icon-edit"
+                @click="finishTask(row)"
+              ></vxe-button>
+            </template>
+          </vxe-column>
+        </vxe-table>
+        <vxe-pager
+          size="mini"
+          auto-hidden
+          v-model:current-page="home.todoPage.currentPage"
+          v-model:page-size="home.todoPage.pageSize"
+          :total="home.todoPage.total"
+          :layouts="['PrevPage', 'NextPage', 'Total']"
+          @page-change="loadTodoList()"
+        >
+        </vxe-pager>
+      </el-tab-pane>
       <el-tab-pane label="我处理的" name="handled">Config</el-tab-pane>
       <el-tab-pane label="我发起的" name="launch">Task</el-tab-pane>
     </el-tabs>
   </el-card>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, onMounted, reactive } from "vue";
-import type { TabsPaneContext } from "element-plus";
-import { obtainProcessList } from "@/api/flowable";
+import { obtainProcessList, obtainTodoList } from "@/api/flowable";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
@@ -64,31 +94,55 @@ export default defineComponent({
         pageSize: 10,
         total: 0,
       },
+      todoPage: {
+        currentPage: 0,
+        pageSize: 10,
+        total: 0,
+      },
       todoList: [],
       handledList: [],
       launchList: [],
     });
 
-    const tabHandleClick = (tab: TabsPaneContext, event: Event) => {
-      console.log(tab, event);
+    const tabHandleClick = (tab, event) => {
+      home.activeName = tab.paneName;
     };
 
     onMounted(() => {
       loadProcessList();
+      loadTodoList();
     });
 
     const loadProcessList = () => {
-      obtainProcessList(home.processPage).then((res: any) => {
+      obtainProcessList(home.processPage).then((res) => {
         home.processList = res.data;
         home.processPage.total = res.total;
       });
     };
 
-    const startProcess = (row: any) => {
-      router.push({ path: row.processDisposePath });
+    const loadTodoList = () => {
+      obtainTodoList(home.todoPage).then((res) => {
+        home.todoList = res.data;
+        home.todoPage.total = res.total;
+      });
     };
 
-    return { home, tabHandleClick, loadProcessList, startProcess };
+    const startProcess = (row) => {
+      router.push({ path: `${row.processDisposePath}` });
+    };
+
+    const finishTask = (row) => {
+      console.log(row);
+    };
+
+    return {
+      home,
+      tabHandleClick,
+      loadProcessList,
+      loadTodoList,
+      startProcess,
+      finishTask,
+    };
   },
 });
 </script>

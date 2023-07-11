@@ -70,4 +70,12 @@ export const obtainProcessList = (processPage: any) => {
     url: `/lumen/flowable/process/page?startBy=${account_store.userinfo.username}&active=true&pageNumber=${processPage.currentPage}&pageSize=${processPage.pageSize}`,
     method: "get",
   });
+};
+
+export const obtainTodoList = (processPage: any) => {
+  const account_store = accountStore();
+  return request({
+    url: `/lumen/flowable/task/todo/page?userId=${account_store.userinfo.username}&pageNumber=${processPage.currentPage}&pageSize=${processPage.pageSize}`,
+    method: "get",
+  });
 }

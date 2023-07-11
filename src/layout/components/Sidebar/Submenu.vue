@@ -1,12 +1,12 @@
 <template>
-  <el-menu-item v-if="!menu.children" :index="basePath">
+  <el-menu-item v-if="!menu.children && !menu.hidden" :index="basePath">
     <item
       v-if="menu && menu.meta && menu.meta.icon"
       :icon="menu.meta.icon"
       :title="menu.meta.title"
     />
   </el-menu-item>
-  <el-sub-menu v-else :index="resolvePath(menu.path)">
+  <el-sub-menu v-else-if="!menu.hidden" :index="resolvePath(menu.path)">
     <template #title>
       <item
         v-if="menu && menu.meta && menu.meta.icon"

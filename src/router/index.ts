@@ -34,6 +34,11 @@ export const constantRoutes = [
           icon: "HomeFilled",
         },
       },
+      {
+        path: "/flowable/holiday",
+        component: () => import("@/views/process/holiday-process.vue"),
+        hidden: true,
+      },
     ],
   },
   {

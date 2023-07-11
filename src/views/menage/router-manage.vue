@@ -8,7 +8,6 @@
   </vxe-toolbar>
 
   <vxe-table
-    show-overflow
     keep-source
     ref="xTable"
     height="90%"

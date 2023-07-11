@@ -195,7 +195,7 @@ export default defineComponent({
               },
               {
                 code: "delete",
-                name: "删除",
+                name: "删除/版本回退",
                 visible: true,
                 disabled: false,
               },
