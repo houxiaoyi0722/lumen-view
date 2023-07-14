@@ -140,7 +140,7 @@ export default defineComponent({
         path: `${row.processDisposePath}`,
         query: {
           state: "PROCESSING",
-          processDefine: row,
+          processDefine: row.id,
         },
       });
     };
@@ -150,7 +150,7 @@ export default defineComponent({
         path: `${row.processDisposePath}`,
         query: {
           state: "DRAFT",
-          processDefinitionId: row.processDefinitionId,
+          processDefinitionId: row.id,
         },
       });
     };

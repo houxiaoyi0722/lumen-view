@@ -15,3 +15,12 @@ export const startProcess = (data: any) => {
     data,
   });
 };
+
+
+export const completeTask = (data: any) => {
+  return request({
+    url: `/lumen/leaveProcess/completeTask`,
+    method: "post",
+    data,
+  });
+};

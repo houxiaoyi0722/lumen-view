@@ -67,7 +67,7 @@
               type="submit"
               status="primary"
               content="提交"
-              @click="createProcess()"
+              @click="completeThisTask()"
             ></vxe-button>
             <vxe-button
               v-else
@@ -93,7 +93,9 @@ import {
 } from "vxe-table";
 import PageHeader from "@/components/page-header/index.vue";
 import { useRoute } from "vue-router";
-import { saveDraft, startProcess } from "@/api/leave-process";
+import {completeTask, saveDraft, startProcess} from "@/api/leave-process";
+import {validNull} from "@/utils/validate";
+import {commonAlert} from "@/components/hooks/common-hooks";
 
 const formRef = ref<VxeFormInstance>();
 
@@ -102,6 +104,7 @@ const loading = ref(false);
 const route = useRoute();
 
 const formData = reactive<any>({
+  id: "",
   name: "ceshi",
   startTime: "2023-07-10 10:00:00",
   endTime: "2023-07-11 10:00:00",
@@ -117,7 +120,12 @@ const formData = reactive<any>({
 onMounted(() => {
   formData.state = route.query.state;
   formData.processDefinitionId = route.query.processDefinitionId;
-  console.log(route.query);
+  if (validNull(formData.id)) {
+    // 初次进入时初始化
+    startProcess(formData).then((res: any) => {
+      console.log(res);
+    });
+  }
 });
 
 const changeEvent = (params: any) => {
@@ -130,13 +138,13 @@ const changeEvent = (params: any) => {
 const createDraft = () => {
   loading.value = true;
   saveDraft(formData).then((res: any) => {
+    commonAlert(res, "保存成功");
     loading.value = false;
-    VXETable.modal.message({ content: "保存成功", status: "success" });
   });
 };
 
-const createProcess = () => {
-  startProcess(formData).then((res: any) => {
+const completeThisTask = () => {
+  completeTask(formData).then((res: any) => {
     console.log(res);
   });
 };
