@@ -7,18 +7,12 @@
       title-align="right"
       title-width="100"
       :data="formData"
-      :rules="formRules"
       :loading="loading"
-      @submit="submitEvent"
-      @reset="resetEvent"
     >
       <vxe-form-gather span="18">
         <vxe-form-item title="申请人" field="name" span="24">
           <template #default="{ data }">
-            <vxe-input
-              v-model="data.name"
-              type="text"
-            ></vxe-input>
+            <vxe-input v-model="data.name" type="text"></vxe-input>
           </template>
         </vxe-form-item>
         <vxe-form-item
@@ -67,11 +61,20 @@
           </template>
         </vxe-form-item>
         <vxe-form-item align="center" span="24">
-          <template #default>
+          <template #default="{ data }">
             <vxe-button
+              v-if="data.state === 'PROCESSING'"
               type="submit"
               status="primary"
               content="提交"
+              @click="createProcess()"
+            ></vxe-button>
+            <vxe-button
+              v-else
+              type="submit"
+              status="primary"
+              content="保存草稿"
+              @click="createDraft()"
             ></vxe-button>
           </template>
         </vxe-form-item>
@@ -81,7 +84,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import {
   VXETable,
   VxeFormInstance,
@@ -89,36 +92,32 @@ import {
   VxeFormEvents,
 } from "vxe-table";
 import PageHeader from "@/components/page-header/index.vue";
+import { useRoute } from "vue-router";
+import { saveDraft, startProcess } from "@/api/leave-process";
 
 const formRef = ref<VxeFormInstance>();
 
 const loading = ref(false);
 
-const formData = ref<any>({
-  name: "test1",
-  startTime: "",
-  endTime: "",
-  reason: "",
+const route = useRoute();
+
+const formData = reactive<any>({
+  name: "ceshi",
+  startTime: "2023-07-10 10:00:00",
+  endTime: "2023-07-11 10:00:00",
+  reason: "aaaaa",
+  state: "",
+  processDefinitionId: "",
+  processKey: "",
+  processInstanceId: "",
+  taskId: "",
+  comment: "",
 });
 
-const formRules = ref<VxeFormPropTypes.Rules>({
-  name: [
-    { required: true, message: "请输入名称" },
-    { min: 3, max: 5, message: "长度在 3 到 5 个字符" },
-  ],
-  sex: [{ required: true, message: "请选择性别" }],
-  age: [
-    { required: true, message: "请输入年龄" },
-    {
-      validator({ itemValue }) {
-        // 自定义校验
-        if (Number(itemValue) > 35 || Number(itemValue) < 18) {
-          return new Error("年龄在 18 ~ 35 之间");
-        }
-      },
-    },
-  ],
-  date: [{ required: true, message: "必填校验" }],
+onMounted(() => {
+  formData.state = route.query.state;
+  formData.processDefinitionId = route.query.processDefinitionId;
+  console.log(route.query);
 });
 
 const changeEvent = (params: any) => {
@@ -128,16 +127,18 @@ const changeEvent = (params: any) => {
   }
 };
 
-const submitEvent: VxeFormEvents.Submit = () => {
+const createDraft = () => {
   loading.value = true;
-  setTimeout(() => {
+  saveDraft(formData).then((res: any) => {
     loading.value = false;
     VXETable.modal.message({ content: "保存成功", status: "success" });
-  }, 1000);
+  });
 };
 
-const resetEvent: VxeFormEvents.Reset = () => {
-  VXETable.modal.message({ content: "重置事件", status: "info" });
+const createProcess = () => {
+  startProcess(formData).then((res: any) => {
+    console.log(res);
+  });
 };
 </script>
 

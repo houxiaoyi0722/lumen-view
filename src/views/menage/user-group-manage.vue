@@ -7,7 +7,6 @@
   </vxe-toolbar>
 
   <vxe-table
-    show-overflow
     keep-source
     ref="roleXTable"
     height="90%"

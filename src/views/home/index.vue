@@ -10,19 +10,27 @@
     >
       <el-tab-pane label="流程列表" name="process" style="height: 200%">
         <vxe-table
-          :show-header="false"
           border
           size="mini"
           :row-config="{ height: 20 }"
           :data="home.processList"
         >
           <vxe-column type="seq" width="60"></vxe-column>
-          <vxe-column field="name" title="名称" show-overflow></vxe-column>
-          <vxe-column title="操作" width="60" show-overflow>
+          <vxe-column field="name" title="名称"></vxe-column>
+          <vxe-column title="创建草稿" width="80" align="center">
             <template #default="{ row }">
               <vxe-button
                 type="text"
-                icon="vxe-icon-edit"
+                icon="vxe-icon-file-txt"
+                @click="createDraft(row)"
+              ></vxe-button>
+            </template>
+          </vxe-column>
+          <vxe-column title="发起流程" width="80" align="center">
+            <template #default="{ row }">
+              <vxe-button
+                type="text"
+                icon="vxe-icon-caret-right"
                 @click="startProcess(row)"
               ></vxe-button>
             </template>
@@ -48,9 +56,9 @@
           :data="home.todoList"
         >
           <vxe-column type="seq" width="60"></vxe-column>
-          <vxe-column field="name" title="名称" show-overflow></vxe-column>
-          <vxe-column field="startBy" title="发起人" show-overflow></vxe-column>
-          <vxe-column title="操作" width="60" show-overflow>
+          <vxe-column field="name" title="名称"></vxe-column>
+          <vxe-column field="startBy" title="发起人"></vxe-column>
+          <vxe-column title="操作" width="60">
             <template #default="{ row }">
               <vxe-button
                 type="text"
@@ -128,7 +136,23 @@ export default defineComponent({
     };
 
     const startProcess = (row) => {
-      router.push({ path: `${row.processDisposePath}` });
+      router.push({
+        path: `${row.processDisposePath}`,
+        query: {
+          state: "PROCESSING",
+          processDefine: row,
+        },
+      });
+    };
+
+    const createDraft = (row) => {
+      router.push({
+        path: `${row.processDisposePath}`,
+        query: {
+          state: "DRAFT",
+          processDefinitionId: row.processDefinitionId,
+        },
+      });
     };
 
     const finishTask = (row) => {
@@ -142,6 +166,7 @@ export default defineComponent({
       loadTodoList,
       startProcess,
       finishTask,
+      createDraft,
     };
   },
 });

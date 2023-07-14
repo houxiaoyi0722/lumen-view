@@ -8,7 +8,6 @@
         </span>
       </template>
       <vxe-table
-        show-overflow
         keep-source
         ref="xTable"
         max-height="750"
