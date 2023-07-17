@@ -36,7 +36,7 @@ export default defineComponent({
   padding: 1.5rem;
   background-color: #fff;
 }
-.breadcrumb-hidden >>> .el-page-header__breadcrumb {
+:deep(.el-page-header__breadcrumb) {
   margin-bottom: 0px;
 }
 </style>
