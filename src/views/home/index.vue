@@ -15,8 +15,8 @@
           :row-config="{ height: 20 }"
           :data="home.processList"
         >
-          <vxe-column type="seq" width="60"></vxe-column>
-          <vxe-column field="name" title="名称"></vxe-column>
+          <vxe-column type="seq" width="30"></vxe-column>
+          <vxe-column field="name" title="名称" show-overflow></vxe-column>
           <vxe-column title="创建草稿" width="80" align="center">
             <template #default="{ row }">
               <vxe-button
@@ -49,21 +49,21 @@
       </el-tab-pane>
       <el-tab-pane label="我的待办" name="todo">
         <vxe-table
-          :show-header="false"
           border
           size="mini"
           :row-config="{ height: 20 }"
           :data="home.todoList"
         >
-          <vxe-column type="seq" width="60"></vxe-column>
-          <vxe-column field="name" title="名称"></vxe-column>
-          <vxe-column field="startBy" title="发起人"></vxe-column>
+          <vxe-column type="seq" width="30"></vxe-column>
+          <vxe-column field="name" title="节点名称" show-overflow></vxe-column>
+          <vxe-column field="startUserId" title="发起人" width="80" show-overflow></vxe-column>
+          <vxe-column field="startTime" title="发起时间" width="140" show-overflow></vxe-column>
           <vxe-column title="操作" width="60">
             <template #default="{ row }">
               <vxe-button
                 type="text"
                 icon="vxe-icon-edit"
-                @click="finishTask(row)"
+                @click="completeTask(row)"
               ></vxe-button>
             </template>
           </vxe-column>
@@ -114,6 +114,15 @@ export default defineComponent({
 
     const tabHandleClick = (tab, event) => {
       home.activeName = tab.paneName;
+      if ("process" === tab.paneName) {
+        loadProcessList();
+      } else if ("todo" === tab.paneName) {
+        loadTodoList();
+      } else if ("handled" === tab.paneName) {
+        console.log(tab.paneName);
+      } else if ("launch" === tab.paneName) {
+        console.log(tab.paneName);
+      }
     };
 
     onMounted(() => {
@@ -140,7 +149,7 @@ export default defineComponent({
         path: `${row.processDisposePath}`,
         query: {
           state: "PROCESSING",
-          processDefine: row.id,
+          processDefinitionId: row.id,
         },
       });
     };
@@ -155,6 +164,10 @@ export default defineComponent({
       });
     };
 
+    const completeTask = (row) => {
+
+    }
+
     const finishTask = (row) => {
       console.log(row);
     };
@@ -167,6 +180,7 @@ export default defineComponent({
       startProcess,
       finishTask,
       createDraft,
+      completeTask,
     };
   },
 });

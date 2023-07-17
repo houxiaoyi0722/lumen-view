@@ -70,6 +70,13 @@
               @click="completeThisTask()"
             ></vxe-button>
             <vxe-button
+              v-if="data.state === 'PROCESSING'"
+              type="submit"
+              status="primary"
+              content="删除"
+              @click="completeThisTask()"
+            ></vxe-button>
+            <vxe-button
               v-else
               type="submit"
               status="primary"
@@ -93,9 +100,9 @@ import {
 } from "vxe-table";
 import PageHeader from "@/components/page-header/index.vue";
 import { useRoute } from "vue-router";
-import {completeTask, saveDraft, startProcess} from "@/api/leave-process";
-import {validNull} from "@/utils/validate";
-import {commonAlert} from "@/components/hooks/common-hooks";
+import { completeTask, saveDraft, startProcess } from "@/api/leave-process";
+import { validNull } from "@/utils/validate";
+import { commonAlert } from "@/components/hooks/common-hooks";
 
 const formRef = ref<VxeFormInstance>();
 
@@ -118,6 +125,7 @@ const formData = reactive<any>({
 });
 
 onMounted(() => {
+  console.log(route.query)
   formData.state = route.query.state;
   formData.processDefinitionId = route.query.processDefinitionId;
   if (validNull(formData.id)) {
