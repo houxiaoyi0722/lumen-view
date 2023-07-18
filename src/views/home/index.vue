@@ -55,9 +55,20 @@
           :data="home.todoList"
         >
           <vxe-column type="seq" width="30"></vxe-column>
+          <vxe-column field="processName" title="流程名称" show-overflow></vxe-column>
           <vxe-column field="name" title="节点名称" show-overflow></vxe-column>
-          <vxe-column field="startUserId" title="发起人" width="80" show-overflow></vxe-column>
-          <vxe-column field="startTime" title="发起时间" width="140" show-overflow></vxe-column>
+          <vxe-column
+            field="startUserId"
+            title="发起人"
+            width="80"
+            show-overflow
+          ></vxe-column>
+          <vxe-column
+            field="startTime"
+            title="发起时间"
+            width="140"
+            show-overflow
+          ></vxe-column>
           <vxe-column title="操作" width="60">
             <template #default="{ row }">
               <vxe-button
@@ -89,6 +100,7 @@
 import { defineComponent, onMounted, reactive } from "vue";
 import { obtainProcessList, obtainTodoList } from "@/api/flowable";
 import { useRouter } from "vue-router";
+import { APPROVAL, DRAFT, PENDING } from "@/const/StringConst";
 
 export default defineComponent({
   setup() {
@@ -145,31 +157,27 @@ export default defineComponent({
     };
 
     const startProcess = (row) => {
-      router.push({
-        path: `${row.processDisposePath}`,
-        query: {
-          state: "PROCESSING",
-          processDefinitionId: row.id,
-        },
-      });
+      routerPush(row, PENDING, null, row.id);
     };
 
     const createDraft = (row) => {
-      router.push({
-        path: `${row.processDisposePath}`,
-        query: {
-          state: "DRAFT",
-          processDefinitionId: row.id,
-        },
-      });
+      routerPush(row, PENDING, null, row.id);
     };
 
     const completeTask = (row) => {
+      routerPush(row, APPROVAL, row.id, row.processDefinitionId);
+    };
 
-    }
-
-    const finishTask = (row) => {
-      console.log(row);
+    const routerPush = (row, state, taskId, processDefinitionId) => {
+      router.push({
+        path: `${row.processDisposePath}`,
+        query: {
+          id: row.businessId,
+          status: state,
+          taskId: taskId,
+          processDefinitionId: processDefinitionId,
+        },
+      });
     };
 
     return {
@@ -178,7 +186,6 @@ export default defineComponent({
       loadProcessList,
       loadTodoList,
       startProcess,
-      finishTask,
       createDraft,
       completeTask,
     };

@@ -24,3 +24,18 @@ export const completeTask = (data: any) => {
     data,
   });
 };
+
+export const leaveProcessById = (id: any) => {
+  return request({
+    url: `/lumen/leaveProcess/leaveProcess?id=${id}`,
+    method: "get",
+  });
+};
+
+export const deleteLeaveProcess = (data: any) => {
+  return request({
+    url: `/lumen/leaveProcess/deleteProcessInstance`,
+    method: "delete",
+    data: data
+  });
+};

@@ -63,18 +63,18 @@
         <vxe-form-item align="center" span="24">
           <template #default="{ data }">
             <vxe-button
-              v-if="data.state === 'PROCESSING'"
+              v-if="data.status === PENDING"
               type="submit"
               status="primary"
               content="提交"
               @click="completeThisTask()"
             ></vxe-button>
             <vxe-button
-              v-if="data.state === 'PROCESSING'"
+              v-if="data.status === PENDING"
               type="submit"
               status="primary"
               content="删除"
-              @click="completeThisTask()"
+              @click="deleteLeaveProcessInstance()"
             ></vxe-button>
             <vxe-button
               v-else
@@ -99,24 +99,26 @@ import {
   VxeFormEvents,
 } from "vxe-table";
 import PageHeader from "@/components/page-header/index.vue";
-import { useRoute } from "vue-router";
-import { completeTask, saveDraft, startProcess } from "@/api/leave-process";
+import {useRoute, useRouter} from "vue-router";
+import {completeTask, deleteLeaveProcess, leaveProcessById, saveDraft, startProcess} from "@/api/leave-process";
 import { validNull } from "@/utils/validate";
 import { commonAlert } from "@/components/hooks/common-hooks";
+import { APPROVAL, DRAFT, PENDING } from "@/const/StringConst";
 
 const formRef = ref<VxeFormInstance>();
 
 const loading = ref(false);
 
 const route = useRoute();
+const router = useRouter();
 
 const formData = reactive<any>({
-  id: "",
-  name: "ceshi",
-  startTime: "2023-07-10 10:00:00",
-  endTime: "2023-07-11 10:00:00",
-  reason: "aaaaa",
-  state: "",
+  id: null,
+  name: "",
+  startTime: "",
+  endTime: "",
+  reason: "",
+  status: "",
   processDefinitionId: "",
   processKey: "",
   processInstanceId: "",
@@ -125,13 +127,25 @@ const formData = reactive<any>({
 });
 
 onMounted(() => {
-  console.log(route.query)
-  formData.state = route.query.state;
+  formData.status = route.query.status;
+  formData.id = route.query.id;
   formData.processDefinitionId = route.query.processDefinitionId;
+  formData.taskId = route.query.taskId;
+  console.log(route.query);
   if (validNull(formData.id)) {
     // 初次进入时初始化
     startProcess(formData).then((res: any) => {
-      console.log(res);
+      formData.processInstanceId = res.data.processInstanceId;
+      formData.id = res.data.id;
+    });
+  } else {
+    leaveProcessById(formData.id).then((res: any) => {
+      formData.name = res.data.name;
+      formData.startTime = res.data.startTime;
+      formData.endTime = res.data.endTime;
+      formData.reason = res.data.reason;
+      formData.status = res.data.status;
+      formData.processInstanceId = res.data.processInstanceId;
     });
   }
 });
@@ -154,6 +168,14 @@ const createDraft = () => {
 const completeThisTask = () => {
   completeTask(formData).then((res: any) => {
     console.log(res);
+  });
+};
+
+const deleteLeaveProcessInstance = () => {
+  deleteLeaveProcess(formData).then((res: any) => {
+    if (commonAlert(res, "删除成功")) {
+      router.back();
+    }
   });
 };
 </script>
