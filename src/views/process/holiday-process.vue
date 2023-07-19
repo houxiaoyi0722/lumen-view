@@ -63,21 +63,36 @@
         <vxe-form-item align="center" span="24">
           <template #default="{ data }">
             <vxe-button
-              v-if="data.status === PENDING"
               type="submit"
               status="primary"
               content="提交"
-              @click="completeThisTask()"
+              @click="startLeaveProcess()"
             ></vxe-button>
             <vxe-button
-              v-if="data.status === PENDING"
+              type="submit"
+              status="primary"
+              content="审批通过"
+              @click="completeThisTask(ACTION_APPROVED)"
+            ></vxe-button>
+            <vxe-button
+              type="submit"
+              status="primary"
+              content="审批驳回"
+              @click="completeThisTask(ACTION_REJECT)"
+            ></vxe-button>
+            <vxe-button
+              type="submit"
+              status="primary"
+              content="审批退回"
+              @click="completeThisTask(ACTION_RETREAT)"
+            ></vxe-button>
+            <vxe-button
               type="submit"
               status="primary"
               content="删除"
               @click="deleteLeaveProcessInstance()"
             ></vxe-button>
             <vxe-button
-              v-else
               type="submit"
               status="primary"
               content="保存草稿"
@@ -103,7 +118,7 @@ import {useRoute, useRouter} from "vue-router";
 import {completeTask, deleteLeaveProcess, leaveProcessById, saveDraft, startProcess} from "@/api/leave-process";
 import { validNull } from "@/utils/validate";
 import { commonAlert } from "@/components/hooks/common-hooks";
-import { APPROVAL, DRAFT, PENDING } from "@/const/StringConst";
+import { APPROVAL, DRAFT, PENDING, ACTION_APPROVED, ACTION_REJECT, ACTION_RETREAT } from "@/const/StringConst";
 
 const formRef = ref<VxeFormInstance>();
 
@@ -131,14 +146,7 @@ onMounted(() => {
   formData.id = route.query.id;
   formData.processDefinitionId = route.query.processDefinitionId;
   formData.taskId = route.query.taskId;
-  console.log(route.query);
-  if (validNull(formData.id)) {
-    // 初次进入时初始化
-    startProcess(formData).then((res: any) => {
-      formData.processInstanceId = res.data.processInstanceId;
-      formData.id = res.data.id;
-    });
-  } else {
+  if (!validNull(formData.id)) {
     leaveProcessById(formData.id).then((res: any) => {
       formData.name = res.data.name;
       formData.startTime = res.data.startTime;
@@ -155,6 +163,14 @@ const changeEvent = (params: any) => {
   if ($form) {
     $form.updateStatus(params);
   }
+};
+
+const startLeaveProcess = () => {
+  startProcess(formData).then((res: any) => {
+    if (commonAlert(res, "保存成功")) {
+      router.back();
+    }
+  });
 };
 
 const createDraft = () => {

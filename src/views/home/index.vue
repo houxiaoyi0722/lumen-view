@@ -50,15 +50,22 @@
       <el-tab-pane label="我的待办" name="todo">
         <vxe-table
           border
+          :loading="home.loading"
+          max-height="230px"
           size="mini"
           :row-config="{ height: 20 }"
           :data="home.todoList"
         >
-          <vxe-column type="seq" width="30"></vxe-column>
-          <vxe-column field="processName" title="流程名称" show-overflow></vxe-column>
-          <vxe-column field="name" title="节点名称" show-overflow></vxe-column>
+          <vxe-column type="seq" width="40"></vxe-column>
           <vxe-column
-            field="startUserId"
+            field="processName"
+            title="流程名称"
+            show-overflow
+          ></vxe-column>
+          <vxe-column field="name" title="节点名称" show-overflow></vxe-column>
+          <vxe-column field="businessStatus" title="状态" show-overflow></vxe-column>
+          <vxe-column
+            field="startUserName"
             title="发起人"
             width="80"
             show-overflow
@@ -100,7 +107,14 @@
 import { defineComponent, onMounted, reactive } from "vue";
 import { obtainProcessList, obtainTodoList } from "@/api/flowable";
 import { useRouter } from "vue-router";
-import { APPROVAL, DRAFT, PENDING } from "@/const/StringConst";
+import {
+  ACTION_APPROVAL,
+  ACTION_DRAFT,
+  ACTION_LAUNCH,
+  APPROVAL,
+  DRAFT,
+  PENDING,
+} from "@/const/StringConst";
 
 export default defineComponent({
   setup() {
@@ -108,6 +122,7 @@ export default defineComponent({
 
     const home = reactive({
       activeName: "todo",
+      loading: false,
       processList: [],
       processPage: {
         currentPage: 0,
@@ -125,6 +140,7 @@ export default defineComponent({
     });
 
     const tabHandleClick = (tab, event) => {
+      home.loading = true;
       home.activeName = tab.paneName;
       if ("process" === tab.paneName) {
         loadProcessList();
@@ -132,8 +148,10 @@ export default defineComponent({
         loadTodoList();
       } else if ("handled" === tab.paneName) {
         console.log(tab.paneName);
+        home.loading = false;
       } else if ("launch" === tab.paneName) {
         console.log(tab.paneName);
+        home.loading = false;
       }
     };
 
@@ -143,29 +161,39 @@ export default defineComponent({
     });
 
     const loadProcessList = () => {
-      obtainProcessList(home.processPage).then((res) => {
-        home.processList = res.data;
-        home.processPage.total = res.total;
-      });
+      obtainProcessList(home.processPage)
+        .then((res) => {
+          home.processList = res.data;
+          home.processPage.total = res.total;
+          home.loading = false;
+        })
+        .catch(() => {
+          home.loading = false;
+        });
     };
 
     const loadTodoList = () => {
-      obtainTodoList(home.todoPage).then((res) => {
-        home.todoList = res.data;
-        home.todoPage.total = res.total;
-      });
+      obtainTodoList(home.todoPage)
+        .then((res) => {
+          home.todoList = res.data;
+          home.todoPage.total = res.total;
+          home.loading = false;
+        })
+        .catch(() => {
+          home.loading = false;
+        });
     };
 
     const startProcess = (row) => {
-      routerPush(row, PENDING, null, row.id);
+      routerPush(row, ACTION_LAUNCH, null, row.id);
     };
 
     const createDraft = (row) => {
-      routerPush(row, PENDING, null, row.id);
+      routerPush(row, ACTION_DRAFT, null, row.id);
     };
 
     const completeTask = (row) => {
-      routerPush(row, APPROVAL, row.id, row.processDefinitionId);
+      routerPush(row, ACTION_APPROVAL, row.id, row.processDefinitionId);
     };
 
     const routerPush = (row, state, taskId, processDefinitionId) => {
