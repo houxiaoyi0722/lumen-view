@@ -63,7 +63,11 @@
             show-overflow
           ></vxe-column>
           <vxe-column field="name" title="节点名称" show-overflow></vxe-column>
-          <vxe-column field="businessStatus" title="状态" show-overflow></vxe-column>
+          <vxe-column
+            field="businessStatus"
+            title="状态"
+            show-overflow
+          ></vxe-column>
           <vxe-column
             field="startUserName"
             title="发起人"
@@ -156,7 +160,7 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      loadProcessList();
+      home.loading = true;
       loadTodoList();
     });
 

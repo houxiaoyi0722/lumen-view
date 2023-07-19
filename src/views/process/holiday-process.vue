@@ -61,39 +61,33 @@
           </template>
         </vxe-form-item>
         <vxe-form-item align="center" span="24">
-          <template #default="{ data }">
+          <template #default>
             <vxe-button
-              type="submit"
               status="primary"
               content="提交"
               @click="startLeaveProcess()"
             ></vxe-button>
             <vxe-button
-              type="submit"
               status="primary"
               content="审批通过"
               @click="completeThisTask(ACTION_APPROVED)"
             ></vxe-button>
             <vxe-button
-              type="submit"
               status="primary"
               content="审批驳回"
-              @click="completeThisTask(ACTION_REJECT)"
+              @click="moveActivity(ACTION_REJECT)"
             ></vxe-button>
             <vxe-button
-              type="submit"
               status="primary"
               content="审批退回"
-              @click="completeThisTask(ACTION_RETREAT)"
+              @click="moveActivity(ACTION_RETREAT)"
             ></vxe-button>
             <vxe-button
-              type="submit"
               status="primary"
               content="删除"
               @click="deleteLeaveProcessInstance()"
             ></vxe-button>
             <vxe-button
-              type="submit"
               status="primary"
               content="保存草稿"
               @click="createDraft()"
@@ -114,11 +108,24 @@ import {
   VxeFormEvents,
 } from "vxe-table";
 import PageHeader from "@/components/page-header/index.vue";
-import {useRoute, useRouter} from "vue-router";
-import {completeTask, deleteLeaveProcess, leaveProcessById, saveDraft, startProcess} from "@/api/leave-process";
+import { useRoute, useRouter } from "vue-router";
+import {
+  completeTask,
+  deleteLeaveProcess,
+  leaveProcessById,
+  saveDraft,
+  startProcess,
+} from "@/api/leave-process";
 import { validNull } from "@/utils/validate";
 import { commonAlert } from "@/components/hooks/common-hooks";
-import { APPROVAL, DRAFT, PENDING, ACTION_APPROVED, ACTION_REJECT, ACTION_RETREAT } from "@/const/StringConst";
+import {
+  APPROVAL,
+  DRAFT,
+  PENDING,
+  ACTION_APPROVED,
+  ACTION_REJECT,
+  ACTION_RETREAT,
+} from "@/const/StringConst";
 
 const formRef = ref<VxeFormInstance>();
 
@@ -130,6 +137,7 @@ const router = useRouter();
 const formData = reactive<any>({
   id: null,
   name: "",
+  action: "",
   startTime: "",
   endTime: "",
   reason: "",
@@ -158,18 +166,13 @@ onMounted(() => {
   }
 });
 
-const changeEvent = (params: any) => {
-  const $form = formRef.value;
-  if ($form) {
-    $form.updateStatus(params);
-  }
-};
-
 const startLeaveProcess = () => {
+  loading.value = true;
   startProcess(formData).then((res: any) => {
     if (commonAlert(res, "保存成功")) {
       router.back();
     }
+    loading.value = false;
   });
 };
 
@@ -182,16 +185,29 @@ const createDraft = () => {
 };
 
 const completeThisTask = () => {
+  loading.value = true;
   completeTask(formData).then((res: any) => {
-    console.log(res);
+    if (commonAlert(res, "审批成功")) {
+      router.back();
+    }
+    loading.value = false;
   });
 };
 
+const moveActivity = (action: string) => {
+  // formData.action = action;
+  // moveActivity(formData).then((res: any) => {
+    console.log(action);
+  // });
+}
+
 const deleteLeaveProcessInstance = () => {
+  loading.value = true;
   deleteLeaveProcess(formData).then((res: any) => {
     if (commonAlert(res, "删除成功")) {
       router.back();
     }
+    loading.value = false;
   });
 };
 </script>

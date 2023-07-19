@@ -5,9 +5,8 @@ import {accountStore} from "@/stores/modules/account";
 
 export const processDefinitionPage = (data: any) => {
   return request({
-    url: `/lumen/flowable/process/page?name=${data.name}${
-      validNull(data.active) ? "" : "&active=" + data.active
-    }&pageNumber=${data.pageNumber}&pageSize=${data.pageSize}`,
+    url: `/lumen/flowable/process/page?name=${data.name}&latestVersion=${data.latestVersion}
+    ${validNull(data.active) ? "" : "&active=" + data.active}&pageNumber=${data.pageNumber}&pageSize=${data.pageSize}`,
     method: "get",
   });
 };
@@ -67,7 +66,7 @@ export const groupList = (name: any) => {
 export const obtainProcessList = (processPage: any) => {
   const account_store = accountStore();
   return request({
-    url: `/lumen/flowable/process/page?startBy=${account_store.userinfo.username}&active=true&pageNumber=${processPage.currentPage}&pageSize=${processPage.pageSize}`,
+    url: `/lumen/flowable/process/page?startBy=${account_store.userinfo.username}&active=true&latestVersion=true&pageNumber=${processPage.currentPage}&pageSize=${processPage.pageSize}`,
     method: "get",
   });
 };

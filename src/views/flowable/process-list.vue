@@ -20,6 +20,12 @@
         <vxe-option value="false" label="挂起"></vxe-option>
       </vxe-select>
     </template>
+    <template #latest_version_item="{ data }">
+      <vxe-select v-model="data.latestVersion">
+        <vxe-option :value="true" label="最新版本"></vxe-option>
+        <vxe-option :value="false" label="全部版本"></vxe-option>
+      </vxe-select>
+    </template>
     <template #operate_item>
       <vxe-button
         type="submit"
@@ -118,9 +124,15 @@ export default defineComponent({
         data: {
           name: "",
           active: undefined,
+          latestVersion: true,
         },
         items: [
           { field: "name", title: "流程名称", slots: { default: "name_item" } },
+          {
+            field: "latestVersion",
+            title: "最新版本",
+            slots: { default: "latest_version_item" },
+          },
           {
             field: "active",
             title: "活动状态",
@@ -195,7 +207,7 @@ export default defineComponent({
               },
               {
                 code: "delete",
-                name: "删除/版本回退",
+                name: "删除",
                 visible: true,
                 disabled: false,
               },
@@ -224,6 +236,7 @@ export default defineComponent({
       processDefinitionPage({
         name: gridOptions.formConfig?.data.name,
         active: gridOptions.formConfig?.data.active,
+        latestVersion: gridOptions.formConfig?.data.latestVersion,
         pageNumber: pagerConfig.currentPage,
         pageSize: pagerConfig.pageSize,
       })
@@ -243,6 +256,7 @@ export default defineComponent({
     const reset = () => {
       gridOptions.formConfig!.data.name = "";
       gridOptions.formConfig!.data.active = null;
+      gridOptions.formConfig!.data.latestVersion = true;
     };
 
     const cellContextMenuEvent: VxeGridEvents.CellMenu = ({ row }) => {
