@@ -101,7 +101,66 @@
         >
         </vxe-pager>
       </el-tab-pane>
-      <el-tab-pane label="我处理的" name="handled">Config</el-tab-pane>
+      <el-tab-pane label="我处理的" name="handled">
+        <vxe-table
+          border
+          :loading="home.loading"
+          max-height="230px"
+          size="mini"
+          :row-config="{ height: 20 }"
+          :data="home.handledList"
+        >
+          <vxe-column type="seq" width="40"></vxe-column>
+          <vxe-column
+            field="processName"
+            title="流程名称"
+            show-overflow
+          ></vxe-column>
+          <vxe-column field="name" title="节点名称" show-overflow></vxe-column>
+          <vxe-column
+            field="businessStatus"
+            title="状态"
+            show-overflow
+          ></vxe-column>
+          <vxe-column
+            field="startUserName"
+            title="发起人"
+            width="80"
+            show-overflow
+          ></vxe-column>
+          <vxe-column
+            field="endTime"
+            title="处理时间"
+            width="140"
+            show-overflow
+          ></vxe-column>
+          <vxe-column
+            field="deleteReason"
+            title="删除原因"
+            width="80"
+            show-overflow
+          ></vxe-column>
+          <vxe-column title="操作" width="60">
+            <template #default="{ row }">
+              <vxe-button
+                type="text"
+                icon="vxe-icon-edit"
+                @click="completeTask(row)"
+              ></vxe-button>
+            </template>
+          </vxe-column>
+        </vxe-table>
+        <vxe-pager
+          size="mini"
+          auto-hidden
+          v-model:current-page="home.handledPage.currentPage"
+          v-model:page-size="home.handledPage.pageSize"
+          :total="home.handledPage.total"
+          :layouts="['PrevPage', 'NextPage', 'Total']"
+          @page-change="loadHandledList()"
+        >
+        </vxe-pager>
+      </el-tab-pane>
       <el-tab-pane label="我发起的" name="launch">Task</el-tab-pane>
     </el-tabs>
   </el-card>
@@ -109,7 +168,7 @@
 
 <script>
 import { defineComponent, onMounted, reactive } from "vue";
-import { obtainProcessList, obtainTodoList } from "@/api/flowable";
+import {obtainHandledList, obtainProcessList, obtainTodoList} from "@/api/flowable";
 import { useRouter } from "vue-router";
 import {
   ACTION_APPROVAL,
@@ -128,6 +187,9 @@ export default defineComponent({
       activeName: "todo",
       loading: false,
       processList: [],
+      todoList: [],
+      handledList: [],
+      launchList: [],
       processPage: {
         currentPage: 0,
         pageSize: 10,
@@ -138,9 +200,16 @@ export default defineComponent({
         pageSize: 10,
         total: 0,
       },
-      todoList: [],
-      handledList: [],
-      launchList: [],
+      handledPage: {
+        currentPage: 0,
+        pageSize: 10,
+        total: 0,
+      },
+      launchPage: {
+        currentPage: 0,
+        pageSize: 10,
+        total: 0,
+      },
     });
 
     const tabHandleClick = (tab, event) => {
@@ -151,8 +220,7 @@ export default defineComponent({
       } else if ("todo" === tab.paneName) {
         loadTodoList();
       } else if ("handled" === tab.paneName) {
-        console.log(tab.paneName);
-        home.loading = false;
+        loadHandledList();
       } else if ("launch" === tab.paneName) {
         console.log(tab.paneName);
         home.loading = false;
@@ -181,6 +249,18 @@ export default defineComponent({
         .then((res) => {
           home.todoList = res.data;
           home.todoPage.total = res.total;
+          home.loading = false;
+        })
+        .catch(() => {
+          home.loading = false;
+        });
+    };
+
+    const loadHandledList = () => {
+      obtainHandledList(home.handledPage)
+        .then((res) => {
+          home.handledList = res.data;
+          home.handledPage.total = res.total;
           home.loading = false;
         })
         .catch(() => {
@@ -217,6 +297,7 @@ export default defineComponent({
       tabHandleClick,
       loadProcessList,
       loadTodoList,
+      loadHandledList,
       startProcess,
       createDraft,
       completeTask,
