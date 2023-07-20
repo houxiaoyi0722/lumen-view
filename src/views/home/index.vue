@@ -47,7 +47,7 @@
         >
         </vxe-pager>
       </el-tab-pane>
-      <el-tab-pane label="我的待办" name="todo">
+      <el-tab-pane label="待办" name="todo">
         <vxe-table
           border
           :loading="home.loading"
@@ -58,7 +58,7 @@
         >
           <vxe-column type="seq" width="40"></vxe-column>
           <vxe-column
-            field="processName"
+            field="processDefinitionName"
             title="流程名称"
             show-overflow
           ></vxe-column>
@@ -101,7 +101,7 @@
         >
         </vxe-pager>
       </el-tab-pane>
-      <el-tab-pane label="我处理的" name="handled">
+      <el-tab-pane label="已处理" name="handled">
         <vxe-table
           border
           :loading="home.loading"
@@ -112,7 +112,7 @@
         >
           <vxe-column type="seq" width="40"></vxe-column>
           <vxe-column
-            field="processName"
+            field="processDefinitionName"
             title="流程名称"
             show-overflow
           ></vxe-column>
@@ -161,14 +161,58 @@
         >
         </vxe-pager>
       </el-tab-pane>
-      <el-tab-pane label="我发起的" name="launch">Task</el-tab-pane>
+      <el-tab-pane label="已发起" name="launch">
+        <vxe-table
+          border
+          :loading="home.loading"
+          max-height="230px"
+          size="mini"
+          :row-config="{ height: 20 }"
+          :data="home.LaunchList"
+        >
+          <vxe-column type="seq" width="40"></vxe-column>
+          <vxe-column
+            field="processDefinitionName"
+            title="流程名称"
+            show-overflow
+          ></vxe-column>
+          <vxe-column
+            field="businessStatus"
+            title="状态"
+            show-overflow
+          ></vxe-column>
+          <vxe-column title="操作" width="60">
+            <template #default="{ row }">
+              <vxe-button
+                type="text"
+                icon="vxe-icon-edit"
+                @click="completeTask(row)"
+              ></vxe-button>
+            </template>
+          </vxe-column>
+        </vxe-table>
+        <vxe-pager
+          size="mini"
+          auto-hidden
+          v-model:current-page="home.launchPage.currentPage"
+          v-model:page-size="home.launchPage.pageSize"
+          :total="home.launchPage.total"
+          :layouts="['PrevPage', 'NextPage', 'Total']"
+          @page-change="loadLaunchList()"
+        >
+        </vxe-pager>
+      </el-tab-pane>
     </el-tabs>
   </el-card>
 </template>
 
 <script>
 import { defineComponent, onMounted, reactive } from "vue";
-import {obtainHandledList, obtainProcessList, obtainTodoList} from "@/api/flowable";
+import {
+  obtainHandledList, obtainLaunchList,
+  obtainProcessList,
+  obtainTodoList,
+} from "@/api/flowable";
 import { useRouter } from "vue-router";
 import {
   ACTION_APPROVAL,
@@ -185,6 +229,7 @@ export default defineComponent({
 
     const home = reactive({
       activeName: "todo",
+      finished: false,
       loading: false,
       processList: [],
       todoList: [],
@@ -222,8 +267,7 @@ export default defineComponent({
       } else if ("handled" === tab.paneName) {
         loadHandledList();
       } else if ("launch" === tab.paneName) {
-        console.log(tab.paneName);
-        home.loading = false;
+        loadLaunchList();
       }
     };
 
@@ -268,6 +312,18 @@ export default defineComponent({
         });
     };
 
+    const loadLaunchList = () => {
+      obtainLaunchList(home.launchPage,home.finished)
+        .then((res) => {
+          home.LaunchList = res.data;
+          home.launchPage.total = res.total;
+          home.loading = false;
+        })
+        .catch(() => {
+          home.loading = false;
+        });
+    };
+
     const startProcess = (row) => {
       routerPush(row, ACTION_LAUNCH, null, row.id);
     };
@@ -284,7 +340,7 @@ export default defineComponent({
       router.push({
         path: `${row.processDisposePath}`,
         query: {
-          id: row.businessId,
+          id: row.businessKey,
           status: state,
           taskId: taskId,
           processDefinitionId: processDefinitionId,
@@ -298,6 +354,7 @@ export default defineComponent({
       loadProcessList,
       loadTodoList,
       loadHandledList,
+      loadLaunchList,
       startProcess,
       createDraft,
       completeTask,

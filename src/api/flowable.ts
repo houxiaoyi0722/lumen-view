@@ -88,3 +88,10 @@ export const obtainHandledList = (processPage: any) => {
     method: "get",
   });
 };
+
+export const obtainLaunchList = (processPage: any,finished: boolean) => {
+  return request({
+    url: `/lumen/flowable/process/myProcess/page?finished=${finished}&pageNumber=${processPage.currentPage}&pageSize=${processPage.pageSize}`,
+    method: "get",
+  });
+};
