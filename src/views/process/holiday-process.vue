@@ -197,9 +197,9 @@ const completeThisTask = () => {
 const moveActivity = (action: string) => {
   // formData.action = action;
   // moveActivity(formData).then((res: any) => {
-    console.log(action);
+  console.log(action);
   // });
-}
+};
 
 const deleteLeaveProcessInstance = () => {
   loading.value = true;

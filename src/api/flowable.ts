@@ -89,9 +89,16 @@ export const obtainHandledList = (processPage: any) => {
   });
 };
 
-export const obtainLaunchList = (processPage: any,finished: boolean) => {
+export const obtainLaunchList = (processPage: any, finished: boolean) => {
   return request({
     url: `/lumen/flowable/process/myProcess/page?finished=${finished}&pageNumber=${processPage.currentPage}&pageSize=${processPage.pageSize}`,
+    method: "get",
+  });
+};
+
+export const modelJson = (instanceId: any) => {
+  return request({
+    url: `/lumen/flowable/rest/process-instances/${instanceId}/model-json`,
     method: "get",
   });
 };

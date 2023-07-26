@@ -80,8 +80,13 @@
             width="140"
             show-overflow
           ></vxe-column>
-          <vxe-column title="操作" width="60">
+          <vxe-column title="操作" width="90">
             <template #default="{ row }">
+              <vxe-button
+                type="text"
+                icon="vxe-icon-flow-branch"
+                @click="showProcessModel(row)"
+              ></vxe-button>
               <vxe-button
                 type="text"
                 icon="vxe-icon-edit"
@@ -140,8 +145,13 @@
             width="80"
             show-overflow
           ></vxe-column>
-          <vxe-column title="操作" width="60">
+          <vxe-column title="操作" width="90">
             <template #default="{ row }">
+              <vxe-button
+                type="text"
+                icon="vxe-icon-flow-branch"
+                @click="showProcessModel(row)"
+              ></vxe-button>
               <vxe-button
                 type="text"
                 icon="vxe-icon-edit"
@@ -181,8 +191,13 @@
             title="状态"
             show-overflow
           ></vxe-column>
-          <vxe-column title="操作" width="60">
+          <vxe-column title="操作" width="90">
             <template #default="{ row }">
+              <vxe-button
+                  type="text"
+                  icon="vxe-icon-flow-branch"
+                  @click="showProcessModel(row)"
+              ></vxe-button>
               <vxe-button
                 type="text"
                 icon="vxe-icon-edit"
@@ -204,12 +219,27 @@
       </el-tab-pane>
     </el-tabs>
   </el-card>
+
+  <vxe-modal
+    v-model="home.isShowProcessModel"
+    id="myModal7"
+    width="900"
+    height="600"
+    size="small"
+    transfer
+    resize
+    destroy-on-close
+    :loading="home.modalLoading"
+  >
+    <process-instance-model :process-instance-id="home.processInstanceId" @close-modal-loading="closeModalLoading()"/>
+  </vxe-modal>
 </template>
 
 <script>
 import { defineComponent, onMounted, reactive } from "vue";
 import {
-  obtainHandledList, obtainLaunchList,
+  obtainHandledList,
+  obtainLaunchList,
   obtainProcessList,
   obtainTodoList,
 } from "@/api/flowable";
@@ -222,8 +252,10 @@ import {
   DRAFT,
   PENDING,
 } from "@/const/StringConst";
+import ProcessInstanceModel from "@/views/flowable/process-instance-model.vue";
 
 export default defineComponent({
+  components: { ProcessInstanceModel },
   setup() {
     const router = useRouter();
 
@@ -255,6 +287,9 @@ export default defineComponent({
         pageSize: 10,
         total: 0,
       },
+      modalLoading: false,
+      isShowProcessModel: false,
+      processInstanceId: "",
     });
 
     const tabHandleClick = (tab, event) => {
@@ -313,7 +348,7 @@ export default defineComponent({
     };
 
     const loadLaunchList = () => {
-      obtainLaunchList(home.launchPage,home.finished)
+      obtainLaunchList(home.launchPage, home.finished)
         .then((res) => {
           home.LaunchList = res.data;
           home.launchPage.total = res.total;
@@ -348,6 +383,16 @@ export default defineComponent({
       });
     };
 
+    const showProcessModel = (row) => {
+      home.isShowProcessModel = true;
+      home.modalLoading = true;
+      home.processInstanceId = row.processInstanceId;
+    };
+
+    const closeModalLoading = () => {
+      home.modalLoading = false;
+    };
+
     return {
       home,
       tabHandleClick,
@@ -358,6 +403,8 @@ export default defineComponent({
       startProcess,
       createDraft,
       completeTask,
+      showProcessModel,
+      closeModalLoading,
     };
   },
 });
