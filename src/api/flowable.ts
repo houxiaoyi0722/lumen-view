@@ -102,3 +102,10 @@ export const modelJson = (instanceId: any) => {
     method: "get",
   });
 };
+
+export const historyModelJson = (instanceId: any) => {
+  return request({
+    url: `/lumen/flowable/rest/process-instances/history/${instanceId}/model-json`,
+    method: "get",
+  });
+};

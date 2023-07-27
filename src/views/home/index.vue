@@ -153,9 +153,8 @@
                 @click="showProcessModel(row)"
               ></vxe-button>
               <vxe-button
-                type="text"
-                icon="vxe-icon-edit"
-                @click="completeTask(row)"
+                  type="text"
+                  icon="vxe-icon-eye-fill"
               ></vxe-button>
             </template>
           </vxe-column>
@@ -194,14 +193,13 @@
           <vxe-column title="操作" width="90">
             <template #default="{ row }">
               <vxe-button
-                  type="text"
-                  icon="vxe-icon-flow-branch"
-                  @click="showProcessModel(row)"
+                type="text"
+                icon="vxe-icon-flow-branch"
+                @click="showProcessModel(row)"
               ></vxe-button>
               <vxe-button
                 type="text"
-                icon="vxe-icon-edit"
-                @click="completeTask(row)"
+                icon="vxe-icon-eye-fill"
               ></vxe-button>
             </template>
           </vxe-column>
@@ -231,7 +229,11 @@
     destroy-on-close
     :loading="home.modalLoading"
   >
-    <process-instance-model :process-instance-id="home.processInstanceId" @close-modal-loading="closeModalLoading()"/>
+    <process-instance-model
+      :process-instance-id="home.processInstanceId"
+      :history="home.history"
+      @close-modal-loading="closeModalLoading()"
+    />
   </vxe-modal>
 </template>
 
@@ -253,6 +255,7 @@ import {
   PENDING,
 } from "@/const/StringConst";
 import ProcessInstanceModel from "@/views/flowable/process-instance-model.vue";
+import {validNull} from "@/utils/validate";
 
 export default defineComponent({
   components: { ProcessInstanceModel },
@@ -290,6 +293,7 @@ export default defineComponent({
       modalLoading: false,
       isShowProcessModel: false,
       processInstanceId: "",
+      history: false,
     });
 
     const tabHandleClick = (tab, event) => {
@@ -387,6 +391,7 @@ export default defineComponent({
       home.isShowProcessModel = true;
       home.modalLoading = true;
       home.processInstanceId = row.processInstanceId;
+      home.history = !validNull(row.processEndTime);
     };
 
     const closeModalLoading = () => {

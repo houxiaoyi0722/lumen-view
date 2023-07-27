@@ -88,16 +88,13 @@ export function isArray(arg: any) {
 }
 
 export function validNull(obj: any) {
-  if (
+  return (
     obj === "" ||
     typeof obj === "undefined" ||
     obj === null ||
     obj.length === 0 ||
     Object.keys(obj).length === 0
-  ) {
-    return true;
-  }
-  return false;
+  );
 }
 
 /**
