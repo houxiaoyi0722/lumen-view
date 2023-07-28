@@ -120,8 +120,101 @@ export default defineComponent({
           for (i = 0; i < modelElements.length; i++) {
             const element = modelElements[i];
             try {
-              const drawFunction = eval("_draw" + element.type);
-              drawFunction(element, paper);
+              switch (element.type) {
+                case "StartEvent":
+                  _drawStartEvent(element, paper);
+                  break;
+                case "EndEvent":
+                  _drawEndEvent(element, paper);
+                  break;
+                case "UserTask":
+                  _drawUserTask(element, paper);
+                  break;
+                case "ExclusiveGateway":
+                  _drawExclusiveGateway(element, paper);
+                  break;
+                case "Lane":
+                  _drawLane(element, paper);
+                  break;
+                case "SubProcess":
+                  _drawSubProcess(element, paper);
+                  break;
+                case "Transaction":
+                  _drawTransaction(element, paper);
+                  break;
+                case "EventSubProcess":
+                  _drawEventSubProcess(element, paper);
+                  break;
+                case "AdhocSubProcess":
+                  _drawAdhocSubProcess(element, paper);
+                  break;
+                case "Event":
+                  _drawEvent(element, paper);
+                  break;
+                case "ServiceTask":
+                  _drawServiceTask(element, paper);
+                  break;
+                case "SendEventServiceTask":
+                  _drawSendEventServiceTask(element, paper);
+                  break;
+                case "ExternalWorkerServiceTask":
+                  _drawExternalWorkerServiceTask(element, paper);
+                  break;
+                case "HttpServiceTask":
+                  _drawHttpServiceTask(element, paper);
+                  break;
+                case "CallActivity":
+                  _drawCallActivity(element, paper);
+                  break;
+                case "ScriptTask":
+                  _drawScriptTask(element, paper);
+                  break;
+                case "BusinessRuleTask":
+                  _drawBusinessRuleTask(element, paper);
+                  break;
+                case "ManualTask":
+                  _drawManualTask(element, paper);
+                  break;
+                case "SendTask":
+                  _drawSendTask(element, paper);
+                  break;
+                case "ReceiveTask":
+                  _drawReceiveTask(element, paper);
+                  break;
+                case "Task":
+                  _drawTask(element, paper);
+                  break;
+                case "ParallelGateway":
+                  _drawParallelGateway(element, paper);
+                  break;
+                case "InclusiveGateway":
+                  _drawInclusiveGateway(element, paper);
+                  break;
+                case "EventGateway":
+                  _drawEventGateway(element, paper);
+                  break;
+                case "Gateway":
+                  _drawGateway(element, paper);
+                  break;
+                case "BoundaryEvent":
+                  _drawBoundaryEvent(element, paper);
+                  break;
+                case "IntermediateCatchEvent":
+                  _drawIntermediateCatchEvent(element, paper);
+                  break;
+                case "ThrowEvent":
+                  _drawThrowEvent(element, paper);
+                  break;
+                case "MultilineText":
+                  _drawMultilineText(element, paper);
+                  break;
+                case "TextAnnotation":
+                  _drawTextAnnotation(element, paper);
+                  break;
+                case "ArrowHead":
+                  _drawArrowHead(element, paper);
+                  break;
+              }
             } catch (err) {
               console.log(err);
             }
