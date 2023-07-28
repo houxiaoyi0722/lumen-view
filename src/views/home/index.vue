@@ -152,10 +152,7 @@
                 icon="vxe-icon-flow-branch"
                 @click="showProcessModel(row)"
               ></vxe-button>
-              <vxe-button
-                  type="text"
-                  icon="vxe-icon-eye-fill"
-              ></vxe-button>
+              <vxe-button type="text" icon="vxe-icon-eye-fill"></vxe-button>
             </template>
           </vxe-column>
         </vxe-table>
@@ -197,10 +194,7 @@
                 icon="vxe-icon-flow-branch"
                 @click="showProcessModel(row)"
               ></vxe-button>
-              <vxe-button
-                type="text"
-                icon="vxe-icon-eye-fill"
-              ></vxe-button>
+              <vxe-button type="text" icon="vxe-icon-eye-fill"></vxe-button>
             </template>
           </vxe-column>
         </vxe-table>
@@ -255,7 +249,7 @@ import {
   PENDING,
 } from "@/const/StringConst";
 import ProcessInstanceModel from "@/views/flowable/process-instance-model.vue";
-import {validNull} from "@/utils/validate";
+import { validNull } from "@/utils/validate";
 
 export default defineComponent({
   components: { ProcessInstanceModel },
@@ -372,10 +366,17 @@ export default defineComponent({
     };
 
     const completeTask = (row) => {
-      routerPush(row, ACTION_APPROVAL, row.id, row.processDefinitionId);
+      routerPush(
+        row,
+        ACTION_APPROVAL,
+        row.id,
+        row.processDefinitionId,
+        row.taskDefinitionKey,
+        row.executionId
+      );
     };
 
-    const routerPush = (row, state, taskId, processDefinitionId) => {
+    const routerPush = (row, state, taskId, processDefinitionId,taskDefinitionKey,executionId) => {
       router.push({
         path: `${row.processDisposePath}`,
         query: {
@@ -383,6 +384,8 @@ export default defineComponent({
           status: state,
           taskId: taskId,
           processDefinitionId: processDefinitionId,
+          taskDefinitionKey: taskDefinitionKey,
+          executionId: executionId,
         },
       });
     };

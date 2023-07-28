@@ -24,10 +24,10 @@ import {
 } from "@/views/flowable/components/display/displaymodel";
 import { Polyline } from "@/views/flowable/components/display/Polyline";
 import {
-  _drawBusinessRuleTaskIcon,
-  _drawEventIcon, _drawManualTaskIcon,
+  _drawBusinessRuleTaskIcon, _drawCamelTaskIcon, _drawDecisionTaskIcon,
+  _drawEventIcon, _drawHttpTaskIcon, _drawManualTaskIcon, _drawMuleTaskIcon,
   _drawReceiveTaskIcon,
-  _drawScriptTaskIcon, _drawSendTaskIcon, _drawUserTaskIcon
+  _drawScriptTaskIcon, _drawSendTaskIcon, _drawServiceTaskIcon, _drawShellTaskIcon, _drawUserTaskIcon
 } from "@/views/flowable/components/display/bpmn-icons";
 
 let strokeWidth;
@@ -35,10 +35,8 @@ let strokeWidth;
 export function _bpmnGetColor(element, defaultColor) {
   let strokeColor;
   if (element.current) {
-    // eslint-disable-next-line no-undef
     strokeColor = CURRENT_COLOR;
   } else if (element.completed) {
-    // eslint-disable-next-line no-undef
     strokeColor = COMPLETED_COLOR;
   } else {
     strokeColor = defaultColor;
@@ -46,14 +44,12 @@ export function _bpmnGetColor(element, defaultColor) {
   return strokeColor;
 }
 
-export function _drawPool(pool) {
-  // eslint-disable-next-line no-undef
+export function _drawPool(pool,paper) {
   const rect = paper.rect(pool.x, pool.y, pool.width, pool.height);
 
   rect.attr({ "stroke-width": 1, stroke: "#000000", fill: "white" });
 
   if (pool.name) {
-    // eslint-disable-next-line no-undef
     const poolName = paper
       .text(pool.x + 14, pool.y + pool.height / 2, pool.name)
       .attr({
@@ -74,14 +70,12 @@ export function _drawPool(pool) {
   }
 }
 
-export function _drawLane(lane) {
-  // eslint-disable-next-line no-undef
+export function _drawLane(lane,paper) {
   const rect = paper.rect(lane.x, lane.y, lane.width, lane.height);
 
   rect.attr({ "stroke-width": 1, stroke: "#000000", fill: "white" });
 
   if (lane.name) {
-    // eslint-disable-next-line no-undef
     const laneName = paper
       .text(lane.x + 10, lane.y + lane.height / 2, lane.name)
       .attr({
@@ -95,8 +89,7 @@ export function _drawLane(lane) {
   }
 }
 
-export function _drawSubProcess(element) {
-  // eslint-disable-next-line no-undef
+export function _drawSubProcess(element,paper) {
   const rect = paper.rect(
     element.x,
     element.y,
@@ -104,14 +97,12 @@ export function _drawSubProcess(element) {
     element.height,
     4
   );
-  // eslint-disable-next-line no-undef
   const strokeColor = _bpmnGetColor(element, MAIN_STROKE_COLOR);
 
   rect.attr({ "stroke-width": 1, stroke: strokeColor, fill: "white" });
 }
 
-export function _drawTransaction(element) {
-  // eslint-disable-next-line no-undef
+export function _drawTransaction(element,paper) {
   const rect = paper.rect(
     element.x,
     element.y,
@@ -120,12 +111,10 @@ export function _drawTransaction(element) {
     4
   );
 
-  // eslint-disable-next-line no-undef
   const strokeColor = _bpmnGetColor(element, MAIN_STROKE_COLOR);
 
   rect.attr({ "stroke-width": 1, stroke: strokeColor, fill: "white" });
 
-  // eslint-disable-next-line no-undef
   const borderRect = paper.rect(
     element.x + 2,
     element.y + 2,
@@ -137,8 +126,7 @@ export function _drawTransaction(element) {
   borderRect.attr({ "stroke-width": 1, stroke: "black", fill: "none" });
 }
 
-export function _drawEventSubProcess(element) {
-  // eslint-disable-next-line no-undef
+export function _drawEventSubProcess(element,paper) {
   const rect = paper.rect(
     element.x,
     element.y,
@@ -146,7 +134,6 @@ export function _drawEventSubProcess(element) {
     element.height,
     4
   );
-  // eslint-disable-next-line no-undef
   const strokeColor = _bpmnGetColor(element, MAIN_STROKE_COLOR);
 
   rect.attr({
@@ -157,8 +144,7 @@ export function _drawEventSubProcess(element) {
   });
 }
 
-export function _drawAdhocSubProcess(element) {
-  // eslint-disable-next-line no-undef
+export function _drawAdhocSubProcess(element,paper) {
   const rect = paper.rect(
     element.x,
     element.y,
@@ -167,11 +153,9 @@ export function _drawAdhocSubProcess(element) {
     4
   );
 
-  // eslint-disable-next-line no-undef
   const strokeColor = _bpmnGetColor(element, MAIN_STROKE_COLOR);
 
   rect.attr({ "stroke-width": 1, stroke: strokeColor, fill: "white" });
-  // eslint-disable-next-line no-undef
   paper
     .text(element.x + element.width / 2, element.y + element.height - 8)
     .attr({
@@ -203,10 +187,8 @@ export function _drawEvent(element, strokeWidth, radius, paper) {
   const x = element.x + element.width / 2;
   const y = element.y + element.height / 2;
 
-  // eslint-disable-next-line no-undef
   const circle = paper.circle(x, y, radius);
 
-  // eslint-disable-next-line no-undef
   const strokeColor = _bpmnGetColor(element, MAIN_STROKE_COLOR);
 
   // Fill
@@ -214,9 +196,7 @@ export function _drawEvent(element, strokeWidth, radius, paper) {
 
   // Opacity
   let eventOpacity = 1.0;
-  // eslint-disable-next-line no-undef
   if (customActivityBackgroundOpacity) {
-    // eslint-disable-next-line no-undef
     eventOpacity = customActivityBackgroundOpacity;
   }
 
@@ -247,25 +227,18 @@ export function _drawEvent(element, strokeWidth, radius, paper) {
 export function _drawServiceTask(element, paper) {
   _drawTask(element,paper);
   if (element.taskType === "mail") {
-    // eslint-disable-next-line no-undef
     _drawSendTaskIcon(paper, element.x + 4, element.y + 4);
   } else if (element.taskType === "camel") {
-    // eslint-disable-next-line no-undef
     _drawCamelTaskIcon(paper, element.x + 4, element.y + 4);
   } else if (element.taskType === "mule") {
-    // eslint-disable-next-line no-undef
     _drawMuleTaskIcon(paper, element.x + 4, element.y + 4);
   } else if (element.taskType === "http") {
-    // eslint-disable-next-line no-undef
     _drawHttpTaskIcon(paper, element.x + 4, element.y + 4);
   } else if (element.taskType === "shell") {
-    // eslint-disable-next-line no-undef
     _drawShellTaskIcon(paper, element.x + 4, element.y + 4);
   } else if (element.taskType === "dmn") {
-    // eslint-disable-next-line no-undef
     _drawDecisionTaskIcon(paper, element.x + 4, element.y + 4);
   } else if (element.stencilIconId) {
-    // eslint-disable-next-line no-undef
     paper.image(
       "../service/stencilitem/" + element.stencilIconId + "/icon",
       element.x + 4,
@@ -274,34 +247,26 @@ export function _drawServiceTask(element, paper) {
       16
     );
   } else {
-    // eslint-disable-next-line no-undef
     _drawServiceTaskIcon(paper, element.x + 4, element.y + 4);
   }
-  // eslint-disable-next-line no-undef
   _addHoverLogic(element, "rect", ACTIVITY_STROKE_COLOR, paper);
 }
 
 export function _drawSendEventServiceTask(element, paper) {
   _drawTask(element,paper);
-  // eslint-disable-next-line no-undef
   _drawSendTaskIcon(paper, element.x + 4, element.y + 4);
-  // eslint-disable-next-line no-undef
   _addHoverLogic(element, "rect", ACTIVITY_STROKE_COLOR, paper);
 }
 
 export function _drawExternalWorkerServiceTask(element, paper) {
   _drawTask(element,paper);
-  // eslint-disable-next-line no-undef
   _drawServiceTaskIcon(paper, element.x + 4, element.y + 4);
-  // eslint-disable-next-line no-undef
   _addHoverLogic(element, "rect", ACTIVITY_STROKE_COLOR, paper);
 }
 
 export function _drawHttpServiceTask(element, paper) {
   _drawTask(element,paper);
-  // eslint-disable-next-line no-undef
   _drawHttpTaskIcon(paper, element.x + 4, element.y + 4);
-  // eslint-disable-next-line no-undef
   _addHoverLogic(element, "rect", ACTIVITY_STROKE_COLOR, paper);
 }
 
@@ -431,10 +396,9 @@ export function _drawTask(element,paper) {
 }
 
 export function _drawExclusiveGateway(element, paper) {
-  _drawGateway(element);
+  _drawGateway(element,paper);
   const quarterWidth = element.width / 4;
   const quarterHeight = element.height / 4;
-  // eslint-disable-next-line no-undef
   const iks = paper.path(
     "M" +
       (element.x + quarterWidth + 3) +
@@ -453,21 +417,17 @@ export function _drawExclusiveGateway(element, paper) {
       " " +
       (element.y + quarterHeight + 3)
   );
-  // eslint-disable-next-line no-undef
   const strokeColor = _bpmnGetColor(element, MAIN_STROKE_COLOR);
 
   // Fill
   const gatewayFillColor = _determineCustomFillColor(
     element,
-    // eslint-disable-next-line no-undef
     ACTIVITY_FILL_COLOR
   );
 
   // Opacity
   let gatewayOpacity = 1.0;
-  // eslint-disable-next-line no-undef
   if (customActivityBackgroundOpacity) {
-    // eslint-disable-next-line no-undef
     gatewayOpacity = customActivityBackgroundOpacity;
   }
 
@@ -477,29 +437,23 @@ export function _drawExclusiveGateway(element, paper) {
     fill: gatewayFillColor,
     "fill-opacity": gatewayOpacity,
   });
-  // eslint-disable-next-line no-undef
   _addHoverLogic(element, "rhombus", MAIN_STROKE_COLOR, paper);
 }
 
 export function _drawParallelGateway(element, paper) {
   _drawGateway(element);
-  // eslint-disable-next-line no-undef
   const strokeColor = _bpmnGetColor(element, MAIN_STROKE_COLOR);
-  // eslint-disable-next-line no-undef
   const path1 = paper.path("M 6.75,16 L 25.75,16 M 16,6.75 L 16,25.75");
 
   // Fill
   const gatewayFillColor = _determineCustomFillColor(
     element,
-    // eslint-disable-next-line no-undef
     ACTIVITY_FILL_COLOR
   );
 
   // Opacity
   let gatewayOpacity = 1.0;
-  // eslint-disable-next-line no-undef
   if (customActivityBackgroundOpacity) {
-    // eslint-disable-next-line no-undef
     gatewayOpacity = customActivityBackgroundOpacity;
   }
 
@@ -511,15 +465,12 @@ export function _drawParallelGateway(element, paper) {
   });
 
   path1.transform("T" + (element.x + 4) + "," + (element.y + 4));
-  // eslint-disable-next-line no-undef
   _addHoverLogic(element, "rhombus", MAIN_STROKE_COLOR, paper);
 }
 
 export function _drawInclusiveGateway(element, paper) {
   _drawGateway(element);
-  // eslint-disable-next-line no-undef
   const strokeColor = _bpmnGetColor(element, MAIN_STROKE_COLOR);
-  // eslint-disable-next-line no-undef
   const circle1 = paper.circle(
     element.x + element.width / 2,
     element.y + element.height / 2,
@@ -529,15 +480,12 @@ export function _drawInclusiveGateway(element, paper) {
   // Fill
   const gatewayFillColor = _determineCustomFillColor(
     element,
-    // eslint-disable-next-line no-undef
     ACTIVITY_FILL_COLOR
   );
 
   // Opacity
   let gatewayOpacity = 1.0;
-  // eslint-disable-next-line no-undef
   if (customActivityBackgroundOpacity) {
-    // eslint-disable-next-line no-undef
     gatewayOpacity = customActivityBackgroundOpacity;
   }
 
@@ -547,15 +495,12 @@ export function _drawInclusiveGateway(element, paper) {
     fill: gatewayFillColor,
     "fill-opacity": gatewayOpacity,
   });
-  // eslint-disable-next-line no-undef
   _addHoverLogic(element, "rhombus", MAIN_STROKE_COLOR, paper);
 }
 
 export function _drawEventGateway(element, paper) {
   _drawGateway(element);
-  // eslint-disable-next-line no-undef
   const strokeColor = _bpmnGetColor(element, MAIN_STROKE_COLOR);
-  // eslint-disable-next-line no-undef
   const circle1 = paper.circle(
     element.x + element.width / 2,
     element.y + element.height / 2,
@@ -565,15 +510,12 @@ export function _drawEventGateway(element, paper) {
   // Fill
   const gatewayFillColor = _determineCustomFillColor(
     element,
-    // eslint-disable-next-line no-undef
     ACTIVITY_FILL_COLOR
   );
 
   // Opacity
   let gatewayOpacity = 1.0;
-  // eslint-disable-next-line no-undef
   if (customActivityBackgroundOpacity) {
-    // eslint-disable-next-line no-undef
     gatewayOpacity = customActivityBackgroundOpacity;
   }
 
@@ -583,7 +525,6 @@ export function _drawEventGateway(element, paper) {
     fill: gatewayFillColor,
     "fill-opacity": gatewayOpacity,
   });
-  // eslint-disable-next-line no-undef
   const circle2 = paper.circle(
     element.x + element.width / 2,
     element.y + element.height / 2,
@@ -595,7 +536,6 @@ export function _drawEventGateway(element, paper) {
     fill: gatewayFillColor,
     "fill-opacity": gatewayOpacity,
   });
-  // eslint-disable-next-line no-undef
   const path1 = paper.path(
     "M 20.327514,22.344972 L 11.259248,22.344216 L 8.4577203,13.719549 L 15.794545,8.389969 L 23.130481,13.720774 L 20.327514,22.344972 z"
   );
@@ -608,14 +548,11 @@ export function _drawEventGateway(element, paper) {
   });
 
   path1.transform("T" + (element.x + 4) + "," + (element.y + 4));
-  // eslint-disable-next-line no-undef
   _addHoverLogic(element, "rhombus", MAIN_STROKE_COLOR, paper);
 }
 
-export function _drawGateway(element) {
-  // eslint-disable-next-line no-undef
+export function _drawGateway(element,paper) {
   const strokeColor = _bpmnGetColor(element, MAIN_STROKE_COLOR);
-  // eslint-disable-next-line no-undef
   const rhombus = paper.path(
     "M" +
       element.x +
@@ -639,15 +576,12 @@ export function _drawGateway(element) {
   // Fill
   const gatewayFillColor = _determineCustomFillColor(
     element,
-    // eslint-disable-next-line no-undef
     ACTIVITY_FILL_COLOR
   );
 
   // Opacity
   let gatewayOpacity = 1.0;
-  // eslint-disable-next-line no-undef
   if (customActivityBackgroundOpacity) {
-    // eslint-disable-next-line no-undef
     gatewayOpacity = customActivityBackgroundOpacity;
   }
 
@@ -664,9 +598,7 @@ export function _drawGateway(element) {
 export function _drawBoundaryEvent(element, paper) {
   const x = element.x + element.width / 2;
   const y = element.y + element.height / 2;
-  // eslint-disable-next-line no-undef
   const circle = paper.circle(x, y, 15);
-  // eslint-disable-next-line no-undef
   const strokeColor = _bpmnGetColor(element, MAIN_STROKE_COLOR);
 
   if (element.cancelActivity) {
@@ -683,7 +615,6 @@ export function _drawBoundaryEvent(element, paper) {
       fill: "white",
     });
   }
-  // eslint-disable-next-line no-undef
   const innerCircle = paper.circle(x, y, 12);
 
   if (element.cancelActivity) {
@@ -696,9 +627,7 @@ export function _drawBoundaryEvent(element, paper) {
       fill: "none",
     });
   }
-  // eslint-disable-next-line no-undef
   _drawEventIcon(paper, element);
-  // eslint-disable-next-line no-undef
   _addHoverLogic(element, "circle", MAIN_STROKE_COLOR, paper);
 
   circle.id = element.id;
@@ -708,19 +637,14 @@ export function _drawBoundaryEvent(element, paper) {
 export function _drawIntermediateCatchEvent(element, paper) {
   const x = element.x + element.width / 2;
   const y = element.y + element.height / 2;
-  // eslint-disable-next-line no-undef
   const circle = paper.circle(x, y, 15);
-  // eslint-disable-next-line no-undef
   const strokeColor = _bpmnGetColor(element, MAIN_STROKE_COLOR);
 
   circle.attr({ "stroke-width": 1, stroke: strokeColor, fill: "white" });
-  // eslint-disable-next-line no-undef
   const innerCircle = paper.circle(x, y, 12);
 
   innerCircle.attr({ "stroke-width": 1, stroke: strokeColor, fill: "none" });
-  // eslint-disable-next-line no-undef
   _drawEventIcon(paper, element);
-  // eslint-disable-next-line no-undef
   _addHoverLogic(element, "circle", MAIN_STROKE_COLOR, paper);
 
   circle.id = element.id;
@@ -730,19 +654,14 @@ export function _drawIntermediateCatchEvent(element, paper) {
 export function _drawThrowEvent(element, paper) {
   const x = element.x + element.width / 2;
   const y = element.y + element.height / 2;
-  // eslint-disable-next-line no-undef
   const circle = paper.circle(x, y, 15);
-  // eslint-disable-next-line no-undef
   const strokeColor = _bpmnGetColor(element, MAIN_STROKE_COLOR);
 
   circle.attr({ "stroke-width": 1, stroke: strokeColor, fill: "white" });
-  // eslint-disable-next-line no-undef
   const innerCircle = paper.circle(x, y, 12);
 
   innerCircle.attr({ "stroke-width": 1, stroke: strokeColor, fill: "none" });
-  // eslint-disable-next-line no-undef
   _drawEventIcon(paper, element);
-  // eslint-disable-next-line no-undef
   _addHoverLogic(element, "circle", MAIN_STROKE_COLOR, paper);
 
   circle.id = element.id;
@@ -764,7 +683,7 @@ export function _drawMultilineText(
     return;
   }
 
-  let textBoxX, textBoxY;
+  let textBoxX;
   const width = boxWidth - 2 * TEXT_PADDING;
 
   if (horizontalAnchor === "middle") {
@@ -772,8 +691,7 @@ export function _drawMultilineText(
   } else if (horizontalAnchor === "start") {
     textBoxX = x;
   }
-  // eslint-disable-next-line prefer-const
-  textBoxY = y + boxHeight / 2;
+  const textBoxY = y + boxHeight / 2;
   const t = paper.text(textBoxX + TEXT_PADDING, textBoxY + TEXT_PADDING).attr({
     "text-anchor": horizontalAnchor,
     "font-family": "Arial",
@@ -818,13 +736,11 @@ export function _drawMultilineText(
 }
 
 export function _drawTextAnnotation(element,paper) {
-  // eslint-disable-next-line no-undef
   const path1 = paper.path("M20,1 L1,1 L1,50 L20,50");
   path1.attr({
     stroke: "#585858",
     fill: "none",
   });
-  // eslint-disable-next-line no-undef
   const annotation = paper.set();
   annotation.push(path1);
 
@@ -849,16 +765,11 @@ export function _drawFlow(flow, paper) {
   const polyline = new Polyline(
     flow.id,
     flow.waypoints,
-    // eslint-disable-next-line no-undef
     SEQUENCEFLOW_STROKE,
-    // eslint-disable-next-line no-undef
     paper
   );
-  // eslint-disable-next-line no-undef
   const strokeColor = _bpmnGetColor(flow, MAIN_STROKE_COLOR);
-  // eslint-disable-next-line no-undef
   polyline.element = paper.path(polyline.path);
-  // eslint-disable-next-line no-undef
   polyline.element.attr({ "stroke-width": SEQUENCEFLOW_STROKE });
   polyline.element.attr({ stroke: strokeColor });
 
@@ -867,12 +778,11 @@ export function _drawFlow(flow, paper) {
   const lastLineIndex = polyline.getLinesCount() - 1;
   const line = polyline.getLine(lastLineIndex);
 
-  if (line == undefined) return;
+  if (line === undefined) return;
 
-  if (flow.type == "connection" && flow.conditions) {
+  if (flow.type === "connection" && flow.conditions) {
     const middleX = (line.x1 + line.x2) / 2;
     const middleY = (line.y1 + line.y2) / 2;
-    // eslint-disable-next-line no-undef
     const image = paper.image(
       "../editor/images/condition-flow.png",
       middleX - 8,
@@ -881,16 +791,12 @@ export function _drawFlow(flow, paper) {
       16
     );
   }
-  // eslint-disable-next-line no-undef
   const polylineInvisible = new Polyline(
     flow.id,
     flow.waypoints,
-    // eslint-disable-next-line no-undef
     SEQUENCEFLOW_STROKE,
-    // eslint-disable-next-line no-undef
     paper
   );
-  // eslint-disable-next-line no-undef
   polylineInvisible.element = paper.path(polyline.path);
   polylineInvisible.element.attr({
     opacity: 0,
@@ -911,7 +817,6 @@ export function _drawFlow(flow, paper) {
     } else {
       angle = -Math.PI / 2;
     }
-    // eslint-disable-next-line no-undef
     const flowName = paper.text(firstLine.x1, firstLine.y1, flow.name).attr({
       "text-anchor": "middle",
       "font-family": "Arial",
@@ -941,12 +846,10 @@ export function _drawFlow(flow, paper) {
   _showTip(jQuery(polylineInvisible.element.node), flow);
 
   polylineInvisible.element.mouseover(function () {
-    // eslint-disable-next-line no-undef
     paper.getById(polyline.element.id).attr({ stroke: "blue" });
   });
 
   polylineInvisible.element.mouseout(function () {
-    // eslint-disable-next-line no-undef
     paper.getById(polyline.element.id).attr({ stroke: "#585858" });
   });
 
@@ -957,14 +860,10 @@ export function _drawAssociation(flow, paper) {
   const polyline = new Polyline(
     flow.id,
     flow.waypoints,
-    // eslint-disable-next-line no-undef
     ASSOCIATION_STROKE,
-    // eslint-disable-next-line no-undef
     paper
   );
-  // eslint-disable-next-line no-undef
   polyline.element = paper.path(polyline.path);
-  // eslint-disable-next-line no-undef
   polyline.element.attr({ "stroke-width": ASSOCIATION_STROKE });
   polyline.element.attr({ "stroke-dasharray": ". " });
   polyline.element.attr({ stroke: "#585858" });
@@ -973,12 +872,9 @@ export function _drawAssociation(flow, paper) {
   const polylineInvisible = new Polyline(
     flow.id,
     flow.waypoints,
-    // eslint-disable-next-line no-undef
     ASSOCIATION_STROKE,
-    // eslint-disable-next-line no-undef
     paper
   );
-  // eslint-disable-next-line no-undef
   polylineInvisible.element = paper.path(polyline.path);
   polylineInvisible.element.attr({
     opacity: 0,
@@ -989,12 +885,10 @@ export function _drawAssociation(flow, paper) {
   _showTip(jQuery(polylineInvisible.element.node), flow);
 
   polylineInvisible.element.mouseover(function () {
-    // eslint-disable-next-line no-undef
     paper.getById(polyline.element.id).attr({ stroke: "blue" });
   });
 
   polylineInvisible.element.mouseout(function () {
-    // eslint-disable-next-line no-undef
     paper.getById(polyline.element.id).attr({ stroke: "#585858" });
   });
 }
@@ -1042,9 +936,7 @@ export function _determineCustomFillColor(element, defaultColor) {
   }
 
   // By id
-  // eslint-disable-next-line no-undef
   if (customActivityColors && customActivityColors[element.id]) {
-    // eslint-disable-next-line no-undef
     color = customActivityColors[element.id];
   }
 

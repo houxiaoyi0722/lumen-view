@@ -16,7 +16,6 @@ export const startProcess = (data: any) => {
   });
 };
 
-
 export const completeTask = (data: any) => {
   return request({
     url: `/lumen/leaveProcess/completeTask`,
@@ -32,10 +31,18 @@ export const leaveProcessById = (id: any) => {
   });
 };
 
+export const moveActivity = (data: any) => {
+  return request({
+    url: `/lumen/leaveProcess/moveActivity`,
+    method: "put",
+    data,
+  });
+};
+
 export const deleteLeaveProcess = (data: any) => {
   return request({
     url: `/lumen/leaveProcess/deleteProcessInstance`,
     method: "delete",
-    data: data
+    data: data,
   });
 };

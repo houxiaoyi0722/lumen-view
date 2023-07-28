@@ -12,13 +12,13 @@ import "@/views/flowable/components/display/Polyline.js";
 import "@/views/flowable/components/display/bpmn-draw";
 import "@/views/flowable/components/display/bpmn-icons";
 import "@/views/flowable/components/display/displaymodel.js";
-import {historyModelJson, modelJson} from "@/api/flowable";
+import { historyModelJson, modelJson } from "@/api/flowable";
 import {
-  _drawStartEvent,
-  _drawUserTask,
-  _drawEndEvent,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _drawStartEvent,_drawEndEvent,_drawUserTask,_drawExclusiveGateway,_drawLane,_drawSubProcess,_drawTransaction,_drawEventSubProcess,_drawAdhocSubProcess,_drawEvent,_drawServiceTask,_drawSendEventServiceTask,_drawExternalWorkerServiceTask,_drawHttpServiceTask,_drawCallActivity,_drawScriptTask,_drawBusinessRuleTask,_drawManualTask,_drawSendTask,_drawReceiveTask,_drawTask,_drawParallelGateway,_drawInclusiveGateway,_drawEventGateway,_drawGateway,_drawBoundaryEvent,_drawIntermediateCatchEvent,_drawThrowEvent,_drawMultilineText,_drawTextAnnotation,_drawArrowHead,
   _drawFlow,
   _drawAssociation,
+  _drawPool,
 } from "@/views/flowable/components/display/bpmn-draw";
 import { defineComponent } from "vue"; //动态调用切勿删除
 
@@ -83,7 +83,6 @@ export default defineComponent({
           if (data.pools) {
             for (i = 0; i < data.pools.length; i++) {
               const pool = data.pools[i];
-              // eslint-disable-next-line no-undef
               _drawPool(pool);
             }
           }
@@ -91,11 +90,12 @@ export default defineComponent({
           const modelElements = data.elements;
           for (i = 0; i < modelElements.length; i++) {
             const element = modelElements[i];
-            //try {
-            const drawFunction = eval("_draw" + element.type);
-            // _drawStartEvent(element, paper);
-            drawFunction(element, paper);
-            //} catch(err) {console.log(err);}
+            try {
+              const drawFunction = eval("_draw" + element.type);
+              drawFunction(element, paper);
+            } catch (err) {
+              console.log(err);
+            }
           }
 
           if (data.flows) {

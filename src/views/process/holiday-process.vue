@@ -15,6 +15,11 @@
             <vxe-input v-model="data.name" type="text"></vxe-input>
           </template>
         </vxe-form-item>
+        <vxe-form-item title="天数" field="day" span="24">
+          <template #default="{ data }">
+            <vxe-input v-model="data.day" type="text"></vxe-input>
+          </template>
+        </vxe-form-item>
         <vxe-form-item
           title="开始时间"
           field="startTime"
@@ -75,12 +80,12 @@
             <vxe-button
               status="primary"
               content="审批驳回"
-              @click="moveActivity(ACTION_REJECT)"
+              @click="moveThisActivity(ACTION_REJECT)"
             ></vxe-button>
             <vxe-button
               status="primary"
               content="审批退回"
-              @click="moveActivity(ACTION_RETREAT)"
+              @click="moveThisActivity(ACTION_RETREAT)"
             ></vxe-button>
             <vxe-button
               status="primary"
@@ -101,18 +106,13 @@
 
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from "vue";
-import {
-  VXETable,
-  VxeFormInstance,
-  VxeFormPropTypes,
-  VxeFormEvents,
-} from "vxe-table";
+import { VxeFormInstance } from "vxe-table";
 import PageHeader from "@/components/page-header/index.vue";
 import { useRoute, useRouter } from "vue-router";
 import {
   completeTask,
   deleteLeaveProcess,
-  leaveProcessById,
+  leaveProcessById, moveActivity,
   saveDraft,
   startProcess,
 } from "@/api/leave-process";
@@ -140,12 +140,15 @@ const formData = reactive<any>({
   action: "",
   startTime: "",
   endTime: "",
+  day: "",
   reason: "",
   status: "",
   processDefinitionId: "",
   processKey: "",
   processInstanceId: "",
   taskId: "",
+  taskDefinitionKey: "",
+  executionId: "",
   comment: "",
 });
 
@@ -154,6 +157,8 @@ onMounted(() => {
   formData.id = route.query.id;
   formData.processDefinitionId = route.query.processDefinitionId;
   formData.taskId = route.query.taskId;
+  formData.taskDefinitionKey = route.query.taskDefinitionKey;
+  formData.executionId = route.query.executionId;
   if (!validNull(formData.id)) {
     leaveProcessById(formData.id).then((res: any) => {
       formData.name = res.data.name;
@@ -161,6 +166,7 @@ onMounted(() => {
       formData.endTime = res.data.endTime;
       formData.reason = res.data.reason;
       formData.status = res.data.status;
+      formData.day = res.data.day;
       formData.processInstanceId = res.data.processInstanceId;
     });
   }
@@ -194,11 +200,11 @@ const completeThisTask = () => {
   });
 };
 
-const moveActivity = (action: string) => {
-  // formData.action = action;
-  // moveActivity(formData).then((res: any) => {
-  console.log(action);
-  // });
+const moveThisActivity = (action: string) => {
+  formData.action = action;
+  moveActivity(formData).then((res: any) => {
+    console.log(action);
+  });
 };
 
 const deleteLeaveProcessInstance = () => {
