@@ -376,7 +376,14 @@ export default defineComponent({
       );
     };
 
-    const routerPush = (row, state, taskId, processDefinitionId,taskDefinitionKey,executionId) => {
+    const routerPush = (
+      row,
+      state,
+      taskId,
+      processDefinitionId,
+      taskDefinitionKey,
+      executionId
+    ) => {
       router.push({
         path: `${row.processDisposePath}`,
         query: {
