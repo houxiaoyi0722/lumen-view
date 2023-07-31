@@ -109,3 +109,10 @@ export const historyModelJson = (instanceId: any) => {
     method: "get",
   });
 };
+
+export const loadProcessHistoryList = (form: any) => {
+  return request({
+    url: `/lumen/flowable/process/history?processInstanceId=${form.processInstanceId}&processDefinitionId=${form.processDefinitionId}`,
+    method: "get",
+  });
+};

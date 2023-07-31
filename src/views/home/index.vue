@@ -215,7 +215,7 @@
   <vxe-modal
     v-model="home.isShowProcessModel"
     id="myModal7"
-    width="900"
+    width="950"
     height="600"
     size="small"
     transfer
@@ -228,12 +228,43 @@
       :history="home.history"
       @close-modal-loading="closeModalLoading()"
     />
+    <vxe-table
+      border
+      :loading="home.hisToryLoading"
+      max-height="230px"
+      size="mini"
+      :row-config="{ height: 20 }"
+      :data="home.processHistoryList"
+    >
+      <vxe-column type="seq" width="40"></vxe-column>
+      <vxe-column field="activityName" title="节点名称" show-overflow></vxe-column>
+      <vxe-column field="action" title="动作" show-overflow></vxe-column>
+      <vxe-column field="actionReason" title="变更原因" show-overflow></vxe-column>
+      <vxe-column
+        field="assignee"
+        title="处理人"
+        width="80"
+        show-overflow
+      ></vxe-column>
+      <vxe-column
+        field="endTime"
+        title="处理时间"
+        width="140"
+        show-overflow
+      ></vxe-column>
+      <vxe-column
+        field="deleteReason"
+        title="删除原因"
+        show-overflow
+      ></vxe-column>
+    </vxe-table>
   </vxe-modal>
 </template>
 
 <script>
 import { defineComponent, onMounted, reactive } from "vue";
 import {
+  loadProcessHistoryList,
   obtainHandledList,
   obtainLaunchList,
   obtainProcessList,
@@ -264,6 +295,7 @@ export default defineComponent({
       todoList: [],
       handledList: [],
       launchList: [],
+      processHistoryList: [],
       processPage: {
         currentPage: 0,
         pageSize: 10,
@@ -285,8 +317,10 @@ export default defineComponent({
         total: 0,
       },
       modalLoading: false,
+      hisToryLoading: false,
       isShowProcessModel: false,
       processInstanceId: "",
+      processDefinitionId: "",
       history: false,
     });
 
@@ -401,11 +435,15 @@ export default defineComponent({
       home.isShowProcessModel = true;
       home.modalLoading = true;
       home.processInstanceId = row.processInstanceId;
+      home.processDefinitionId = row.processDefinitionId;
       home.history = !validNull(row.processEndTime);
     };
 
     const closeModalLoading = () => {
       home.modalLoading = false;
+      loadProcessHistoryList(home).then((res) => {
+        home.processHistoryList = res.data;
+      });
     };
 
     return {

@@ -65,6 +65,21 @@
             ></vxe-textarea>
           </template>
         </vxe-form-item>
+        <vxe-form-item
+          title="处理\拒绝\退回 理由"
+          field="actionReason"
+          span="24"
+          :item-render="{}"
+        >
+          <template #default="{ data }">
+            <vxe-textarea
+              v-model="data.actionReason"
+              placeholder="请输入原因"
+              :autosize="{ minRows: 6, maxRows: 10 }"
+              clearable
+            ></vxe-textarea>
+          </template>
+        </vxe-form-item>
         <vxe-form-item align="center" span="24">
           <template #default>
             <vxe-button
@@ -143,6 +158,7 @@ const formData = reactive<any>({
   endTime: "",
   day: "",
   reason: "",
+  actionReason: "删除",
   status: "",
   processDefinitionId: "",
   processKey: "",
@@ -191,8 +207,9 @@ const createDraft = () => {
   });
 };
 
-const completeThisTask = () => {
+const completeThisTask = (action: string) => {
   loading.value = true;
+  formData.action = action;
   completeTask(formData).then((res: any) => {
     if (commonAlert(res, "审批成功")) {
       router.back();
@@ -203,9 +220,18 @@ const completeThisTask = () => {
 
 const moveThisActivity = (action: string) => {
   formData.action = action;
-  moveActivity(formData).then((res: any) => {
-    console.log(action);
-  });
+  loading.value = true;
+
+  moveActivity(formData)
+    .then((res: any) => {
+      if (commonAlert(res, "处理成功")) {
+        router.back();
+      }
+      loading.value = false;
+    })
+    .catch(() => {
+      loading.value = false;
+    });
 };
 
 const deleteLeaveProcessInstance = () => {
