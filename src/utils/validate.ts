@@ -117,3 +117,10 @@ export function getBytesLength(str: any) {
   }
   return num;
 }
+
+export function hasSpecialSymbols(str: any) {
+  const regEn = /[`~!@#$%^&*()_+<>?:"{},.\\/;'[\]]/im,
+    regCn = /[·！#￥（—）：；“”‘、，|《。》？【】[\]]/im;
+
+  return regEn.test(str) || regCn.test(str);
+}

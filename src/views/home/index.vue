@@ -215,8 +215,8 @@
   <vxe-modal
     v-model="home.isShowProcessModel"
     id="myModal7"
-    width="950"
-    height="600"
+    width="1500"
+    height="700"
     size="small"
     transfer
     resize
@@ -254,7 +254,7 @@
       ></vxe-column>
       <vxe-column
         field="deleteReason"
-        title="删除原因"
+        title="节点处理"
         show-overflow
       ></vxe-column>
     </vxe-table>

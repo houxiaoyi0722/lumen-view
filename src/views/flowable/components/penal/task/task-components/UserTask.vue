@@ -18,8 +18,9 @@
         v-model="userTaskForm.assignee"
         @change="updateElementTask('assignee')"
         filterable
+        allow-create
         remote
-        placeholder="输入姓名搜索"
+        placeholder="输入姓名搜索,或输入表达式"
         remote-show-suffix
         :remote-method="assigneeRemoteMethod"
         :loading="selectData.loading"
@@ -37,11 +38,12 @@
         v-model="userTaskForm.candidateUsers"
         @change="updateElementTask('candidateUsers')"
         multiple
+        allow-create
         collapse-tags
         collapse-tags-tooltip
         filterable
         remote
-        placeholder="输入姓名搜索"
+        placeholder="输入姓名搜索，或输入表达式"
         remote-show-suffix
         :remote-method="assigneeRemoteMethod"
         :loading="selectData.loading"
@@ -59,11 +61,12 @@
         v-model="userTaskForm.candidateGroups"
         @change="updateElementTask('candidateGroups')"
         multiple
+        allow-create
         collapse-tags
         collapse-tags-tooltip
         filterable
         remote
-        placeholder="输入名称搜索"
+        placeholder="输入名称搜索，或输入表达式"
         remote-show-suffix
         :remote-method="groupRemoteMethod"
         :loading="selectData.loading"
@@ -102,6 +105,7 @@
 
 <script>
 import { groupList, userList } from "@/api/flowable";
+import {hasSpecialSymbols} from "@/utils/validate";
 
 export default {
   name: "UserTask",
@@ -169,11 +173,13 @@ export default {
       );
     },
     assigneeRemoteMethod(query) {
-      this.selectData.loading = true;
-      userList(query).then((res) => {
-        this.selectData.loading = false;
-        this.userOptions = res.data;
-      });
+      if (!hasSpecialSymbols(query)) {
+        this.selectData.loading = true;
+        userList(query).then((res) => {
+          this.selectData.loading = false;
+          this.userOptions = res.data;
+        });
+      }
     },
     groupRemoteMethod(query) {
       this.selectData.loading = true;
