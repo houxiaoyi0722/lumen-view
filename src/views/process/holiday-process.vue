@@ -112,7 +112,8 @@ import { useRoute, useRouter } from "vue-router";
 import {
   completeTask,
   deleteLeaveProcess,
-  leaveProcessById, moveActivity,
+  leaveProcessById,
+  moveActivity,
   saveDraft,
   startProcess,
 } from "@/api/leave-process";
