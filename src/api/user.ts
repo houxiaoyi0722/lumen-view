@@ -54,3 +54,11 @@ export const saveUserExt = (data: any) => {
     data,
   });
 };
+
+export const offlineUser = (data: any) => {
+  return request({
+    url: `/lumen/offline`,
+    method: "post",
+    data,
+  });
+};

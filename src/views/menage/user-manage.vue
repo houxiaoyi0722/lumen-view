@@ -308,7 +308,7 @@ import type {
 } from "vxe-table";
 import {
   getUserExData,
-  insert,
+  insert, offlineUser,
   remove,
   resetUserPassword,
   saveUserExt,
@@ -421,6 +421,12 @@ export default defineComponent({
                 visible: true,
                 disabled: false,
               },
+              {
+                code: "offline",
+                name: "下线",
+                visible: true,
+                disabled: false,
+              },
             ],
           ],
         },
@@ -512,6 +518,9 @@ export default defineComponent({
           break;
         case "resetPassword":
           resetPassword(row);
+          break;
+        case "offline":
+          offline(row);
           break;
       }
     };
@@ -731,6 +740,23 @@ export default defineComponent({
         return false;
       }
       return true;
+    };
+
+    const offline = async (row: any) => {
+      const type = await VXETable.modal.confirm(
+        `确定要下线用户${row.name}?`
+      );
+
+      const $grid = xGrid.value;
+      if ($grid) {
+        if (type === "confirm") {
+          offlineUser({ username: row.username }).then((res: any) => {
+            if (commonAlert(res, "操作成功")) {
+              findList();
+            }
+          });
+        }
+      }
     };
 
     // 初次加载
