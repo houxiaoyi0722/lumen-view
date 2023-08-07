@@ -71,6 +71,10 @@
     <template #username_edit="{ row }">
       <vxe-input v-model="row.username"></vxe-input>
     </template>
+    <template #online_default="{ row }">
+      <span v-if="row.online" style="color: #01fa6f"> 在线 </span>
+      <span v-else style="color: #f10a0a"> 离线 </span>
+    </template>
     <template #enabled_default="{ row }">
       <vxe-switch
         v-model="row.enabled"
@@ -434,6 +438,12 @@ export default defineComponent({
           title: "账号",
           editRender: { autofocus: ".vxe-input--inner" },
           slots: { edit: "username_edit" },
+        },
+        {
+          width: 100,
+          field: "online",
+          title: "在线状态",
+          slots: { default: "online_default" },
         },
         {
           width: 100,

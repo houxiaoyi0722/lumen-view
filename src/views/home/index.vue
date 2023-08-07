@@ -11,6 +11,7 @@
       <el-tab-pane label="流程列表" name="process" style="height: 200%">
         <vxe-table
           border
+          :loading="home.loading"
           size="mini"
           :row-config="{ height: 20 }"
           :data="home.processList"
@@ -325,7 +326,6 @@ export default defineComponent({
     });
 
     const tabHandleClick = (tab, event) => {
-      home.loading = true;
       home.activeName = tab.paneName;
       if ("process" === tab.paneName) {
         loadProcessList();
@@ -344,6 +344,7 @@ export default defineComponent({
     });
 
     const loadProcessList = () => {
+      home.loading = true;
       obtainProcessList(home.processPage)
         .then((res) => {
           home.processList = res.data;
@@ -356,6 +357,7 @@ export default defineComponent({
     };
 
     const loadTodoList = () => {
+      home.loading = true;
       obtainTodoList(home.todoPage)
         .then((res) => {
           home.todoList = res.data;
@@ -368,6 +370,7 @@ export default defineComponent({
     };
 
     const loadHandledList = () => {
+      home.loading = true;
       obtainHandledList(home.handledPage)
         .then((res) => {
           home.handledList = res.data;
@@ -380,6 +383,7 @@ export default defineComponent({
     };
 
     const loadLaunchList = () => {
+      home.loading = true;
       obtainLaunchList(home.launchPage, home.finished)
         .then((res) => {
           home.LaunchList = res.data;
