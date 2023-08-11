@@ -19,6 +19,7 @@ pipeline {
 
     stage('构建') {
       steps {
+        sh 'sonar-scanner -Dsonar.projectKey=lumen-view -Dsonar.sources=. Dsonar.host.url=http://10.144.233.86:9002'
         sh "npm config get registry"
         sh "npm config set registry=http://10.144.233.86:8011/repository/lumen-npm/"
         sh "npm install"
