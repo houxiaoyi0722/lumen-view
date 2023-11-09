@@ -72,7 +72,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: www.sang.lumen.com
+    - host: www.sang0722.com
       http:
         paths:
           - backend:
